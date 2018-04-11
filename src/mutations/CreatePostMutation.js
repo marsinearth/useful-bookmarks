@@ -12,6 +12,7 @@ const mutation = graphql`
         id
         description
         imageUrl
+        siteUrl
       }
     }
   }
@@ -19,11 +20,12 @@ const mutation = graphql`
 
 let tempID = 0
 
-export default function CreatePostMutation(description, imageUrl, viewerId, callback) {
+export default function CreatePostMutation(description, imageUrl, siteUrl, viewerId, callback) {
   const variables = {
     input: {
       description,
       imageUrl,
+      siteUrl,
       clientMutationId: ""
     },
   }
@@ -46,6 +48,7 @@ export default function CreatePostMutation(description, imageUrl, viewerId, call
         newPost.setValue(id, 'id')
         newPost.setValue(description, 'description')
         newPost.setValue(imageUrl, 'imageUrl')
+        newPost.setValue(siteUrl, 'siteUrl')
       // 2 - add `newPost` to the store
         const viewerProxy = proxyStore.get(viewerId),
         connection = ConnectionHandler.getConnection(viewerProxy, 'ListPage_allPosts')
@@ -64,7 +67,7 @@ export default function CreatePostMutation(description, imageUrl, viewerId, call
           ConnectionHandler.insertEdgeAfter(connection, newPost)
         }
       },
-    
+
     },
   )
 }

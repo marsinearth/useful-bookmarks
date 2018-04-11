@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   QueryRenderer,
   graphql
@@ -15,7 +15,7 @@ const HomeAllPostQuery = graphql`
   }
 `
 
-class Home extends Component {
+class Home extends PureComponent {
   render() {
     return (
       <QueryRenderer

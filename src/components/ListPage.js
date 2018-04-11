@@ -1,14 +1,20 @@
-import React, {Component} from 'react'
+import React, { PureComponent } from 'react'
 import {
   createFragmentContainer,
   graphql
 } from 'react-relay'
 import { Link } from 'react-router-dom'
 import Post from './Post'
+import { GC_USER_ID, GC_AUTH_TOKEN } from '../constants';
 
-class ListPage extends Component {
+class ListPage extends PureComponent {
+  componentWillUnmount() {
+    localStorage.removeItem(GC_USER_ID)
+    localStorage.removeItem(GC_AUTH_TOKEN)
+  }
   render() {
     const { viewer } = this.props
+    //userId = localStorage.getItem(GC_USER_ID)
     return (
       <div className='w-100 flex justify-center'>
         <Link

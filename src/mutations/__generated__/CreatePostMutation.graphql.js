@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 38f90854a7220b0be225ad609e8e2e1a
+ * @relayHash eb4135dfcd6b32c7455cf2991d8c641e
  */
 
 /* eslint-disable */
@@ -13,6 +13,7 @@ export type CreatePostMutationVariables = {|
   input: {
     description: string,
     imageUrl: string,
+    siteUrl: string,
     clientMutationId: string,
   },
 |};
@@ -22,6 +23,7 @@ export type CreatePostMutationResponse = {|
       +id: string,
       +description: string,
       +imageUrl: string,
+      +siteUrl: string,
     |},
   |},
 |};
@@ -37,6 +39,7 @@ mutation CreatePostMutation(
       id
       description
       imageUrl
+      siteUrl
     }
   }
 }
@@ -97,6 +100,13 @@ v1 = [
             "name": "imageUrl",
             "args": null,
             "storageKey": null
+          },
+          {
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "siteUrl",
+            "args": null,
+            "storageKey": null
           }
         ]
       }
@@ -108,7 +118,7 @@ return {
   "operationKind": "mutation",
   "name": "CreatePostMutation",
   "id": null,
-  "text": "mutation CreatePostMutation(\n  $input: CreatePostInput!\n) {\n  createPost(input: $input) {\n    post {\n      id\n      description\n      imageUrl\n    }\n  }\n}\n",
+  "text": "mutation CreatePostMutation(\n  $input: CreatePostInput!\n) {\n  createPost(input: $input) {\n    post {\n      id\n      description\n      imageUrl\n      siteUrl\n    }\n  }\n}\n",
   "metadata": {},
   "fragment": {
     "kind": "Fragment",
@@ -126,5 +136,5 @@ return {
   }
 };
 })();
-(node/*: any*/).hash = 'dd8f84e516490eb1c058fc1b330a55fc';
+(node/*: any*/).hash = '2dd3161842beb80e7c841bb39c56a4ca';
 module.exports = node;

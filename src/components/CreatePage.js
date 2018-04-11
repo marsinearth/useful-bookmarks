@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { PureComponent } from 'react'
 import { withRouter, Link } from 'react-router-dom'
 import CreatePostMutation from '../mutations/CreatePostMutation'
 import { QueryRenderer, graphql } from 'react-relay'
@@ -13,13 +13,14 @@ const CreatePageViewerQuery = graphql`
   }
 `
 
-class CreatePage extends Component {
+class CreatePage extends PureComponent {
   state = {
     description: '',
-    imageUrl: ''
+    imageUrl: '',
+    siteUrl: ''
   }
   render() {
-    const { description, imageUrl } = this.state
+    const { description, imageUrl, siteUrl } = this.state
     return (
       <QueryRenderer
         environment={environment}
@@ -46,6 +47,12 @@ class CreatePage extends Component {
                     placeholder='Image Url'
                     onChange={(e) => this.setState({ imageUrl: e.target.value })}
                   />
+                  <input
+                    className='w-100 pa3 mv2'
+                    value={siteUrl}
+                    placeholder='Site Url'
+                    onChange={(e) => this.setState({ siteUrl: e.target.value })}
+                  />
                   {imageUrl &&
                     <img
                       src={imageUrl}
@@ -53,7 +60,7 @@ class CreatePage extends Component {
                       className='w-100 mv3'
                     />
                   }
-                  {description && imageUrl &&
+                  {description && imageUrl && siteUrl &&
                     <button
                       className='pa3 bg-black-10 bn dim ttu pointer'
                       onClick={() => this._handlePost(props.viewer.id)}
@@ -83,8 +90,8 @@ class CreatePage extends Component {
     )
   }
   _handlePost = viewerId => {
-    const { description, imageUrl } = this.state
-    CreatePostMutation(description, imageUrl, viewerId, () => this.props.history.replace('/'))
+    const { description, imageUrl, siteUrl } = this.state
+    CreatePostMutation(description, imageUrl, siteUrl, viewerId, () => this.props.history.replace('/'))
   }
 }
 export default withRouter(CreatePage)

@@ -14,6 +14,7 @@ export type Post_post = {|
   +id: string,
   +description: string,
   +imageUrl: string,
+  +siteUrl: string,
   +$refType: Post_post$ref,
 |};
 */
@@ -46,8 +47,15 @@ const node/*: ConcreteFragment*/ = {
       "name": "imageUrl",
       "args": null,
       "storageKey": null
+    },
+    {
+      "kind": "ScalarField",
+      "alias": null,
+      "name": "siteUrl",
+      "args": null,
+      "storageKey": null
     }
   ]
 };
-(node/*: any*/).hash = '4b772a13cd5a1f0af9065f26c5ad34f9';
+(node/*: any*/).hash = 'dbb2470fbe0158f06b301f7163efc757';
 module.exports = node;

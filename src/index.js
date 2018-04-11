@@ -8,12 +8,14 @@ import history from './history'
 
 import Home from './components/Home'
 import CreatePage from './components/CreatePage'
+import Login from './components/Login'
 
 render(
   <Router history={history}>
     <Switch>
       <Route exact path='/' component={Home} />
-      <Route path='/create' component={CreatePage} />
+      <Route exact path='/create' component={CreatePage} />
+      <Route exact path='/login' component={Login} />
     </Switch>
   </Router>,
   document.getElementById('root'))

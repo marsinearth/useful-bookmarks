@@ -13,9 +13,9 @@ type Post_viewer$ref = any;
 import type { FragmentReference } from 'relay-runtime';
 declare export opaque type ListPage_viewer$ref: FragmentReference;
 export type ListPage_viewer = {|
-  +allPosts: ?{|
+  +allPosts: {|
     +edges: ?$ReadOnlyArray<?{|
-      +node: ?{|
+      +node: {|
         +$fragmentRefs: Post_post$ref,
       |},
     |}>,
