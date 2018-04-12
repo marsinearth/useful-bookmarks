@@ -18,7 +18,7 @@ type Post @model {
   id: ID! @isUnique
   postedBy: User @relation(name: "UsersPosts")
   imageUrl: String!
-  siteUrl: String! @migrationValue(value: "https://www.diningcode.com/index.php")
+  siteUrl: String!
   updatedAt: DateTime!
 }
 

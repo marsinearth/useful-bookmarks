@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 76228e9d63143e9e105e5aecb1522a56
+ * @relayHash d9f320f9e8a13c992b3859afeb73da19
  */
 
 /* eslint-disable */
@@ -10,7 +10,9 @@
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
 type ListPage_viewer$ref = any;
-export type HomeAllPostQueryVariables = {| |};
+export type HomeAllPostQueryVariables = {|
+  id?: ?string,
+|};
 export type HomeAllPostQueryResponse = {|
   +viewer: {|
     +$fragmentRefs: ListPage_viewer$ref,
@@ -20,7 +22,9 @@ export type HomeAllPostQueryResponse = {|
 
 
 /*
-query HomeAllPostQuery {
+query HomeAllPostQuery(
+  $id: ID
+) {
   viewer {
     ...ListPage_viewer
     id
@@ -29,6 +33,10 @@ query HomeAllPostQuery {
 
 fragment ListPage_viewer on Viewer {
   ...Post_viewer
+  User(id: $id) {
+    name
+    id
+  }
   allPosts(last: 100, orderBy: createdAt_DESC) {
     edges {
       node {
@@ -58,7 +66,15 @@ fragment Post_post on Post {
 */
 
 const node/*: ConcreteRequest*/ = (function(){
-var v0 = {
+var v0 = [
+  {
+    "kind": "LocalArgument",
+    "name": "id",
+    "type": "ID",
+    "defaultValue": null
+  }
+],
+v1 = {
   "kind": "ScalarField",
   "alias": null,
   "name": "id",
@@ -70,14 +86,14 @@ return {
   "operationKind": "query",
   "name": "HomeAllPostQuery",
   "id": null,
-  "text": "query HomeAllPostQuery {\n  viewer {\n    ...ListPage_viewer\n    id\n  }\n}\n\nfragment ListPage_viewer on Viewer {\n  ...Post_viewer\n  allPosts(last: 100, orderBy: createdAt_DESC) {\n    edges {\n      node {\n        ...Post_post\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasPreviousPage\n      startCursor\n    }\n  }\n}\n\nfragment Post_viewer on Viewer {\n  id\n}\n\nfragment Post_post on Post {\n  id\n  description\n  imageUrl\n  siteUrl\n}\n",
+  "text": "query HomeAllPostQuery(\n  $id: ID\n) {\n  viewer {\n    ...ListPage_viewer\n    id\n  }\n}\n\nfragment ListPage_viewer on Viewer {\n  ...Post_viewer\n  User(id: $id) {\n    name\n    id\n  }\n  allPosts(last: 100, orderBy: createdAt_DESC) {\n    edges {\n      node {\n        ...Post_post\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasPreviousPage\n      startCursor\n    }\n  }\n}\n\nfragment Post_viewer on Viewer {\n  id\n}\n\nfragment Post_post on Post {\n  id\n  description\n  imageUrl\n  siteUrl\n}\n",
   "metadata": {},
   "fragment": {
     "kind": "Fragment",
     "name": "HomeAllPostQuery",
     "type": "Query",
     "metadata": null,
-    "argumentDefinitions": [],
+    "argumentDefinitions": v0,
     "selections": [
       {
         "kind": "LinkedField",
@@ -100,7 +116,7 @@ return {
   "operation": {
     "kind": "Operation",
     "name": "HomeAllPostQuery",
-    "argumentDefinitions": [],
+    "argumentDefinitions": v0,
     "selections": [
       {
         "kind": "LinkedField",
@@ -111,7 +127,33 @@ return {
         "concreteType": "Viewer",
         "plural": false,
         "selections": [
-          v0,
+          v1,
+          {
+            "kind": "LinkedField",
+            "alias": null,
+            "name": "User",
+            "storageKey": null,
+            "args": [
+              {
+                "kind": "Variable",
+                "name": "id",
+                "variableName": "id",
+                "type": "ID"
+              }
+            ],
+            "concreteType": "User",
+            "plural": false,
+            "selections": [
+              {
+                "kind": "ScalarField",
+                "alias": null,
+                "name": "name",
+                "args": null,
+                "storageKey": null
+              },
+              v1
+            ]
+          },
           {
             "kind": "LinkedField",
             "alias": null,
@@ -152,7 +194,7 @@ return {
                     "concreteType": "Post",
                     "plural": false,
                     "selections": [
-                      v0,
+                      v1,
                       {
                         "kind": "ScalarField",
                         "alias": null,
@@ -247,5 +289,5 @@ return {
   }
 };
 })();
-(node/*: any*/).hash = '04cd4ef9045b018c0afe29db5b30e190';
+(node/*: any*/).hash = '215080d67acc54809a1ec09dd455228b';
 module.exports = node;

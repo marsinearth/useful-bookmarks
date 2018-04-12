@@ -13,6 +13,9 @@ type Post_viewer$ref = any;
 import type { FragmentReference } from 'relay-runtime';
 declare export opaque type ListPage_viewer$ref: FragmentReference;
 export type ListPage_viewer = {|
+  +User: ?{|
+    +name: string,
+  |},
   +allPosts: {|
     +edges: ?$ReadOnlyArray<?{|
       +node: {|
@@ -42,12 +45,43 @@ const node/*: ConcreteFragment*/ = {
       }
     ]
   },
-  "argumentDefinitions": [],
+  "argumentDefinitions": [
+    {
+      "kind": "RootArgument",
+      "name": "id",
+      "type": "ID"
+    }
+  ],
   "selections": [
     {
       "kind": "FragmentSpread",
       "name": "Post_viewer",
       "args": null
+    },
+    {
+      "kind": "LinkedField",
+      "alias": null,
+      "name": "User",
+      "storageKey": null,
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "id",
+          "variableName": "id",
+          "type": "ID"
+        }
+      ],
+      "concreteType": "User",
+      "plural": false,
+      "selections": [
+        {
+          "kind": "ScalarField",
+          "alias": null,
+          "name": "name",
+          "args": null,
+          "storageKey": null
+        }
+      ]
     },
     {
       "kind": "LinkedField",
@@ -128,5 +162,5 @@ const node/*: ConcreteFragment*/ = {
     }
   ]
 };
-(node/*: any*/).hash = '09270d0796a50c019bd3e5f148cb1ac4';
+(node/*: any*/).hash = 'ae41f424298245b196c1fd18f2d52ffe';
 module.exports = node;

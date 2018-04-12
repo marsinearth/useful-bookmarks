@@ -5,23 +5,26 @@ import {
 } from 'react-relay'
 import { Link } from 'react-router-dom'
 import Post from './Post'
-import { GC_USER_ID, GC_AUTH_TOKEN } from '../constants';
+
 
 class ListPage extends PureComponent {
-  componentWillUnmount() {
-    localStorage.removeItem(GC_USER_ID)
-    localStorage.removeItem(GC_AUTH_TOKEN)
-  }
   render() {
-    const { viewer } = this.props
-    //userId = localStorage.getItem(GC_USER_ID)
+    const { viewer } = this.props,
+    userInfo = viewer.User,
+    userName = userInfo && userInfo.name
+
     return (
       <div className='w-100 flex justify-center'>
+        {userName &&
+          <div className='fixed bg-white top-0 left-0 pa4 ttu black-30 no-underline'>
+            Hello {userName}!
+          </div>
+        }
         <Link
-          to='/create'
+          to={userName ? '/create' : '/login'}
           className='fixed bg-white top-0 right-0 pa4 ttu dim black no-underline'
         >
-          + New Post
+          + {userName ? 'New Post' : 'Sign In'}
         </Link>
         <div
           className='w-100'
@@ -43,6 +46,9 @@ class ListPage extends PureComponent {
 export default createFragmentContainer(ListPage, graphql`
   fragment ListPage_viewer on Viewer {
     ...Post_viewer
+    User(id: $id) {
+      name
+    }
     allPosts(
       last: 100,
       orderBy: createdAt_DESC

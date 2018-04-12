@@ -6,9 +6,10 @@ import {
 import environment from '../Environment'
 import ListPage from './ListPage'
 import Loading from '../assets/images/loading.gif'
+import { GC_USER_ID } from '../constants'
 
 const HomeAllPostQuery = graphql`
-  query HomeAllPostQuery {
+  query HomeAllPostQuery($id: ID) {
     viewer {
       ...ListPage_viewer
     }
@@ -17,10 +18,12 @@ const HomeAllPostQuery = graphql`
 
 class Home extends PureComponent {
   render() {
+    const userId = localStorage.getItem(GC_USER_ID)
     return (
       <QueryRenderer
         environment={environment}
         query={HomeAllPostQuery}
+        variables={{ id: userId }}
         render={({error, props}) => {
           if (error) {
             return <div>{error.message}</div>

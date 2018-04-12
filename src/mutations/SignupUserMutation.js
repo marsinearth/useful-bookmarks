@@ -6,9 +6,15 @@ import environment from '../Environment';
 
 const mutation = graphql`
     mutation SignupUserMutation(
-      $input: SignupUserInput!
+      $name: String!,
+      $email: String!,
+      $password: String!
     ) {
-        signupUser(input: $input) {
+        signupUser(
+          name: $name,
+          email: $email,
+          password: $password
+        ) {
           id
           token
         }
@@ -17,12 +23,10 @@ const mutation = graphql`
 
 export default function SignupUserMutation(name, email, password, callback) {
   const variables = {
-    input: {
-      name,
-      email,
-      password,
-      clientMutationId: ""
-    },
+    name,
+    email,
+    password,
+    clientMutationId: ""
   }
 
   commitMutation(

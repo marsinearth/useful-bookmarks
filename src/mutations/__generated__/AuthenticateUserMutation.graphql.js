@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash d6d9bb8410dfc94e82712fc7bd0fadcf
+ * @relayHash 64930c71a4c597922f9292a107317f9f
  */
 
 /* eslint-disable */
@@ -10,11 +10,8 @@
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
 export type AuthenticateUserMutationVariables = {|
-  input: {
-    email: string,
-    password: string,
-    clientMutationId: string,
-  },
+  email: string,
+  password: string,
 |};
 export type AuthenticateUserMutationResponse = {|
   +authenticateUser: ?{|
@@ -27,9 +24,10 @@ export type AuthenticateUserMutationResponse = {|
 
 /*
 mutation AuthenticateUserMutation(
-  $input: AuthenticateUserInput!
+  $email: String!
+  $password: String!
 ) {
-  authenticateUser(input: $input) {
+  authenticateUser(email: $email, password: $password) {
     id
     token
   }
@@ -40,8 +38,14 @@ const node/*: ConcreteRequest*/ = (function(){
 var v0 = [
   {
     "kind": "LocalArgument",
-    "name": "input",
-    "type": "AuthenticateUserInput!",
+    "name": "email",
+    "type": "String!",
+    "defaultValue": null
+  },
+  {
+    "kind": "LocalArgument",
+    "name": "password",
+    "type": "String!",
     "defaultValue": null
   }
 ],
@@ -54,9 +58,15 @@ v1 = [
     "args": [
       {
         "kind": "Variable",
-        "name": "input",
-        "variableName": "input",
-        "type": "AuthenticateUserInput!"
+        "name": "email",
+        "variableName": "email",
+        "type": "String!"
+      },
+      {
+        "kind": "Variable",
+        "name": "password",
+        "variableName": "password",
+        "type": "String!"
       }
     ],
     "concreteType": "AuthenticateUserPayload",
@@ -84,7 +94,7 @@ return {
   "operationKind": "mutation",
   "name": "AuthenticateUserMutation",
   "id": null,
-  "text": "mutation AuthenticateUserMutation(\n  $input: AuthenticateUserInput!\n) {\n  authenticateUser(input: $input) {\n    id\n    token\n  }\n}\n",
+  "text": "mutation AuthenticateUserMutation(\n  $email: String!\n  $password: String!\n) {\n  authenticateUser(email: $email, password: $password) {\n    id\n    token\n  }\n}\n",
   "metadata": {},
   "fragment": {
     "kind": "Fragment",
@@ -102,5 +112,5 @@ return {
   }
 };
 })();
-(node/*: any*/).hash = '1263bb4b785441e24bccf824dfd0b6b7';
+(node/*: any*/).hash = 'ed84b2d0611603bb09bbc310cc065908';
 module.exports = node;

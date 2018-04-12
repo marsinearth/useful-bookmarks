@@ -68,7 +68,10 @@ class CreatePage extends PureComponent {
                       Post
                     </button>
                   }
-                  <div style={{ textAlign: "center", color: "red" }}>
+                  <div
+                    className='link underline-hover dim'
+                    style={{ textAlign: "center", color: "red" }}
+                  >
                     <Link to="/" >
                       Cancel
                     </Link>

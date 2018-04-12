@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash b51c80abe13655ca22cdd5fa128afa91
+ * @relayHash 5ac6142eca75df150338ea992cd3a1ff
  */
 
 /* eslint-disable */
@@ -10,15 +10,12 @@
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
 export type SignupUserMutationVariables = {|
-  input: {
-    name: string,
-    email: string,
-    password: string,
-    clientMutationId: string,
-  },
+  name: string,
+  email: string,
+  password: string,
 |};
 export type SignupUserMutationResponse = {|
-  +signupUser: {|
+  +signupUser: ?{|
     +id: string,
     +token: string,
   |},
@@ -28,9 +25,11 @@ export type SignupUserMutationResponse = {|
 
 /*
 mutation SignupUserMutation(
-  $input: SignupUserInput!
+  $name: String!
+  $email: String!
+  $password: String!
 ) {
-  signupUser(input: $input) {
+  signupUser(name: $name, email: $email, password: $password) {
     id
     token
   }
@@ -41,8 +40,20 @@ const node/*: ConcreteRequest*/ = (function(){
 var v0 = [
   {
     "kind": "LocalArgument",
-    "name": "input",
-    "type": "SignupUserInput!",
+    "name": "name",
+    "type": "String!",
+    "defaultValue": null
+  },
+  {
+    "kind": "LocalArgument",
+    "name": "email",
+    "type": "String!",
+    "defaultValue": null
+  },
+  {
+    "kind": "LocalArgument",
+    "name": "password",
+    "type": "String!",
     "defaultValue": null
   }
 ],
@@ -55,9 +66,21 @@ v1 = [
     "args": [
       {
         "kind": "Variable",
-        "name": "input",
-        "variableName": "input",
-        "type": "SignupUserInput!"
+        "name": "email",
+        "variableName": "email",
+        "type": "String!"
+      },
+      {
+        "kind": "Variable",
+        "name": "name",
+        "variableName": "name",
+        "type": "String!"
+      },
+      {
+        "kind": "Variable",
+        "name": "password",
+        "variableName": "password",
+        "type": "String!"
       }
     ],
     "concreteType": "SignupUserPayload",
@@ -85,7 +108,7 @@ return {
   "operationKind": "mutation",
   "name": "SignupUserMutation",
   "id": null,
-  "text": "mutation SignupUserMutation(\n  $input: SignupUserInput!\n) {\n  signupUser(input: $input) {\n    id\n    token\n  }\n}\n",
+  "text": "mutation SignupUserMutation(\n  $name: String!\n  $email: String!\n  $password: String!\n) {\n  signupUser(name: $name, email: $email, password: $password) {\n    id\n    token\n  }\n}\n",
   "metadata": {},
   "fragment": {
     "kind": "Fragment",
@@ -103,5 +126,5 @@ return {
   }
 };
 })();
-(node/*: any*/).hash = 'aef83cfd535023c3d23aed2dd9c41162';
+(node/*: any*/).hash = '52459796041239bb08ff9a4980ac1f0d';
 module.exports = node;

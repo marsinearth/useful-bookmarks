@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash eb4135dfcd6b32c7455cf2991d8c641e
+ * @relayHash 6439254d9a4024aaeff598593558c63c
  */
 
 /* eslint-disable */
@@ -14,6 +14,18 @@ export type CreatePostMutationVariables = {|
     description: string,
     imageUrl: string,
     siteUrl: string,
+    postedById?: ?string,
+    postedBy?: ?{
+      email: string,
+      name: string,
+      password: string,
+      postsIds?: ?$ReadOnlyArray<string>,
+      posts?: ?$ReadOnlyArray<{
+        description: string,
+        imageUrl: string,
+        siteUrl: string,
+      }>,
+    },
     clientMutationId: string,
   },
 |};

@@ -10,37 +10,38 @@ class Post extends PureComponent {
   render() {
     const { description, imageUrl, siteUrl } = this.props.post
     return (
-      <a
-        className='no-underline pointer'
-        href={siteUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <div className='pa3 bg-black-05 ma3 dim'>
+      <div className='pa3 bg-black-05 ma3'>
+        <a
+          className='link pointer'
+          href={siteUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <div
-            className='w-100'
+            className='w-100 dim'
             style={{
               backgroundImage: `url(${imageUrl})`,
               backgroundSize: 'cover',
               paddingBottom: '100%'
             }}
           />
-          <div className='pt3'>
-            {description}&nbsp;
-            <span
-              className='red f6 pointer dim'
-              onClick={this._handleDelete}
-            >
-              Delete
-            </span>
-          </div>
+        </a>
+        <div className='pt3'>
+          {description}&nbsp;
+          <span
+            className='red f6 pointer dim'
+            onClick={this._handleDelete}
+          >
+            Delete
+          </span>
         </div>
-      </a>
+      </div>
     )
   }
   _handleDelete = () => {
     const { post, viewer } = this.props
-    DeletePostMutation(post.id, viewer.id)
+    window.confirm(`Are you sure to delete: ${post.description}?`) &&
+      DeletePostMutation(post.id, viewer.id)
   }
 }
 
