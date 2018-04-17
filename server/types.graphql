@@ -17,6 +17,7 @@ type Post @model {
   description: String!
   id: ID! @isUnique
   postedBy: User @relation(name: "UsersPosts")
+  comments: [Comment!]! @relation(name: "CommentsPost")
   imageUrl: String!
   siteUrl: String!
   updatedAt: DateTime!
@@ -31,6 +32,16 @@ type User @model {
   createdAt: DateTime! # read-only (managed by Graphcool)
   updatedAt: DateTime! # read-only (managed by Graphcool)
   posts: [Post!]! @relation(name: "UsersPosts")
+  comments: [Comment!]! @relation(name: "UsersComments")
   email: String! @isUnique
   password: String!
+}
+
+type Comment @model {
+  id: ID! @isUnique
+  commentedBy: User @relation(name: "UsersComments")
+  commentedPost: Post @relation(name: "CommentsPost")
+  content: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }

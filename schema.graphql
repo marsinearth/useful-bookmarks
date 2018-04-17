@@ -1,3 +1,33 @@
+type AddToCommentsPostPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  commentedPostPost: Post
+  commentsComment: Comment
+  commentedPostPostEdge: PostEdge
+  commentsCommentEdge: CommentEdge
+}
+
+input AddToCommentsPostPostInput {
+  commentsCommentId: ID!
+  commentedPostPostId: ID!
+  clientMutationId: String!
+}
+
+type AddToUsersCommentsPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  commentedByUser: User
+  commentsComment: Comment
+  commentedByUserEdge: UserEdge
+  commentsCommentEdge: CommentEdge
+}
+
+input AddToUsersCommentsUserInput {
+  commentsCommentId: ID!
+  commentedByUserId: ID!
+  clientMutationId: String!
+}
+
 type AddToUsersPostsPayload {
   viewer: Viewer!
   clientMutationId: String!
@@ -17,6 +47,227 @@ input AddToUsersPostsPostInput {
 type AuthenticateUserPayload {
   id: ID!
   token: String!
+}
+
+type Comment implements Node {
+  commentedBy(filter: UserFilter): User
+  commentedPost(filter: PostFilter): Post
+  content: String!
+  createdAt: DateTime!
+  id: ID!
+  updatedAt: DateTime!
+}
+
+input CommentcommentedByUser {
+  email: String!
+  name: String!
+  password: String!
+  commentsIds: [ID!]
+  comments: [UsercommentsComment!]
+  postsIds: [ID!]
+  posts: [UserpostsPost!]
+}
+
+input CommentcommentedPostPost {
+  description: String!
+  imageUrl: String!
+  siteUrl: String!
+  postedById: ID
+  postedBy: PostpostedByUser
+  commentsIds: [ID!]
+  comments: [PostcommentsComment!]
+}
+
+"""A connection to a list of items."""
+type CommentConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [CommentEdge]
+
+  """Count of filtered result set without considering pagination arguments"""
+  count: Int!
+}
+
+"""An edge in a connection."""
+type CommentEdge {
+  """The item at the end of the edge."""
+  node: Comment!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+input CommentFilter {
+  """Logical AND on all given filters."""
+  AND: [CommentFilter!]
+
+  """Logical OR on all given filters."""
+  OR: [CommentFilter!]
+  content: String
+
+  """All values that are not equal to given value."""
+  content_not: String
+
+  """All values that are contained in given list."""
+  content_in: [String!]
+
+  """All values that are not contained in given list."""
+  content_not_in: [String!]
+
+  """All values less than the given value."""
+  content_lt: String
+
+  """All values less than or equal the given value."""
+  content_lte: String
+
+  """All values greater than the given value."""
+  content_gt: String
+
+  """All values greater than or equal the given value."""
+  content_gte: String
+
+  """All values containing the given string."""
+  content_contains: String
+
+  """All values not containing the given string."""
+  content_not_contains: String
+
+  """All values starting with the given string."""
+  content_starts_with: String
+
+  """All values not starting with the given string."""
+  content_not_starts_with: String
+
+  """All values ending with the given string."""
+  content_ends_with: String
+
+  """All values not ending with the given string."""
+  content_not_ends_with: String
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  commentedBy: UserFilter
+  commentedPost: PostFilter
+}
+
+enum CommentOrderBy {
+  content_ASC
+  content_DESC
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+input CreateComment {
+  content: String!
+  commentedById: ID
+  commentedBy: CommentcommentedByUser
+  commentedPostId: ID
+  commentedPost: CommentcommentedPostPost
+}
+
+input CreateCommentInput {
+  content: String!
+  commentedById: ID
+  commentedBy: CommentcommentedByUser
+  commentedPostId: ID
+  commentedPost: CommentcommentedPostPost
+  clientMutationId: String!
+}
+
+type CreateCommentPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  comment: Comment
+  edge: CommentEdge
+  commentedBy: User
+  commentedPost: Post
 }
 
 input CreateFile {
@@ -49,6 +300,8 @@ input CreatePost {
   siteUrl: String!
   postedById: ID
   postedBy: PostpostedByUser
+  commentsIds: [ID!]
+  comments: [PostcommentsComment!]
 }
 
 input CreatePostInput {
@@ -57,6 +310,8 @@ input CreatePostInput {
   siteUrl: String!
   postedById: ID
   postedBy: PostpostedByUser
+  commentsIds: [ID!]
+  comments: [PostcommentsComment!]
   clientMutationId: String!
 }
 
@@ -72,6 +327,8 @@ input CreateUser {
   email: String!
   name: String!
   password: String!
+  commentsIds: [ID!]
+  comments: [UsercommentsComment!]
   postsIds: [ID!]
   posts: [UserpostsPost!]
 }
@@ -86,6 +343,21 @@ type CreateUserPayload {
 }
 
 scalar DateTime
+
+input DeleteCommentInput {
+  id: ID!
+  clientMutationId: String!
+}
+
+type DeleteCommentPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  comment: Comment
+  edge: CommentEdge
+  commentedBy: User
+  commentedPost: Post
+  deletedId: ID
+}
 
 input DeleteFileInput {
   id: ID!
@@ -463,18 +735,26 @@ type LoggedInUserPayload {
 }
 
 type Mutation {
+  createComment(input: CreateCommentInput!): CreateCommentPayload
   createFile(input: CreateFileInput!): CreateFilePayload
   createPost(input: CreatePostInput!): CreatePostPayload
+  updateComment(input: UpdateCommentInput!): UpdateCommentPayload
   updateFile(input: UpdateFileInput!): UpdateFilePayload
   updatePost(input: UpdatePostInput!): UpdatePostPayload
   updateUser(input: UpdateUserInput!): UpdateUserPayload
+  updateOrCreateComment(input: UpdateOrCreateCommentInput!): UpdateOrCreateCommentPayload
   updateOrCreateFile(input: UpdateOrCreateFileInput!): UpdateOrCreateFilePayload
   updateOrCreatePost(input: UpdateOrCreatePostInput!): UpdateOrCreatePostPayload
   updateOrCreateUser(input: UpdateOrCreateUserInput!): UpdateOrCreateUserPayload
+  deleteComment(input: DeleteCommentInput!): DeleteCommentPayload
   deleteFile(input: DeleteFileInput!): DeleteFilePayload
   deletePost(input: DeletePostInput!): DeletePostPayload
   deleteUser(input: DeleteUserInput!): DeleteUserPayload
+  addToCommentsPost(input: AddToCommentsPostPostInput!): AddToCommentsPostPayload
+  addToUsersComments(input: AddToUsersCommentsUserInput!): AddToUsersCommentsPayload
   addToUsersPosts(input: AddToUsersPostsPostInput!): AddToUsersPostsPayload
+  removeFromCommentsPost(input: RemoveFromCommentsPostPostInput!): RemoveFromCommentsPostPayload
+  removeFromUsersComments(input: RemoveFromUsersCommentsUserInput!): RemoveFromUsersCommentsPayload
   removeFromUsersPosts(input: RemoveFromUsersPostsPostInput!): RemoveFromUsersPostsPayload
   createUser(input: SignupUserInput!): CreateUserPayload!
 
@@ -507,6 +787,7 @@ type PageInfo {
 }
 
 type Post implements Node {
+  comments(filter: CommentFilter, orderBy: CommentOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection
   createdAt: DateTime!
   description: String!
   id: ID!
@@ -514,6 +795,12 @@ type Post implements Node {
   postedBy(filter: UserFilter): User
   siteUrl: String!
   updatedAt: DateTime!
+}
+
+input PostcommentsComment {
+  content: String!
+  commentedById: ID
+  commentedBy: CommentcommentedByUser
 }
 
 """A connection to a list of items."""
@@ -747,6 +1034,9 @@ input PostFilter {
 
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
+  comments_every: CommentFilter
+  comments_some: CommentFilter
+  comments_none: CommentFilter
   postedBy: UserFilter
 }
 
@@ -769,6 +1059,8 @@ input PostpostedByUser {
   email: String!
   name: String!
   password: String!
+  commentsIds: [ID!]
+  comments: [UsercommentsComment!]
   postsIds: [ID!]
   posts: [UserpostsPost!]
 }
@@ -781,6 +1073,36 @@ type Query {
     """The ID of an object"""
     id: ID!
   ): Node
+}
+
+type RemoveFromCommentsPostPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  commentedPostPost: Post
+  commentsComment: Comment
+  commentedPostPostEdge: PostEdge
+  commentsCommentEdge: CommentEdge
+}
+
+input RemoveFromCommentsPostPostInput {
+  commentsCommentId: ID!
+  commentedPostPostId: ID!
+  clientMutationId: String!
+}
+
+type RemoveFromUsersCommentsPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  commentedByUser: User
+  commentsComment: Comment
+  commentedByUserEdge: UserEdge
+  commentsCommentEdge: CommentEdge
+}
+
+input RemoveFromUsersCommentsUserInput {
+  commentsCommentId: ID!
+  commentedByUserId: ID!
+  clientMutationId: String!
 }
 
 type RemoveFromUsersPostsPayload {
@@ -802,6 +1124,8 @@ input SignupUserInput {
   email: String!
   name: String!
   password: String!
+  commentsIds: [ID!]
+  comments: [UsercommentsComment!]
   postsIds: [ID!]
   posts: [UserpostsPost!]
   clientMutationId: String!
@@ -811,6 +1135,34 @@ input SignupUserInput {
 type SignupUserPayload {
   id: ID!
   token: String!
+}
+
+input UpdateComment {
+  content: String
+  id: ID!
+  commentedById: ID
+  commentedBy: CommentcommentedByUser
+  commentedPostId: ID
+  commentedPost: CommentcommentedPostPost
+}
+
+input UpdateCommentInput {
+  content: String
+  id: ID!
+  commentedById: ID
+  commentedBy: CommentcommentedByUser
+  commentedPostId: ID
+  commentedPost: CommentcommentedPostPost
+  clientMutationId: String!
+}
+
+type UpdateCommentPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  comment: Comment
+  edge: CommentEdge
+  commentedBy: User
+  commentedPost: Post
 }
 
 input UpdateFile {
@@ -837,6 +1189,21 @@ type UpdateFilePayload {
   clientMutationId: String!
   file: File
   edge: FileEdge
+}
+
+input UpdateOrCreateCommentInput {
+  update: UpdateComment!
+  create: CreateComment!
+  clientMutationId: String!
+}
+
+type UpdateOrCreateCommentPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  comment: Comment
+  edge: CommentEdge
+  commentedBy: User
+  commentedPost: Post
 }
 
 input UpdateOrCreateFileInput {
@@ -886,6 +1253,8 @@ input UpdatePost {
   siteUrl: String
   postedById: ID
   postedBy: PostpostedByUser
+  commentsIds: [ID!]
+  comments: [PostcommentsComment!]
 }
 
 input UpdatePostInput {
@@ -895,6 +1264,8 @@ input UpdatePostInput {
   siteUrl: String
   postedById: ID
   postedBy: PostpostedByUser
+  commentsIds: [ID!]
+  comments: [PostcommentsComment!]
   clientMutationId: String!
 }
 
@@ -911,6 +1282,8 @@ input UpdateUser {
   id: ID!
   name: String
   password: String
+  commentsIds: [ID!]
+  comments: [UsercommentsComment!]
   postsIds: [ID!]
   posts: [UserpostsPost!]
 }
@@ -920,6 +1293,8 @@ input UpdateUserInput {
   id: ID!
   name: String
   password: String
+  commentsIds: [ID!]
+  comments: [UsercommentsComment!]
   postsIds: [ID!]
   posts: [UserpostsPost!]
   clientMutationId: String!
@@ -933,6 +1308,7 @@ type UpdateUserPayload {
 }
 
 type User implements Node {
+  comments(filter: CommentFilter, orderBy: CommentOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection
   createdAt: DateTime!
   email: String!
   id: ID!
@@ -940,6 +1316,12 @@ type User implements Node {
   password: String!
   posts(filter: PostFilter, orderBy: PostOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): PostConnection
   updatedAt: DateTime!
+}
+
+input UsercommentsComment {
+  content: String!
+  commentedPostId: ID
+  commentedPost: CommentcommentedPostPost
 }
 
 """A connection to a list of items."""
@@ -1173,6 +1555,9 @@ input UserFilter {
 
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
+  comments_every: CommentFilter
+  comments_some: CommentFilter
+  comments_none: CommentFilter
   posts_every: PostFilter
   posts_some: PostFilter
   posts_none: PostFilter
@@ -1197,14 +1582,18 @@ input UserpostsPost {
   description: String!
   imageUrl: String!
   siteUrl: String!
+  commentsIds: [ID!]
+  comments: [PostcommentsComment!]
 }
 
 """This is the famous Relay viewer object"""
 type Viewer {
+  allComments(filter: CommentFilter, orderBy: CommentOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection!
   allFiles(filter: FileFilter, orderBy: FileOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
   allPosts(filter: PostFilter, orderBy: PostOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): PostConnection!
   allUsers(filter: UserFilter, orderBy: UserOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   user: User
+  Comment(id: ID): Comment
   File(id: ID, secret: String, url: String): File
   Post(id: ID): Post
   User(email: String, id: ID): User

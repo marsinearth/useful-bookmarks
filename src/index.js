@@ -14,6 +14,7 @@ import Login from './components/Login'
 window.onbeforeunload = function() {
   localStorage.removeItem(GC_USER_ID)
   localStorage.removeItem(GC_AUTH_TOKEN)
+  return
 }
 
 render(

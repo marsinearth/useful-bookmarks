@@ -1,14 +1,46 @@
-import React, { PureComponent } from 'react'
+import React, { createRef, PureComponent } from 'react'
 import {
   createFragmentContainer,
   graphql
 } from 'react-relay'
 import DeletePostMutation from '../mutations/DeletePostMutation'
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import faEllipsisV from '@fortawesome/fontawesome-free-solid/faEllipsisV'
+import AnimateHeight from 'react-animate-height'
+
+//let's practice the new context with commenting theme!!!
+class AddComment extends PureComponent {
+  render(){
+    const { mode, handleBlur } = this.props
+    return (
+      <AnimateHeight
+        duration={500}
+        height={mode ? '1rem' : 0}
+      >
+        <input
+          type='text'
+          placeholder='Add Comment'
+          className='w-100 pa3 mt3'
+          onBlur={handleBlur}
+        />
+      </AnimateHeight>
+    )
+  }
+}
 
 class Post extends PureComponent {
+  constructor(props){
+    super(props)
+    this.state = {
+      menu: false,
+      commentMode: false
+    }
+    this.optionTooltip = createRef()
+  }
   render() {
-    const { description, imageUrl, siteUrl } = this.props.post
+    const { description, imageUrl, siteUrl } = this.props.post,
+    { menu, commentMode } = this.state
     return (
       <div className='pa3 bg-black-05 ma3'>
         <a
@@ -26,22 +58,71 @@ class Post extends PureComponent {
             }}
           />
         </a>
-        <div className='pt3'>
+        <div className='pt3 relative'>
           {description}&nbsp;
-          <span
-            className='red f6 pointer dim'
-            onClick={this._handleDelete}
+          <div
+            className='fr pointer light-silver pr1'
+            onClick={this._openMenuPanel}
           >
-            Delete
-          </span>
+            <FontAwesomeIcon
+              icon={faEllipsisV}
+              pull='right'
+            />
+          </div>
+          <div
+            ref={this.optionTooltip}
+            onBlur={this._handleBlur}
+            className={`absolute top-0 right-0 bg-white d${menu ? 'ib' : 'n'} outline-0`}
+            style={{ marginTop:'1px', marginRight:'-15px' }}
+            tabIndex='-1'
+          >
+            <div
+              className='light-silver f6 pointer dim pv1 ph2 tr'
+              onClick={this._addComment}
+            >
+              + Comment
+            </div>
+            <div
+              className='red f6 pointer dim pv1 ph2 tr'
+              onClick={this._handleDelete}
+            >
+              Delete
+            </div>
+          </div>
+          <AddComment
+            mode={commentMode}
+            handleBlur={this._handleBlur}
+          />
         </div>
       </div>
     )
   }
+  _openMenuPanel = () => {
+    this.setState({ menu: true }, () => {
+      this.optionTooltip.current.focus()
+    })
+  }
+  _handleBlur = e => {
+    const target = e.target || e.srcElement,
+    tagName = target && target.tagName
+    let stateObj = {}
+    switch(tagName) {
+      case 'INPUT':
+        stateObj['commentMode'] = false
+        break
+      default:
+        stateObj['menu'] = false
+        break
+    }
+    this.setState(stateObj)
+  }
+  _addComment = () => {
+    this.setState({ commentMode: true, menu: false })
+  }
   _handleDelete = () => {
     const { post, viewer } = this.props
-    window.confirm(`Are you sure to delete: ${post.description}?`) &&
-      DeletePostMutation(post.id, viewer.id)
+    window.confirm(`Are you sure to delete: ${post.description}?`) && DeletePostMutation(post.id, viewer.id)
+    this.setState({ menu: false })
   }
 }
 
