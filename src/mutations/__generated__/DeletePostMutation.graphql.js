@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash d72540248c42b78d26e6e480c50820ec
+ * @relayHash 71351b04f493aff50fd8bbb3b1db4a5e
  */
 
 /* eslint-disable */
@@ -9,11 +9,12 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
+type DeletePostInputVariables = {|
+  id: string,
+  clientMutationId: string,
+|};
 export type DeletePostMutationVariables = {|
-  input: {
-    id: string,
-    clientMutationId: string,
-  },
+  input: DeletePostInputVariables,
 |};
 export type DeletePostMutationResponse = {|
   +deletePost: ?{|

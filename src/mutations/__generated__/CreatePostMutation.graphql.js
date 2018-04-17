@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 6439254d9a4024aaeff598593558c63c
+ * @relayHash d08b17bb196310e4ed2cd65f96c96b7d
  */
 
 /* eslint-disable */
@@ -9,25 +9,62 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
+type CreatePostInputVariables = {|
+  description: string,
+  imageUrl: string,
+  siteUrl: string,
+  postedById: ?string,
+  postedBy: ?PostpostedByUserVariables,
+  commentsIds: ?$ReadOnlyArray<string>,
+  comments: ?$ReadOnlyArray<PostcommentsCommentVariables>,
+  clientMutationId: string,
+|};
+type PostpostedByUserVariables = {|
+  email: string,
+  name: string,
+  password: string,
+  commentsIds: ?$ReadOnlyArray<string>,
+  comments: ?$ReadOnlyArray<UsercommentsCommentVariables>,
+  postsIds: ?$ReadOnlyArray<string>,
+  posts: ?$ReadOnlyArray<UserpostsPostVariables>,
+|};
+type UsercommentsCommentVariables = {|
+  content: string,
+  commentedPostId: ?string,
+  commentedPost: ?CommentcommentedPostPostVariables,
+|};
+type CommentcommentedPostPostVariables = {|
+  description: string,
+  imageUrl: string,
+  siteUrl: string,
+  postedById: ?string,
+  postedBy: ?PostpostedByUserVariables,
+  commentsIds: ?$ReadOnlyArray<string>,
+  comments: ?$ReadOnlyArray<PostcommentsCommentVariables>,
+|};
+type PostcommentsCommentVariables = {|
+  content: string,
+  commentedById: ?string,
+  commentedBy: ?CommentcommentedByUserVariables,
+|};
+type CommentcommentedByUserVariables = {|
+  email: string,
+  name: string,
+  password: string,
+  commentsIds: ?$ReadOnlyArray<string>,
+  comments: ?$ReadOnlyArray<UsercommentsCommentVariables>,
+  postsIds: ?$ReadOnlyArray<string>,
+  posts: ?$ReadOnlyArray<UserpostsPostVariables>,
+|};
+type UserpostsPostVariables = {|
+  description: string,
+  imageUrl: string,
+  siteUrl: string,
+  commentsIds: ?$ReadOnlyArray<string>,
+  comments: ?$ReadOnlyArray<PostcommentsCommentVariables>,
+|};
 export type CreatePostMutationVariables = {|
-  input: {
-    description: string,
-    imageUrl: string,
-    siteUrl: string,
-    postedById?: ?string,
-    postedBy?: ?{
-      email: string,
-      name: string,
-      password: string,
-      postsIds?: ?$ReadOnlyArray<string>,
-      posts?: ?$ReadOnlyArray<{
-        description: string,
-        imageUrl: string,
-        siteUrl: string,
-      }>,
-    },
-    clientMutationId: string,
-  },
+  input: CreatePostInputVariables,
 |};
 export type CreatePostMutationResponse = {|
   +createPost: ?{|

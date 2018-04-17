@@ -17,7 +17,7 @@ type Post @model {
   description: String!
   id: ID! @isUnique
   postedBy: User @relation(name: "UsersPosts")
-  comments: [Comment!]! @relation(name: "CommentsPost")
+  comments: [Comment!]! @relation(name: "CommentsPosts")
   imageUrl: String!
   siteUrl: String!
   updatedAt: DateTime!
@@ -40,7 +40,7 @@ type User @model {
 type Comment @model {
   id: ID! @isUnique
   commentedBy: User @relation(name: "UsersComments")
-  commentedPost: Post @relation(name: "CommentsPost")
+  commentedPost: Post @relation(name: "CommentsPosts")
   content: String!
   createdAt: DateTime!
   updatedAt: DateTime!

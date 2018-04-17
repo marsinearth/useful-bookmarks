@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash d9f320f9e8a13c992b3859afeb73da19
+ * @relayHash 36464199cff6b4ae81bd7cfea4d5d9e2
  */
 
 /* eslint-disable */
@@ -11,7 +11,7 @@
 import type { ConcreteRequest } from 'relay-runtime';
 type ListPage_viewer$ref = any;
 export type HomeAllPostQueryVariables = {|
-  id?: ?string,
+  id: ?string,
 |};
 export type HomeAllPostQueryResponse = {|
   +viewer: {|
@@ -62,6 +62,33 @@ fragment Post_post on Post {
   description
   imageUrl
   siteUrl
+  comments(last: 100, orderBy: createdAt_DESC) {
+    edges {
+      node {
+        ...Comment_comment
+        id
+        __typename
+      }
+      cursor
+    }
+    pageInfo {
+      hasPreviousPage
+      startCursor
+    }
+  }
+}
+
+fragment Comment_comment on Comment {
+  id
+  content
+  commentedBy {
+    id
+    name
+  }
+  commentedPost {
+    id
+    description
+  }
 }
 */
 
@@ -80,13 +107,72 @@ v1 = {
   "name": "id",
   "args": null,
   "storageKey": null
+},
+v2 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "name",
+  "args": null,
+  "storageKey": null
+},
+v3 = {
+  "kind": "Literal",
+  "name": "last",
+  "value": 100,
+  "type": "Int"
+},
+v4 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "description",
+  "args": null,
+  "storageKey": null
+},
+v5 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "__typename",
+  "args": null,
+  "storageKey": null
+},
+v6 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "cursor",
+  "args": null,
+  "storageKey": null
+},
+v7 = {
+  "kind": "LinkedField",
+  "alias": null,
+  "name": "pageInfo",
+  "storageKey": null,
+  "args": null,
+  "concreteType": "PageInfo",
+  "plural": false,
+  "selections": [
+    {
+      "kind": "ScalarField",
+      "alias": null,
+      "name": "hasPreviousPage",
+      "args": null,
+      "storageKey": null
+    },
+    {
+      "kind": "ScalarField",
+      "alias": null,
+      "name": "startCursor",
+      "args": null,
+      "storageKey": null
+    }
+  ]
 };
 return {
   "kind": "Request",
   "operationKind": "query",
   "name": "HomeAllPostQuery",
   "id": null,
-  "text": "query HomeAllPostQuery(\n  $id: ID\n) {\n  viewer {\n    ...ListPage_viewer\n    id\n  }\n}\n\nfragment ListPage_viewer on Viewer {\n  ...Post_viewer\n  User(id: $id) {\n    name\n    id\n  }\n  allPosts(last: 100, orderBy: createdAt_DESC) {\n    edges {\n      node {\n        ...Post_post\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasPreviousPage\n      startCursor\n    }\n  }\n}\n\nfragment Post_viewer on Viewer {\n  id\n}\n\nfragment Post_post on Post {\n  id\n  description\n  imageUrl\n  siteUrl\n}\n",
+  "text": "query HomeAllPostQuery(\n  $id: ID\n) {\n  viewer {\n    ...ListPage_viewer\n    id\n  }\n}\n\nfragment ListPage_viewer on Viewer {\n  ...Post_viewer\n  User(id: $id) {\n    name\n    id\n  }\n  allPosts(last: 100, orderBy: createdAt_DESC) {\n    edges {\n      node {\n        ...Post_post\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasPreviousPage\n      startCursor\n    }\n  }\n}\n\nfragment Post_viewer on Viewer {\n  id\n}\n\nfragment Post_post on Post {\n  id\n  description\n  imageUrl\n  siteUrl\n  comments(last: 100, orderBy: createdAt_DESC) {\n    edges {\n      node {\n        ...Comment_comment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasPreviousPage\n      startCursor\n    }\n  }\n}\n\nfragment Comment_comment on Comment {\n  id\n  content\n  commentedBy {\n    id\n    name\n  }\n  commentedPost {\n    id\n    description\n  }\n}\n",
   "metadata": {},
   "fragment": {
     "kind": "Fragment",
@@ -144,13 +230,7 @@ return {
             "concreteType": "User",
             "plural": false,
             "selections": [
-              {
-                "kind": "ScalarField",
-                "alias": null,
-                "name": "name",
-                "args": null,
-                "storageKey": null
-              },
+              v2,
               v1
             ]
           },
@@ -160,12 +240,7 @@ return {
             "name": "allPosts",
             "storageKey": "allPosts(last:100,orderBy:\"createdAt_DESC\")",
             "args": [
-              {
-                "kind": "Literal",
-                "name": "last",
-                "value": 100,
-                "type": "Int"
-              },
+              v3,
               {
                 "kind": "Literal",
                 "name": "orderBy",
@@ -195,13 +270,7 @@ return {
                     "plural": false,
                     "selections": [
                       v1,
-                      {
-                        "kind": "ScalarField",
-                        "alias": null,
-                        "name": "description",
-                        "args": null,
-                        "storageKey": null
-                      },
+                      v4,
                       {
                         "kind": "ScalarField",
                         "alias": null,
@@ -217,48 +286,107 @@ return {
                         "storageKey": null
                       },
                       {
-                        "kind": "ScalarField",
+                        "kind": "LinkedField",
                         "alias": null,
-                        "name": "__typename",
-                        "args": null,
-                        "storageKey": null
-                      }
+                        "name": "comments",
+                        "storageKey": "comments(last:100,orderBy:\"createdAt_DESC\")",
+                        "args": [
+                          v3,
+                          {
+                            "kind": "Literal",
+                            "name": "orderBy",
+                            "value": "createdAt_DESC",
+                            "type": "CommentOrderBy"
+                          }
+                        ],
+                        "concreteType": "CommentConnection",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "kind": "LinkedField",
+                            "alias": null,
+                            "name": "edges",
+                            "storageKey": null,
+                            "args": null,
+                            "concreteType": "CommentEdge",
+                            "plural": true,
+                            "selections": [
+                              {
+                                "kind": "LinkedField",
+                                "alias": null,
+                                "name": "node",
+                                "storageKey": null,
+                                "args": null,
+                                "concreteType": "Comment",
+                                "plural": false,
+                                "selections": [
+                                  v1,
+                                  {
+                                    "kind": "ScalarField",
+                                    "alias": null,
+                                    "name": "content",
+                                    "args": null,
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "kind": "LinkedField",
+                                    "alias": null,
+                                    "name": "commentedBy",
+                                    "storageKey": null,
+                                    "args": null,
+                                    "concreteType": "User",
+                                    "plural": false,
+                                    "selections": [
+                                      v1,
+                                      v2
+                                    ]
+                                  },
+                                  {
+                                    "kind": "LinkedField",
+                                    "alias": null,
+                                    "name": "commentedPost",
+                                    "storageKey": null,
+                                    "args": null,
+                                    "concreteType": "Post",
+                                    "plural": false,
+                                    "selections": [
+                                      v1,
+                                      v4
+                                    ]
+                                  },
+                                  v5
+                                ]
+                              },
+                              v6
+                            ]
+                          },
+                          v7
+                        ]
+                      },
+                      {
+                        "kind": "LinkedHandle",
+                        "alias": null,
+                        "name": "comments",
+                        "args": [
+                          v3,
+                          {
+                            "kind": "Literal",
+                            "name": "orderBy",
+                            "value": "createdAt_DESC",
+                            "type": "CommentOrderBy"
+                          }
+                        ],
+                        "handle": "connection",
+                        "key": "Post_comments",
+                        "filters": []
+                      },
+                      v5
                     ]
                   },
-                  {
-                    "kind": "ScalarField",
-                    "alias": null,
-                    "name": "cursor",
-                    "args": null,
-                    "storageKey": null
-                  }
+                  v6
                 ]
               },
-              {
-                "kind": "LinkedField",
-                "alias": null,
-                "name": "pageInfo",
-                "storageKey": null,
-                "args": null,
-                "concreteType": "PageInfo",
-                "plural": false,
-                "selections": [
-                  {
-                    "kind": "ScalarField",
-                    "alias": null,
-                    "name": "hasPreviousPage",
-                    "args": null,
-                    "storageKey": null
-                  },
-                  {
-                    "kind": "ScalarField",
-                    "alias": null,
-                    "name": "startCursor",
-                    "args": null,
-                    "storageKey": null
-                  }
-                ]
-              }
+              v7
             ]
           },
           {
@@ -266,12 +394,7 @@ return {
             "alias": null,
             "name": "allPosts",
             "args": [
-              {
-                "kind": "Literal",
-                "name": "last",
-                "value": 100,
-                "type": "Int"
-              },
+              v3,
               {
                 "kind": "Literal",
                 "name": "orderBy",

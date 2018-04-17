@@ -94,7 +94,9 @@ class CreatePage extends PureComponent {
   }
   _handlePost = viewerId => {
     const { description, imageUrl, siteUrl } = this.state
-    CreatePostMutation(description, imageUrl, siteUrl, viewerId, () => this.props.history.replace('/'))
+    CreatePostMutation(description, imageUrl, siteUrl, viewerId, () => {
+      this.props.history.replace('/')
+    })
   }
 }
 export default withRouter(CreatePage)

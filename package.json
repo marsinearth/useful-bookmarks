@@ -55,12 +55,12 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "relay": "relay-compiler --src ./src --schema schema.graphql",
+    "relay": "relay-compiler --src ./src --schema ./schema.graphql",
     "get-schema": "node scripts/getSchema.js"
   },
   "devDependencies": {
+    "@monastic.panic/relay-compiler-recusion-fix": "^1.5.0",
     "babel-plugin-relay": "^1.5.0",
-    "relay-compiler": "^1.5.0",
     "tachyons": "^4.9.1"
   },
   "jest": {

@@ -8,6 +8,7 @@ import { withRouter } from 'react-router-dom'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faEllipsisV from '@fortawesome/fontawesome-free-solid/faEllipsisV'
 import AnimateHeight from 'react-animate-height'
+import Comment from './Comment'
 
 //let's practice the new context with commenting theme!!!
 class AddComment extends PureComponent {
@@ -39,8 +40,9 @@ class Post extends PureComponent {
     this.optionTooltip = createRef()
   }
   render() {
-    const { description, imageUrl, siteUrl } = this.props.post,
+    const { description, imageUrl, siteUrl, comments } = this.props.post,
     { menu, commentMode } = this.state
+    //console.log('comments: ', comments)
     return (
       <div className='pa3 bg-black-05 ma3'>
         <a
@@ -89,6 +91,12 @@ class Post extends PureComponent {
               Delete
             </div>
           </div>
+          {comments.edges.map(({ node }) =>
+            <Comment
+              key={node.__id}
+              comment={node}
+            />
+          )}
           <AddComment
             mode={commentMode}
             handleBlur={this._handleBlur}
@@ -121,7 +129,8 @@ class Post extends PureComponent {
   }
   _handleDelete = () => {
     const { post, viewer } = this.props
-    window.confirm(`Are you sure to delete: ${post.description}?`) && DeletePostMutation(post.id, viewer.id)
+    if(window.confirm(`Are you sure to delete: ${post.description}?`))
+      DeletePostMutation(post.id, viewer.id)
     this.setState({ menu: false })
   }
 }
@@ -135,6 +144,19 @@ const FragmentContainer = createFragmentContainer(Post, graphql`
     description
     imageUrl
     siteUrl
+    comments(
+      last: 100,
+      orderBy: createdAt_DESC
+    ) @connection(
+      key: "Post_comments",
+      filters: []
+    ) {
+      edges {
+        node {
+          ...Comment_comment
+        }
+      }
+    }
   }
 `)
 

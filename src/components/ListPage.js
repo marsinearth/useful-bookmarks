@@ -6,7 +6,6 @@ import {
 import { Link } from 'react-router-dom'
 import Post from './Post'
 
-
 class ListPage extends PureComponent {
   render() {
     const { viewer } = this.props,
