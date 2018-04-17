@@ -13,4 +13,5 @@ used fixed version of relay-compiler: [Explanation](https://github.com/facebook/
   - will complete comments system by adding mutations for CUD, relay's pagination func for browsing a many of them
   - will add likes(exactly same as hackernews' votes)
   - will add small chatting system using relay's subscription func
-  - will add some kind of console page for stats and browsing users-posts-comments relationships and likes
+  - will add some kind of console page for stats and browsing users-posts-comments-likes relationships
+  - will transform graphcool to traditional DB by writing own resolver (headache reserved T^T maybe redis.....!)
