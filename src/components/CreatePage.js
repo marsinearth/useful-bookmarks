@@ -4,6 +4,9 @@ import CreatePostMutation from '../mutations/CreatePostMutation'
 import { QueryRenderer, graphql } from 'react-relay'
 import environment from '../Environment'
 import Loading from '../assets/images/loading.gif'
+import DefaultImg from '../assets/images/default.jpeg'
+import { GC_USER_ID } from '../constants'
+import styled, { css } from 'styled-components'
 
 const CreatePageViewerQuery = graphql`
   query CreatePageViewerQuery {
@@ -21,6 +24,7 @@ class CreatePage extends PureComponent {
   }
   render() {
     const { description, imageUrl, siteUrl } = this.state
+
     return (
       <QueryRenderer
         environment={environment}
@@ -30,73 +34,122 @@ class CreatePage extends PureComponent {
             return <div>{error.message}</div>
           } else if (props) {
             return (
-              <div className='w-100 pa4 flex justify-center'>
-                <div
-                  style={{ maxWidth: 400 }}
-                  className=''
-                >
-                  <input
-                    className='w-100 pa3 mv2'
+              <Wrapper>
+                <InnerWrapper>
+                  <Input
+                    type='text'
                     value={description}
                     placeholder='Description'
                     onChange={(e) => this.setState({ description: e.target.value })}
                   />
-                  <input
-                    className='w-100 pa3 mv2'
+                  <Input
+                    type='text'
                     value={imageUrl}
                     placeholder='Image Url'
                     onChange={(e) => this.setState({ imageUrl: e.target.value })}
                   />
-                  <input
-                    className='w-100 pa3 mv2'
+                  <Input
+                    type='text'
                     value={siteUrl}
                     placeholder='Site Url'
                     onChange={(e) => this.setState({ siteUrl: e.target.value })}
                   />
                   {imageUrl &&
-                    <img
+                    <Img
                       src={imageUrl}
+                      onError={e => e.target.src = DefaultImg}
                       alt={description}
-                      className='w-100 mv3'
                     />
                   }
                   {description && imageUrl && siteUrl &&
-                    <button
-                      className='pa3 bg-black-10 bn dim ttu pointer'
-                      onClick={() => this._handlePost(props.viewer.id)}
-                    >
+                    <PostBtn onClick={() => this._handlePost(props.viewer.id)}>
                       Post
-                    </button>
+                    </PostBtn>
                   }
-                  <div
-                    className='link underline-hover dim'
-                    style={{ textAlign: "center", color: "red" }}
-                  >
+                  <LinkContainer>
                     <Link to="/" >
                       Cancel
                     </Link>
-                 </div>
-                </div>
-              </div>
+                 </LinkContainer>
+               </InnerWrapper>
+             </Wrapper>
             )
           }
           return (
-            <div className='w-100 pa4 flex justify-center'>
+            <Wrapper>
               <img
                 src={Loading}
                 alt="Loading..."
               />
-            </div>
+            </Wrapper>
           )
         }}
       />
     )
   }
   _handlePost = viewerId => {
-    const { description, imageUrl, siteUrl } = this.state
-    CreatePostMutation(description, imageUrl, siteUrl, viewerId, () => {
-      this.props.history.replace('/')
-    })
+    const { description, imageUrl, siteUrl } = this.state,
+    postedById = localStorage.getItem(GC_USER_ID)
+
+    CreatePostMutation(
+      description,
+      imageUrl,
+      siteUrl,
+      postedById,
+      viewerId,
+      () => {
+        this.props.history.replace('/')
+      }
+    )
   }
 }
+
 export default withRouter(CreatePage)
+
+const Dim = css`
+  opacity: 1;
+  transition: opacity .15s ease-in;
+  cursor: pointer;
+  &:hover,
+  &:focus {
+    opacity: .5;
+    transition: opacity .15s ease-in;
+  }
+`,
+Wrapper = styled.div`
+  width: 100%;
+  padding: 2rem;
+  justify-content: center;
+  display: flex;
+`,
+InnerWrapper = styled.div`
+  max-width: 400px;
+`,
+Input = styled.input`
+  width: 100%;
+  padding: 1rem;
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+`,
+Img = styled.img`
+  width: 100%;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+`,
+LinkContainer = styled.div`
+  text-align: center;
+  color: red;
+  text-decoration: none;
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
+  ${Dim}
+`,
+PostBtn = styled.button`
+  padding: 1rem;
+  text-transform: uppercase;
+  background-color: rgba( 0, 0, 0, .1 );
+  border: none;
+  ${Dim}
+`

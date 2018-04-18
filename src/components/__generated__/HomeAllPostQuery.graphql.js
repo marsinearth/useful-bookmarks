@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 36464199cff6b4ae81bd7cfea4d5d9e2
+ * @relayHash 6de9173a9a6b0df0332718bd93a4fb53
  */
 
 /* eslint-disable */
@@ -62,6 +62,10 @@ fragment Post_post on Post {
   description
   imageUrl
   siteUrl
+  postedBy {
+    name
+    id
+  }
   comments(last: 100, orderBy: createdAt_DESC) {
     edges {
       node {
@@ -115,34 +119,38 @@ v2 = {
   "args": null,
   "storageKey": null
 },
-v3 = {
+v3 = [
+  v2,
+  v1
+],
+v4 = {
   "kind": "Literal",
   "name": "last",
   "value": 100,
   "type": "Int"
 },
-v4 = {
+v5 = {
   "kind": "ScalarField",
   "alias": null,
   "name": "description",
   "args": null,
   "storageKey": null
 },
-v5 = {
+v6 = {
   "kind": "ScalarField",
   "alias": null,
   "name": "__typename",
   "args": null,
   "storageKey": null
 },
-v6 = {
+v7 = {
   "kind": "ScalarField",
   "alias": null,
   "name": "cursor",
   "args": null,
   "storageKey": null
 },
-v7 = {
+v8 = {
   "kind": "LinkedField",
   "alias": null,
   "name": "pageInfo",
@@ -172,7 +180,7 @@ return {
   "operationKind": "query",
   "name": "HomeAllPostQuery",
   "id": null,
-  "text": "query HomeAllPostQuery(\n  $id: ID\n) {\n  viewer {\n    ...ListPage_viewer\n    id\n  }\n}\n\nfragment ListPage_viewer on Viewer {\n  ...Post_viewer\n  User(id: $id) {\n    name\n    id\n  }\n  allPosts(last: 100, orderBy: createdAt_DESC) {\n    edges {\n      node {\n        ...Post_post\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasPreviousPage\n      startCursor\n    }\n  }\n}\n\nfragment Post_viewer on Viewer {\n  id\n}\n\nfragment Post_post on Post {\n  id\n  description\n  imageUrl\n  siteUrl\n  comments(last: 100, orderBy: createdAt_DESC) {\n    edges {\n      node {\n        ...Comment_comment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasPreviousPage\n      startCursor\n    }\n  }\n}\n\nfragment Comment_comment on Comment {\n  id\n  content\n  commentedBy {\n    id\n    name\n  }\n  commentedPost {\n    id\n    description\n  }\n}\n",
+  "text": "query HomeAllPostQuery(\n  $id: ID\n) {\n  viewer {\n    ...ListPage_viewer\n    id\n  }\n}\n\nfragment ListPage_viewer on Viewer {\n  ...Post_viewer\n  User(id: $id) {\n    name\n    id\n  }\n  allPosts(last: 100, orderBy: createdAt_DESC) {\n    edges {\n      node {\n        ...Post_post\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasPreviousPage\n      startCursor\n    }\n  }\n}\n\nfragment Post_viewer on Viewer {\n  id\n}\n\nfragment Post_post on Post {\n  id\n  description\n  imageUrl\n  siteUrl\n  postedBy {\n    name\n    id\n  }\n  comments(last: 100, orderBy: createdAt_DESC) {\n    edges {\n      node {\n        ...Comment_comment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasPreviousPage\n      startCursor\n    }\n  }\n}\n\nfragment Comment_comment on Comment {\n  id\n  content\n  commentedBy {\n    id\n    name\n  }\n  commentedPost {\n    id\n    description\n  }\n}\n",
   "metadata": {},
   "fragment": {
     "kind": "Fragment",
@@ -229,10 +237,7 @@ return {
             ],
             "concreteType": "User",
             "plural": false,
-            "selections": [
-              v2,
-              v1
-            ]
+            "selections": v3
           },
           {
             "kind": "LinkedField",
@@ -240,7 +245,7 @@ return {
             "name": "allPosts",
             "storageKey": "allPosts(last:100,orderBy:\"createdAt_DESC\")",
             "args": [
-              v3,
+              v4,
               {
                 "kind": "Literal",
                 "name": "orderBy",
@@ -270,7 +275,7 @@ return {
                     "plural": false,
                     "selections": [
                       v1,
-                      v4,
+                      v5,
                       {
                         "kind": "ScalarField",
                         "alias": null,
@@ -288,10 +293,20 @@ return {
                       {
                         "kind": "LinkedField",
                         "alias": null,
+                        "name": "postedBy",
+                        "storageKey": null,
+                        "args": null,
+                        "concreteType": "User",
+                        "plural": false,
+                        "selections": v3
+                      },
+                      {
+                        "kind": "LinkedField",
+                        "alias": null,
                         "name": "comments",
                         "storageKey": "comments(last:100,orderBy:\"createdAt_DESC\")",
                         "args": [
-                          v3,
+                          v4,
                           {
                             "kind": "Literal",
                             "name": "orderBy",
@@ -351,16 +366,16 @@ return {
                                     "plural": false,
                                     "selections": [
                                       v1,
-                                      v4
+                                      v5
                                     ]
                                   },
-                                  v5
+                                  v6
                                 ]
                               },
-                              v6
+                              v7
                             ]
                           },
-                          v7
+                          v8
                         ]
                       },
                       {
@@ -368,7 +383,7 @@ return {
                         "alias": null,
                         "name": "comments",
                         "args": [
-                          v3,
+                          v4,
                           {
                             "kind": "Literal",
                             "name": "orderBy",
@@ -380,13 +395,13 @@ return {
                         "key": "Post_comments",
                         "filters": []
                       },
-                      v5
+                      v6
                     ]
                   },
-                  v6
+                  v7
                 ]
               },
-              v7
+              v8
             ]
           },
           {
@@ -394,7 +409,7 @@ return {
             "alias": null,
             "name": "allPosts",
             "args": [
-              v3,
+              v4,
               {
                 "kind": "Literal",
                 "name": "orderBy",

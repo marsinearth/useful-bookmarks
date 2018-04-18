@@ -5,6 +5,7 @@ import {
 } from 'react-relay'
 import { Link } from 'react-router-dom'
 import Post from './Post'
+import styled, { css } from 'styled-components'
 
 class ListPage extends PureComponent {
   render() {
@@ -13,22 +14,16 @@ class ListPage extends PureComponent {
     userName = userInfo && userInfo.name
 
     return (
-      <div className='w-100 flex justify-center'>
+      <Wrapper>
         {userName &&
-          <div className='fixed bg-white top-0 left-0 pa4 ttu black-30 no-underline'>
+          <WelcomeUser>
             Hello {userName}!
-          </div>
+          </WelcomeUser>
         }
-        <Link
-          to={userName ? '/create' : '/login'}
-          className='fixed bg-white top-0 right-0 pa4 ttu dim black no-underline'
-        >
+        <StyledLink to={userName ? '/create' : '/login'}>
           + {userName ? 'New Post' : 'Sign In'}
-        </Link>
-        <div
-          className='w-100'
-          style={{ maxWidth: 400 }}
-        >
+        </StyledLink>
+        <InnerWrapper>
           {viewer.allPosts.edges.map(({ node }) =>
             <Post
               key={node.__id}
@@ -36,8 +31,8 @@ class ListPage extends PureComponent {
               viewer={viewer}
             />
           )}
-        </div>
-      </div>
+        </InnerWrapper>
+      </Wrapper>
     )
   }
 }
@@ -63,3 +58,40 @@ export default createFragmentContainer(ListPage, graphql`
     }
   }
 `)
+
+const Decorated = css`
+  position: fixed;
+  background-color: white;
+  top: 0;
+  padding: 2rem;
+  text-transform: uppercase;
+`,
+Dim = css`
+  transition: opacity .15s ease-in;
+  cursor: pointer;
+  &:hover,
+  &:focus {
+    opacity: .5;
+    transition: opacity .15s ease-in;
+  }
+`,
+Wrapper = styled.div`
+  width: 100%;
+  justify-content: center;
+  display: flex;
+`,
+InnerWrapper = styled.div`
+  width: 100%;
+  max-width: 400px;
+`,
+WelcomeUser = styled.div`
+  left: 0;
+  color: rgba( 0, 0, 0, .3 );
+  ${Decorated}
+`,
+StyledLink = styled(Link)`
+  right: 0;
+  color: black;
+  ${Dim}
+  ${Decorated}
+`

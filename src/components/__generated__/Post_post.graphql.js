@@ -16,6 +16,9 @@ export type Post_post = {|
   +description: string,
   +imageUrl: string,
   +siteUrl: string,
+  +postedBy: ?{|
+    +name: string,
+  |},
   +comments: ?{|
     +edges: ?$ReadOnlyArray<?{|
       +node: {|
@@ -73,6 +76,24 @@ const node/*: ConcreteFragment*/ = {
       "name": "siteUrl",
       "args": null,
       "storageKey": null
+    },
+    {
+      "kind": "LinkedField",
+      "alias": null,
+      "name": "postedBy",
+      "storageKey": null,
+      "args": null,
+      "concreteType": "User",
+      "plural": false,
+      "selections": [
+        {
+          "kind": "ScalarField",
+          "alias": null,
+          "name": "name",
+          "args": null,
+          "storageKey": null
+        }
+      ]
     },
     {
       "kind": "LinkedField",
@@ -153,5 +174,5 @@ const node/*: ConcreteFragment*/ = {
     }
   ]
 };
-(node/*: any*/).hash = '8a5727694513c2a1c54fe4db8d64f21a';
+(node/*: any*/).hash = 'a8f300487f4420c61ea9ce08b7db1c73';
 module.exports = node;

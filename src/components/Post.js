@@ -9,6 +9,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faEllipsisV from '@fortawesome/fontawesome-free-solid/faEllipsisV'
 import AnimateHeight from 'react-animate-height'
 import Comment from './Comment'
+import styled, { css } from 'styled-components'
 
 //let's practice the new context with commenting theme!!!
 class AddComment extends PureComponent {
@@ -17,12 +18,11 @@ class AddComment extends PureComponent {
     return (
       <AnimateHeight
         duration={500}
-        height={mode ? '1rem' : 0}
+        height={mode ? 'auto' : 0}
       >
-        <input
+        <Input
           type='text'
           placeholder='Add Comment'
-          className='w-100 pa3 mt3'
           onBlur={handleBlur}
         />
       </AnimateHeight>
@@ -40,69 +40,62 @@ class Post extends PureComponent {
     this.optionTooltip = createRef()
   }
   render() {
-    const { description, imageUrl, siteUrl, comments } = this.props.post,
-    { menu, commentMode } = this.state
-    //console.log('comments: ', comments)
+    const { description, imageUrl, siteUrl, postedBy, comments } = this.props.post,
+    { menu, commentMode } = this.state,
+    userName = postedBy && postedBy.name
+    console.log('userName: ', userName)
+    console.log('comments: ', comments)
     return (
-      <div className='pa3 bg-black-05 ma3'>
+      <Container>
         <a
-          className='link pointer'
           href={siteUrl}
           target="_blank"
           rel="noopener noreferrer"
         >
-          <div
-            className='w-100 dim'
-            style={{
-              backgroundImage: `url(${imageUrl})`,
-              backgroundSize: 'cover',
-              paddingBottom: '100%'
-            }}
-          />
+          <ImgContainer url={imageUrl} />
         </a>
-        <div className='pt3 relative'>
-          {description}&nbsp;
-          <div
-            className='fr pointer light-silver pr1'
-            onClick={this._openMenuPanel}
-          >
-            <FontAwesomeIcon
-              icon={faEllipsisV}
-              pull='right'
-            />
-          </div>
-          <div
-            ref={this.optionTooltip}
+        <InfoContainer>
+          {description}
+          {userName &&
+            <VertOptionContainer onClick={this._openMenuPanel}>
+              <FontAwesomeIcon
+                icon={faEllipsisV}
+                pull='right'
+              />
+            </VertOptionContainer>
+          }
+          <Tooltip
+            innerRef={this.optionTooltip}
             onBlur={this._handleBlur}
-            className={`absolute top-0 right-0 bg-white d${menu ? 'ib' : 'n'} outline-0`}
-            style={{ marginTop:'1px', marginRight:'-15px' }}
+            menu={menu}
             tabIndex='-1'
           >
-            <div
-              className='light-silver f6 pointer dim pv1 ph2 tr'
-              onClick={this._addComment}
-            >
+            <TooltipMenu comment onClick={this._addComment}>
               + Comment
-            </div>
-            <div
-              className='red f6 pointer dim pv1 ph2 tr'
-              onClick={this._handleDelete}
-            >
+            </TooltipMenu>
+            <TooltipMenu onClick={this._handleDelete}>
               Delete
-            </div>
-          </div>
-          {comments.edges.map(({ node }) =>
-            <Comment
-              key={node.__id}
-              comment={node}
-            />
-          )}
+            </TooltipMenu>
+          </Tooltip>
+          {comments.pageInfo.startCursor &&
+            <CommentsContainer>
+              <CommentsTitle>
+                Comments
+              </CommentsTitle>
+              {comments.edges.map(({ node }) =>
+                <Comment
+                  key={node.__id}
+                  comment={node}
+                />
+              )}
+            </CommentsContainer>
+          }
           <AddComment
             mode={commentMode}
             handleBlur={this._handleBlur}
           />
-        </div>
-      </div>
+        </InfoContainer>
+      </Container>
     )
   }
   _openMenuPanel = () => {
@@ -144,6 +137,9 @@ const FragmentContainer = createFragmentContainer(Post, graphql`
     description
     imageUrl
     siteUrl
+    postedBy {
+      name
+    }
     comments(
       last: 100,
       orderBy: createdAt_DESC
@@ -161,3 +157,67 @@ const FragmentContainer = createFragmentContainer(Post, graphql`
 `)
 
 export default withRouter(FragmentContainer)
+
+const Dim = css`
+  opacity: 1;
+  transition: opacity .15s ease-in;
+  cursor: pointer;
+  &:hover,
+  &:focus {
+    opacity: .5;
+    transition: opacity .15s ease-in;
+  }
+`,
+Input = styled.input`
+  width: 100%;
+  padding: 1rem;
+  margin-top: 1rem;
+`,
+Container = styled.div`
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, .05);
+  margin: 1rem;
+`,
+ImgContainer = styled.div`
+  width: 100%;
+  background-size: cover;
+  background-image: ${props => props.url && 'url(' + props.url + ')'};
+  padding-bottom: 100%;
+  ${Dim}
+`,
+InfoContainer = styled.div`
+  padding-top: 1rem;
+  position: relative;
+`,
+VertOptionContainer = styled.div`
+  float: right;
+  cursor: pointer;
+  color: #aaa;
+  padding-right: .25rem;
+`,
+Tooltip = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: white;
+  outline: 0;
+  display: ${props => props.menu ? 'inline-block' : 'none'};
+  margin-top: 1px;
+  margin-right: -15px;
+`,
+TooltipMenu = styled.div`
+  color: ${props => props.comment ? '#aaa' : 'red'};
+  font-size: .875rem;
+  text-align: right;
+  padding: .25rem .5rem;
+  cursor: pointer;
+  ${Dim}
+`,
+CommentsContainer = styled.div`
+  width: 100%;
+`,
+CommentsTitle = styled.p`
+  color: #aaa;
+  font-weight: bold;
+  font-size: .875rem;
+`

@@ -7,6 +7,7 @@ import environment from '../Environment'
 import ListPage from './ListPage'
 import Loading from '../assets/images/loading.gif'
 import { GC_USER_ID } from '../constants'
+import styled from 'styled-components'
 
 const HomeAllPostQuery = graphql`
   query HomeAllPostQuery($id: ID) {
@@ -31,12 +32,12 @@ class Home extends PureComponent {
             return <ListPage viewer={props.viewer} />
           }
           return (
-            <div className='w-100 pa4 flex justify-center'>
+            <Wrapper>
               <img
                 src={Loading}
                 alt="Loading..."
               />
-            </div>
+            </Wrapper>
           )
         }}
       />
@@ -45,3 +46,10 @@ class Home extends PureComponent {
 }
 
 export default Home;
+
+const Wrapper = styled.div`
+  width: 100%;
+  padding: 2rem;
+  justify-content: center;
+  display: flex;
+`
