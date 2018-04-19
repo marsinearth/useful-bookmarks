@@ -19,7 +19,6 @@ export type Comment_comment = {|
   |},
   +commentedPost: ?{|
     +id: string,
-    +description: string,
   |},
   +$refType: Comment_comment$ref,
 |};
@@ -77,18 +76,11 @@ return {
       "concreteType": "Post",
       "plural": false,
       "selections": [
-        v0,
-        {
-          "kind": "ScalarField",
-          "alias": null,
-          "name": "description",
-          "args": null,
-          "storageKey": null
-        }
+        v0
       ]
     }
   ]
 };
 })();
-(node/*: any*/).hash = '28551b7e2ff8ba3745e3c07eddae701f';
+(node/*: any*/).hash = '8bc781a29aec9412dbc4d0d66f24403d';
 module.exports = node;

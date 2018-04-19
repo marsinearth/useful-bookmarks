@@ -4,31 +4,11 @@ import {
   graphql
 } from 'react-relay'
 import DeletePostMutation from '../mutations/DeletePostMutation'
-import { withRouter } from 'react-router-dom'
+import CreateComment from './CreateComment'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faEllipsisV from '@fortawesome/fontawesome-free-solid/faEllipsisV'
-import AnimateHeight from 'react-animate-height'
 import Comment from './Comment'
 import styled, { css } from 'styled-components'
-
-//let's practice the new context with commenting theme!!!
-class AddComment extends PureComponent {
-  render(){
-    const { mode, handleBlur } = this.props
-    return (
-      <AnimateHeight
-        duration={500}
-        height={mode ? 'auto' : 0}
-      >
-        <Input
-          type='text'
-          placeholder='Add Comment'
-          onBlur={handleBlur}
-        />
-      </AnimateHeight>
-    )
-  }
-}
 
 class Post extends PureComponent {
   constructor(props){
@@ -40,11 +20,17 @@ class Post extends PureComponent {
     this.optionTooltip = createRef()
   }
   render() {
-    const { description, imageUrl, siteUrl, postedBy, comments } = this.props.post,
+    const { id, description, imageUrl, siteUrl, postedBy, comments } = this.props.post,
     { menu, commentMode } = this.state,
-    userName = postedBy && postedBy.name
-    console.log('userName: ', userName)
-    console.log('comments: ', comments)
+    viewer = this.props.viewer,
+    viewerId = viewer && viewer.id,
+    userInfo = viewer && viewer.User,
+    userId = userInfo && userInfo.id,
+    userName = userInfo && userInfo.name,
+    posterId = postedBy && postedBy.id,
+    posterAuth = posterId === userId,
+    vertOptionIcon = <FontAwesomeIcon icon={faEllipsisV}/>
+
     return (
       <Container>
         <a
@@ -56,12 +42,9 @@ class Post extends PureComponent {
         </a>
         <InfoContainer>
           {description}
-          {userName &&
+          {userId &&
             <VertOptionContainer onClick={this._openMenuPanel}>
-              <FontAwesomeIcon
-                icon={faEllipsisV}
-                pull='right'
-              />
+              {vertOptionIcon}
             </VertOptionContainer>
           }
           <Tooltip
@@ -73,11 +56,13 @@ class Post extends PureComponent {
             <TooltipMenu comment onClick={this._addComment}>
               + Comment
             </TooltipMenu>
-            <TooltipMenu onClick={this._handleDelete}>
-              Delete
-            </TooltipMenu>
+            {posterAuth &&
+              <TooltipMenu onClick={this._handleDelete}>
+                Delete
+              </TooltipMenu>
+            }
           </Tooltip>
-          {comments.pageInfo.startCursor &&
+          {comments.edges && comments.edges.length > 0 &&
             <CommentsContainer>
               <CommentsTitle>
                 Comments
@@ -86,12 +71,18 @@ class Post extends PureComponent {
                 <Comment
                   key={node.__id}
                   comment={node}
+                  postId={id}
+                  viewer={viewer}
+                  vertOptionIcon={vertOptionIcon}
                 />
               )}
             </CommentsContainer>
           }
-          <AddComment
+          <CreateComment
             mode={commentMode}
+            commentedPostId={id}
+            viewerId={viewerId}
+            userName={userName}
             handleBlur={this._handleBlur}
           />
         </InfoContainer>
@@ -104,17 +95,12 @@ class Post extends PureComponent {
     })
   }
   _handleBlur = e => {
-    const target = e.target || e.srcElement,
-    tagName = target && target.tagName
-    let stateObj = {}
-    switch(tagName) {
-      case 'INPUT':
-        stateObj['commentMode'] = false
-        break
-      default:
-        stateObj['menu'] = false
-        break
-    }
+    let target = e, stateObj = {}
+    if(e.target) target = e.target || e.srcElement
+    const tagName = target && target.tagName
+    if(tagName === 'INPUT') stateObj['commentMode'] = false
+    else stateObj['menu'] = false
+
     this.setState(stateObj)
   }
   _addComment = () => {
@@ -128,9 +114,14 @@ class Post extends PureComponent {
   }
 }
 
-const FragmentContainer = createFragmentContainer(Post, graphql`
+export default createFragmentContainer(Post, graphql`
   fragment Post_viewer on Viewer {
+    ...Comment_viewer
     id
+    User(id: $id) {
+      id
+      name
+    }
   }
   fragment Post_post on Post {
     id
@@ -138,11 +129,12 @@ const FragmentContainer = createFragmentContainer(Post, graphql`
     imageUrl
     siteUrl
     postedBy {
+      id
       name
     }
     comments(
       last: 100,
-      orderBy: createdAt_DESC
+      orderBy: createdAt_ASC
     ) @connection(
       key: "Post_comments",
       filters: []
@@ -156,8 +148,6 @@ const FragmentContainer = createFragmentContainer(Post, graphql`
   }
 `)
 
-export default withRouter(FragmentContainer)
-
 const Dim = css`
   opacity: 1;
   transition: opacity .15s ease-in;
@@ -167,11 +157,6 @@ const Dim = css`
     opacity: .5;
     transition: opacity .15s ease-in;
   }
-`,
-Input = styled.input`
-  width: 100%;
-  padding: 1rem;
-  margin-top: 1rem;
 `,
 Container = styled.div`
   padding: 1rem;
@@ -193,24 +178,28 @@ VertOptionContainer = styled.div`
   float: right;
   cursor: pointer;
   color: #aaa;
-  padding-right: .25rem;
+  text-align: center;
+  width: 1rem;
 `,
 Tooltip = styled.div`
   position: absolute;
   top: 0;
   right: 0;
+  height: 3rem;
   background-color: white;
   outline: 0;
-  display: ${props => props.menu ? 'inline-block' : 'none'};
+  display: ${props => props.menu ? 'flex' : 'none'};
+  flex-flow: column;
+  align-items: flex-end;
+  justify-content: center;
   margin-top: 1px;
   margin-right: -15px;
 `,
 TooltipMenu = styled.div`
   color: ${props => props.comment ? '#aaa' : 'red'};
   font-size: .875rem;
-  text-align: right;
   padding: .25rem .5rem;
-  cursor: pointer;
+  vertical-align: middle;
   ${Dim}
 `,
 CommentsContainer = styled.div`

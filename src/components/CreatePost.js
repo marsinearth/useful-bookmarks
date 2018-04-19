@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { withRouter, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import CreatePostMutation from '../mutations/CreatePostMutation'
 import { QueryRenderer, graphql } from 'react-relay'
 import environment from '../Environment'
@@ -8,19 +8,36 @@ import DefaultImg from '../assets/images/default.jpeg'
 import { GC_USER_ID } from '../constants'
 import styled, { css } from 'styled-components'
 
-const CreatePageViewerQuery = graphql`
-  query CreatePageViewerQuery {
+const CreatePostViewerQuery = graphql`
+  query CreatePostViewerQuery {
     viewer {
-      id
+      id,
+      allPosts(
+        last: 100,
+        orderBy: createdAt_DESC
+      ) @connection(
+        key: "ListPage_allPosts",
+        filters: []
+      ) {
+        edges {
+          node {
+            id
+          }
+        }
+      }
     }
   }
 `
 
-class CreatePage extends PureComponent {
+class CreatePost extends PureComponent {
   state = {
     description: '',
     imageUrl: '',
     siteUrl: ''
+  }
+  componentDidMount(){
+    const userId = localStorage.getItem(GC_USER_ID)
+    if(!userId) this.props.history.replace('/')
   }
   render() {
     const { description, imageUrl, siteUrl } = this.state
@@ -28,7 +45,7 @@ class CreatePage extends PureComponent {
     return (
       <QueryRenderer
         environment={environment}
-        query={CreatePageViewerQuery}
+        query={CreatePostViewerQuery}
         render={({error, props}) => {
           if (error) {
             return <div>{error.message}</div>
@@ -97,14 +114,12 @@ class CreatePage extends PureComponent {
       siteUrl,
       postedById,
       viewerId,
-      () => {
-        this.props.history.replace('/')
-      }
+      () => this.props.history.replace('/')
     )
   }
 }
 
-export default withRouter(CreatePage)
+export default CreatePost
 
 const Dim = css`
   opacity: 1;
@@ -130,6 +145,7 @@ Input = styled.input`
   padding: 1rem;
   margin-top: .5rem;
   margin-bottom: .5rem;
+  box-sizing: border-box;
 `,
 Img = styled.img`
   width: 100%;

@@ -6,17 +6,17 @@ import { ConnectionHandler } from 'relay-runtime'
 import environment from '../Environment'
 
 const mutation = graphql`
-  mutation DeletePostMutation($input: DeletePostInput!) {
-    deletePost(input: $input) {
+  mutation DeleteCommentMutation($input: DeleteCommentInput!) {
+    deleteComment(input: $input) {
       deletedId
     }
   }
 `
 
-export default function DeletePostMutation(postId, viewerId) {
+export default function DeleteCommentMutation(commentId, postId) {
   const variables = {
     input: {
-      id: postId,
+      id: commentId,
       clientMutationId: ""
     },
   }
@@ -27,10 +27,11 @@ export default function DeletePostMutation(postId, viewerId) {
       variables,
       onError: err => console.error(err),
       updater: proxyStore => {
-        const deletePostField = proxyStore.getRootField('deletePost'),
+        const deletePostField = proxyStore.getRootField('deleteComment'),
         deletedId = deletePostField.getValue('deletedId'),
-        viewerProxy = proxyStore.get(viewerId),
-        connection = ConnectionHandler.getConnection(viewerProxy, 'ListPage_allPosts')
+        postProxy = proxyStore.get(postId),
+        connection = ConnectionHandler.getConnection(postProxy, 'Post_comments')
+        
         if (connection) ConnectionHandler.deleteNode(connection, deletedId)
       },
     },

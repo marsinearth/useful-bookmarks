@@ -18,6 +18,14 @@ const mutation = graphql`
   }
 `
 
+function sharedUpdater(store, viewerId, newPost) {
+  const viewerProxy = store.get(viewerId),
+  connection = ConnectionHandler.getConnection(viewerProxy, "ListPage_allPosts"),
+  newEdge = ConnectionHandler.createEdge(store, connection, newPost, 'PostEdge')
+
+  if (connection) ConnectionHandler.insertEdgeAfter(connection, newEdge)
+}
+
 let tempID = 0
 
 export default function CreatePostMutation(
@@ -37,14 +45,13 @@ export default function CreatePostMutation(
       clientMutationId: ""
     },
   }
-
   commitMutation(
     environment,
     {
       mutation,
       variables,
       onCompleted: res => {
-        console.log(res, environment)
+        console.log('res: ', res)
         callback()
       },
       onError: err => console.error(err),
@@ -58,22 +65,14 @@ export default function CreatePostMutation(
         newPost.setValue(imageUrl, 'imageUrl')
         newPost.setValue(siteUrl, 'siteUrl')
       // 2 - add `newPost` to the store
-        const viewerProxy = proxyStore.get(viewerId),
-        connection = ConnectionHandler.getConnection(viewerProxy, 'ListPage_allPosts')
-        if (connection) {
-          ConnectionHandler.insertEdgeAfter(connection, newPost)
-        }
+        sharedUpdater(proxyStore, viewerId, newPost)
       },
       updater: proxyStore => {
         // 1 - retrieve the `newPost` from the server response
         const createPostField = proxyStore.getRootField('createPost'),
-        newPost = createPostField.getLinkedRecord('post'),
+        newPost = createPostField.getLinkedRecord('post')
       // 2 - add `newPost` to the store
-        viewerProxy = proxyStore.get(viewerId),
-        connection = ConnectionHandler.getConnection(viewerProxy, 'ListPage_allPosts')
-        if (connection) {
-          ConnectionHandler.insertEdgeAfter(connection, newPost)
-        }
+        sharedUpdater(proxyStore, viewerId, newPost)
       },
 
     },

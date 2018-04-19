@@ -8,26 +8,21 @@
 
 /*::
 import type { ConcreteFragment } from 'relay-runtime';
-type Comment_comment$ref = any;
 import type { FragmentReference } from 'relay-runtime';
-declare export opaque type Post_post$ref: FragmentReference;
-export type Post_post = {|
+declare export opaque type Comment_viewer$ref: FragmentReference;
+export type Comment_viewer = {|
   +id: string,
-  +description: string,
-  +imageUrl: string,
-  +siteUrl: string,
-  +postedBy: ?{|
+  +User: ?{|
     +id: string,
-    +name: string,
   |},
-  +comments: ?{|
+  +allComments: {|
     +edges: ?$ReadOnlyArray<?{|
       +node: {|
-        +$fragmentRefs: Comment_comment$ref,
+        +id: string,
       |},
     |}>,
   |},
-  +$refType: Post_post$ref,
+  +$refType: Comment_viewer$ref,
 |};
 */
 
@@ -42,8 +37,8 @@ var v0 = {
 };
 return {
   "kind": "Fragment",
-  "name": "Post_post",
-  "type": "Post",
+  "name": "Comment_viewer",
+  "type": "Viewer",
   "metadata": {
     "connection": [
       {
@@ -51,58 +46,43 @@ return {
         "cursor": null,
         "direction": "backward",
         "path": [
-          "comments"
+          "allComments"
         ]
       }
     ]
   },
-  "argumentDefinitions": [],
+  "argumentDefinitions": [
+    {
+      "kind": "RootArgument",
+      "name": "id",
+      "type": "ID"
+    }
+  ],
   "selections": [
     v0,
     {
-      "kind": "ScalarField",
-      "alias": null,
-      "name": "description",
-      "args": null,
-      "storageKey": null
-    },
-    {
-      "kind": "ScalarField",
-      "alias": null,
-      "name": "imageUrl",
-      "args": null,
-      "storageKey": null
-    },
-    {
-      "kind": "ScalarField",
-      "alias": null,
-      "name": "siteUrl",
-      "args": null,
-      "storageKey": null
-    },
-    {
       "kind": "LinkedField",
       "alias": null,
-      "name": "postedBy",
+      "name": "User",
       "storageKey": null,
-      "args": null,
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "id",
+          "variableName": "id",
+          "type": "ID"
+        }
+      ],
       "concreteType": "User",
       "plural": false,
       "selections": [
-        v0,
-        {
-          "kind": "ScalarField",
-          "alias": null,
-          "name": "name",
-          "args": null,
-          "storageKey": null
-        }
+        v0
       ]
     },
     {
       "kind": "LinkedField",
-      "alias": "comments",
-      "name": "__Post_comments_connection",
+      "alias": "allComments",
+      "name": "__Comment_allComments_connection",
       "storageKey": null,
       "args": null,
       "concreteType": "CommentConnection",
@@ -126,11 +106,7 @@ return {
               "concreteType": "Comment",
               "plural": false,
               "selections": [
-                {
-                  "kind": "FragmentSpread",
-                  "name": "Comment_comment",
-                  "args": null
-                },
+                v0,
                 {
                   "kind": "ScalarField",
                   "alias": null,
@@ -179,5 +155,5 @@ return {
   ]
 };
 })();
-(node/*: any*/).hash = 'ace18e3b0fdedf164e156f0c7379729a';
+(node/*: any*/).hash = '6d3e389c5ab4f3488f08266d201caebe';
 module.exports = node;

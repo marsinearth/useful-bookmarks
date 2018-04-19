@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 6de9173a9a6b0df0332718bd93a4fb53
+ * @relayHash 56459134f40d834c8dd3d98549d43052
  */
 
 /* eslint-disable */
@@ -54,7 +54,12 @@ fragment ListPage_viewer on Viewer {
 }
 
 fragment Post_viewer on Viewer {
+  ...Comment_viewer
   id
+  User(id: $id) {
+    id
+    name
+  }
 }
 
 fragment Post_post on Post {
@@ -63,10 +68,10 @@ fragment Post_post on Post {
   imageUrl
   siteUrl
   postedBy {
-    name
     id
+    name
   }
-  comments(last: 100, orderBy: createdAt_DESC) {
+  comments(last: 100, orderBy: createdAt_ASC) {
     edges {
       node {
         ...Comment_comment
@@ -91,7 +96,26 @@ fragment Comment_comment on Comment {
   }
   commentedPost {
     id
-    description
+  }
+}
+
+fragment Comment_viewer on Viewer {
+  id
+  User(id: $id) {
+    id
+  }
+  allComments(last: 100, orderBy: createdAt_ASC) {
+    edges {
+      node {
+        id
+        __typename
+      }
+      cursor
+    }
+    pageInfo {
+      hasPreviousPage
+      startCursor
+    }
   }
 }
 */
@@ -112,45 +136,46 @@ v1 = {
   "args": null,
   "storageKey": null
 },
-v2 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "name",
-  "args": null,
-  "storageKey": null
-},
-v3 = [
-  v2,
-  v1
+v2 = [
+  v1,
+  {
+    "kind": "ScalarField",
+    "alias": null,
+    "name": "name",
+    "args": null,
+    "storageKey": null
+  }
 ],
-v4 = {
+v3 = {
   "kind": "Literal",
   "name": "last",
   "value": 100,
   "type": "Int"
 },
+v4 = [
+  v3,
+  {
+    "kind": "Literal",
+    "name": "orderBy",
+    "value": "createdAt_ASC",
+    "type": "CommentOrderBy"
+  }
+],
 v5 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "description",
-  "args": null,
-  "storageKey": null
-},
-v6 = {
   "kind": "ScalarField",
   "alias": null,
   "name": "__typename",
   "args": null,
   "storageKey": null
 },
-v7 = {
+v6 = {
   "kind": "ScalarField",
   "alias": null,
   "name": "cursor",
   "args": null,
   "storageKey": null
 },
-v8 = {
+v7 = {
   "kind": "LinkedField",
   "alias": null,
   "name": "pageInfo",
@@ -180,7 +205,7 @@ return {
   "operationKind": "query",
   "name": "HomeAllPostQuery",
   "id": null,
-  "text": "query HomeAllPostQuery(\n  $id: ID\n) {\n  viewer {\n    ...ListPage_viewer\n    id\n  }\n}\n\nfragment ListPage_viewer on Viewer {\n  ...Post_viewer\n  User(id: $id) {\n    name\n    id\n  }\n  allPosts(last: 100, orderBy: createdAt_DESC) {\n    edges {\n      node {\n        ...Post_post\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasPreviousPage\n      startCursor\n    }\n  }\n}\n\nfragment Post_viewer on Viewer {\n  id\n}\n\nfragment Post_post on Post {\n  id\n  description\n  imageUrl\n  siteUrl\n  postedBy {\n    name\n    id\n  }\n  comments(last: 100, orderBy: createdAt_DESC) {\n    edges {\n      node {\n        ...Comment_comment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasPreviousPage\n      startCursor\n    }\n  }\n}\n\nfragment Comment_comment on Comment {\n  id\n  content\n  commentedBy {\n    id\n    name\n  }\n  commentedPost {\n    id\n    description\n  }\n}\n",
+  "text": "query HomeAllPostQuery(\n  $id: ID\n) {\n  viewer {\n    ...ListPage_viewer\n    id\n  }\n}\n\nfragment ListPage_viewer on Viewer {\n  ...Post_viewer\n  User(id: $id) {\n    name\n    id\n  }\n  allPosts(last: 100, orderBy: createdAt_DESC) {\n    edges {\n      node {\n        ...Post_post\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasPreviousPage\n      startCursor\n    }\n  }\n}\n\nfragment Post_viewer on Viewer {\n  ...Comment_viewer\n  id\n  User(id: $id) {\n    id\n    name\n  }\n}\n\nfragment Post_post on Post {\n  id\n  description\n  imageUrl\n  siteUrl\n  postedBy {\n    id\n    name\n  }\n  comments(last: 100, orderBy: createdAt_ASC) {\n    edges {\n      node {\n        ...Comment_comment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasPreviousPage\n      startCursor\n    }\n  }\n}\n\nfragment Comment_comment on Comment {\n  id\n  content\n  commentedBy {\n    id\n    name\n  }\n  commentedPost {\n    id\n  }\n}\n\nfragment Comment_viewer on Viewer {\n  id\n  User(id: $id) {\n    id\n  }\n  allComments(last: 100, orderBy: createdAt_ASC) {\n    edges {\n      node {\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasPreviousPage\n      startCursor\n    }\n  }\n}\n",
   "metadata": {},
   "fragment": {
     "kind": "Fragment",
@@ -237,7 +262,53 @@ return {
             ],
             "concreteType": "User",
             "plural": false,
-            "selections": v3
+            "selections": v2
+          },
+          {
+            "kind": "LinkedField",
+            "alias": null,
+            "name": "allComments",
+            "storageKey": "allComments(last:100,orderBy:\"createdAt_ASC\")",
+            "args": v4,
+            "concreteType": "CommentConnection",
+            "plural": false,
+            "selections": [
+              {
+                "kind": "LinkedField",
+                "alias": null,
+                "name": "edges",
+                "storageKey": null,
+                "args": null,
+                "concreteType": "CommentEdge",
+                "plural": true,
+                "selections": [
+                  {
+                    "kind": "LinkedField",
+                    "alias": null,
+                    "name": "node",
+                    "storageKey": null,
+                    "args": null,
+                    "concreteType": "Comment",
+                    "plural": false,
+                    "selections": [
+                      v1,
+                      v5
+                    ]
+                  },
+                  v6
+                ]
+              },
+              v7
+            ]
+          },
+          {
+            "kind": "LinkedHandle",
+            "alias": null,
+            "name": "allComments",
+            "args": v4,
+            "handle": "connection",
+            "key": "Comment_allComments",
+            "filters": []
           },
           {
             "kind": "LinkedField",
@@ -245,7 +316,7 @@ return {
             "name": "allPosts",
             "storageKey": "allPosts(last:100,orderBy:\"createdAt_DESC\")",
             "args": [
-              v4,
+              v3,
               {
                 "kind": "Literal",
                 "name": "orderBy",
@@ -275,7 +346,13 @@ return {
                     "plural": false,
                     "selections": [
                       v1,
-                      v5,
+                      {
+                        "kind": "ScalarField",
+                        "alias": null,
+                        "name": "description",
+                        "args": null,
+                        "storageKey": null
+                      },
                       {
                         "kind": "ScalarField",
                         "alias": null,
@@ -298,22 +375,14 @@ return {
                         "args": null,
                         "concreteType": "User",
                         "plural": false,
-                        "selections": v3
+                        "selections": v2
                       },
                       {
                         "kind": "LinkedField",
                         "alias": null,
                         "name": "comments",
-                        "storageKey": "comments(last:100,orderBy:\"createdAt_DESC\")",
-                        "args": [
-                          v4,
-                          {
-                            "kind": "Literal",
-                            "name": "orderBy",
-                            "value": "createdAt_DESC",
-                            "type": "CommentOrderBy"
-                          }
-                        ],
+                        "storageKey": "comments(last:100,orderBy:\"createdAt_ASC\")",
+                        "args": v4,
                         "concreteType": "CommentConnection",
                         "plural": false,
                         "selections": [
@@ -351,10 +420,7 @@ return {
                                     "args": null,
                                     "concreteType": "User",
                                     "plural": false,
-                                    "selections": [
-                                      v1,
-                                      v2
-                                    ]
+                                    "selections": v2
                                   },
                                   {
                                     "kind": "LinkedField",
@@ -365,43 +431,34 @@ return {
                                     "concreteType": "Post",
                                     "plural": false,
                                     "selections": [
-                                      v1,
-                                      v5
+                                      v1
                                     ]
                                   },
-                                  v6
+                                  v5
                                 ]
                               },
-                              v7
+                              v6
                             ]
                           },
-                          v8
+                          v7
                         ]
                       },
                       {
                         "kind": "LinkedHandle",
                         "alias": null,
                         "name": "comments",
-                        "args": [
-                          v4,
-                          {
-                            "kind": "Literal",
-                            "name": "orderBy",
-                            "value": "createdAt_DESC",
-                            "type": "CommentOrderBy"
-                          }
-                        ],
+                        "args": v4,
                         "handle": "connection",
                         "key": "Post_comments",
                         "filters": []
                       },
-                      v6
+                      v5
                     ]
                   },
-                  v7
+                  v6
                 ]
               },
-              v8
+              v7
             ]
           },
           {
@@ -409,7 +466,7 @@ return {
             "alias": null,
             "name": "allPosts",
             "args": [
-              v4,
+              v3,
               {
                 "kind": "Literal",
                 "name": "orderBy",

@@ -121,6 +121,7 @@ Input = styled.input`
   padding: 1rem;
   margin-top: .5rem;
   margin-bottom: .5rem;
+  box-sizing: border-box;
 `,
 LinkContainer = styled.div`
   text-align: center;
