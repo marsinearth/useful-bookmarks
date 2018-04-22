@@ -26,12 +26,6 @@ class Post extends PureComponent {
     }
     this.optionTooltip = createRef()
   }
-  componentDidMount() {
-    const { comments } = this.props.post,
-    commentsPageInfo = comments && comments.pageInfo,
-    endCursor = commentsPageInfo && commentsPageInfo.endCursor
-    this.setState({ endCursor })
-  }
   static getDerivedStateFromProps(nextProps, prevState) {
     const { comments } = nextProps.post,
     commentsPageInfo = comments && comments.pageInfo,
