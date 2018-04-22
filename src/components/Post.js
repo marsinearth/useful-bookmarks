@@ -1,35 +1,46 @@
 import React, { createRef, PureComponent } from 'react'
 import {
-  createFragmentContainer,
+  createPaginationContainer,
   graphql
 } from 'react-relay'
 import DeletePostMutation from '../mutations/DeletePostMutation'
 import CreateComment from './CreateComment'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faEllipsisV from '@fortawesome/fontawesome-free-solid/faEllipsisV'
+import faCaretDown from '@fortawesome/fontawesome-free-solid/faCaretDown'
 import Comment from './Comment'
+import Loading from '../assets/images/loading.gif'
 import styled, { css } from 'styled-components'
+import { ITEMS_PER_PAGE } from '../constants'
+
+const vertOptionIcon = <FontAwesomeIcon icon={faEllipsisV}/>
 
 class Post extends PureComponent {
   constructor(props){
     super(props)
     this.state = {
       menu: false,
-      commentMode: false
+      commentMode: false,
+      commentLoading: false
     }
     this.optionTooltip = createRef()
   }
+  componentDidUpdate(prevProps, prevState) {
+    if(this.props.post.comments.pageInfo.endCursor
+      !== prevProps.post.comments.pageInfo.endCursor
+    ) this.setState({ commentLoading: false })
+  }
   render() {
     const { id, description, imageUrl, siteUrl, postedBy, comments } = this.props.post,
-    { menu, commentMode } = this.state,
+    { menu, commentMode, commentLoading } = this.state,
     viewer = this.props.viewer,
+    { relay } = this.props,
     viewerId = viewer && viewer.id,
     userInfo = viewer && viewer.User,
     userId = userInfo && userInfo.id,
     userName = userInfo && userInfo.name,
     posterId = postedBy && postedBy.id,
-    posterAuth = posterId === userId,
-    vertOptionIcon = <FontAwesomeIcon icon={faEllipsisV}/>
+    posterAuth = posterId === userId
 
     return (
       <Container>
@@ -64,10 +75,16 @@ class Post extends PureComponent {
           </Tooltip>
           {comments.edges && comments.edges.length > 0 &&
             <CommentsContainer>
-              <CommentsTitle>
-                Comments
-              </CommentsTitle>
-              {comments.edges.map(({ node }) =>
+              <p>Comments</p>
+              {commentLoading &&
+                <CommentsLoading>
+                  <img
+                    src={Loading}
+                    alt="Loading..."
+                  />
+                </CommentsLoading>
+              }
+              {!commentLoading && comments.edges.map(({ node }) =>
                 <Comment
                   key={node.__id}
                   comment={node}
@@ -76,6 +93,14 @@ class Post extends PureComponent {
                   vertOptionIcon={vertOptionIcon}
                 />
               )}
+              {relay.hasMore() &&
+                <CommentMoreContainer onClick={this._loadMore}>
+                  <div>
+                    <span>More </span>
+                    <FontAwesomeIcon icon={faCaretDown}/>
+                  </div>
+                </CommentMoreContainer>
+              }
             </CommentsContainer>
           }
           <CreateComment
@@ -88,6 +113,11 @@ class Post extends PureComponent {
         </InfoContainer>
       </Container>
     )
+  }
+  _loadMore = () => {
+    const { relay } = this.props
+    if(!relay.hasMore()) return
+    this.setState({ CommentsLoading: true }, () => relay.loadMore(ITEMS_PER_PAGE))
   }
   _openMenuPanel = () => {
     this.setState({ menu: true }, () => {
@@ -114,39 +144,77 @@ class Post extends PureComponent {
   }
 }
 
-export default createFragmentContainer(Post, graphql`
-  fragment Post_viewer on Viewer {
-    ...Comment_viewer
-    id
-    User(id: $id) {
-      id
-      name
-    }
-  }
-  fragment Post_post on Post {
-    id
-    description
-    imageUrl
-    siteUrl
-    postedBy {
-      id
-      name
-    }
-    comments(
-      last: 100,
-      orderBy: createdAt_ASC
-    ) @connection(
-      key: "Post_comments",
-      filters: []
-    ) {
-      edges {
-        node {
-          ...Comment_comment
+export default createPaginationContainer(
+  Post,
+  {
+    viewer: graphql`
+      fragment Post_viewer on Viewer {
+        ...Comment_viewer
+        id
+        User(id: $id) {
+          id
+          name
         }
+      }
+    `,
+    post: graphql`
+      fragment Post_post on Post {
+        id
+        description
+        imageUrl
+        siteUrl
+        postedBy {
+          id
+          name
+        }
+        comments(
+          first: $count,
+          after: $cursor,
+          orderBy: createdAt_ASC
+        ) @connection(
+          key: "Post_comments",
+          filters: []
+        ) {
+          edges {
+            node {
+              ...Comment_comment
+            }
+          }
+          pageInfo {
+            hasNextPage,
+            endCursor
+          }
+        }
+      }
+    `
+  },
+  {
+    direction: 'forward',
+    query: graphql`
+      query PostPaginationQuery(
+        $count: Int!
+        $cursor: String
+        $postID: ID!
+      ) {
+        viewer {
+          Post(id: $postID) {
+              ...Post_post
+          }
+        }
+      }
+    `,
+    getConnectionFromProps(props) {
+      return props.post && props.post.comments
+    },
+    getVariables(props, { count, cursor }) {
+      return {
+        count,
+        cursor,
+        postID: props.post.id
       }
     }
   }
-`)
+)
 
 const Dim = css`
   opacity: 1;
@@ -204,9 +272,43 @@ TooltipMenu = styled.div`
 `,
 CommentsContainer = styled.div`
   width: 100%;
+
+  p {
+    color: #aaa;
+    font-weight: bold;
+    font-size: .875rem;
+  }
 `,
-CommentsTitle = styled.p`
-  color: #aaa;
-  font-weight: bold;
-  font-size: .875rem;
+CommentsLoading = styled.div`
+  width: 100%;
+  padding: 2rem;
+  justify-content: center;
+  display: flex;
+  background-color: transparent;
+  box-sizing: border-box;
+
+  img {
+    width: 5rem;
+    height: 5rem;
+    mix-blend-mode: multiply;
+  }
+`,
+CommentMoreContainer = styled.div`
+  width: 100%;
+  text-align: center;
+
+  div {
+    width: 1rem;
+    color: #aaa;
+    cursor: pointer;
+
+    span {
+      font-size: .75rem;
+      vertical-align: text-top;
+    }
+
+    &:active {
+      color: #444;
+    }
+  }
 `

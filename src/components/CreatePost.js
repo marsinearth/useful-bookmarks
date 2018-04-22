@@ -52,7 +52,7 @@ class CreatePost extends PureComponent {
           } else if (props) {
             return (
               <Wrapper>
-                <InnerWrapper>
+                <div>
                   <Input
                     type='text'
                     value={description}
@@ -72,7 +72,7 @@ class CreatePost extends PureComponent {
                     onChange={(e) => this.setState({ siteUrl: e.target.value })}
                   />
                   {imageUrl &&
-                    <Img
+                    <img
                       src={imageUrl}
                       onError={e => e.target.src = DefaultImg}
                       alt={description}
@@ -88,7 +88,7 @@ class CreatePost extends PureComponent {
                       Cancel
                     </Link>
                  </LinkContainer>
-               </InnerWrapper>
+               </div>
              </Wrapper>
             )
           }
@@ -136,9 +136,16 @@ Wrapper = styled.div`
   padding: 2rem;
   justify-content: center;
   display: flex;
-`,
-InnerWrapper = styled.div`
-  max-width: 400px;
+
+  div {
+    max-width: 400px;
+
+    img {
+      width: 100%;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+  }
 `,
 Input = styled.input`
   width: 100%;
@@ -146,11 +153,6 @@ Input = styled.input`
   margin-top: .5rem;
   margin-bottom: .5rem;
   box-sizing: border-box;
-`,
-Img = styled.img`
-  width: 100%;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
 `,
 LinkContainer = styled.div`
   text-align: center;

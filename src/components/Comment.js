@@ -140,13 +140,13 @@ Container = styled.div`
   padding: .25rem .5rem;
   position: relative;
 `,
-Writer = styled.span`
+Content = styled.span`
+  color: #aaa;
+`,
+Writer = Content.extend`
   color: #999;
   font-weight: bold;
   margin-right: .5rem;
-`,
-Content = styled.span`
-  color: #aaa;
 `,
 VertOptionContainer = styled.div`
   float: right;
@@ -158,7 +158,7 @@ VertOptionContainer = styled.div`
 `,
 Tooltip = styled.div`
   position: absolute;
-  top: 0;
+  bottom: 0;
   right: 0;
   height: 1rem;
   background-color: white;
@@ -167,7 +167,7 @@ Tooltip = styled.div`
   flex-flow: column;
   align-items: flex-end;
   justify-content: center;
-  margin-top: 1px;
+  margin-bottom: 2px;
   margin-right: -10px;
 `,
 TooltipMenu = styled.div`

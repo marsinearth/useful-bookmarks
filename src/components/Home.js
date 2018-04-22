@@ -6,11 +6,11 @@ import {
 import environment from '../Environment'
 import ListPage from './ListPage'
 import Loading from '../assets/images/loading.gif'
-import { GC_USER_ID } from '../constants'
+import { GC_USER_ID, ITEMS_PER_PAGE } from '../constants'
 import styled from 'styled-components'
 
 const HomeAllPostQuery = graphql`
-  query HomeAllPostQuery($id: ID) {
+  query HomeAllPostQuery($count: Int!, $id: ID, $cursor: String) {
     viewer {
       ...ListPage_viewer
     }
@@ -24,7 +24,10 @@ class Home extends PureComponent {
       <QueryRenderer
         environment={environment}
         query={HomeAllPostQuery}
-        variables={{ id: userId }}
+        variables={{
+          id: userId,
+          count: ITEMS_PER_PAGE
+        }}
         render={({error, props}) => {
           if (error) {
             return <div>{error.message}</div>

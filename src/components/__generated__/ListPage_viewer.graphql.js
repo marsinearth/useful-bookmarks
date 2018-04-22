@@ -22,6 +22,10 @@ export type ListPage_viewer = {|
         +$fragmentRefs: Post_post$ref,
       |},
     |}>,
+    +pageInfo: {|
+      +hasNextPage: boolean,
+      +endCursor: ?string,
+    |},
   |},
   +$fragmentRefs: Post_viewer$ref,
   +$refType: ListPage_viewer$ref,
@@ -36,9 +40,9 @@ const node/*: ConcreteFragment*/ = {
   "metadata": {
     "connection": [
       {
-        "count": null,
-        "cursor": null,
-        "direction": "backward",
+        "count": "count",
+        "cursor": "cursor",
+        "direction": "forward",
         "path": [
           "allPosts"
         ]
@@ -50,6 +54,16 @@ const node/*: ConcreteFragment*/ = {
       "kind": "RootArgument",
       "name": "id",
       "type": "ID"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "count",
+      "type": "Int"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "cursor",
+      "type": "String"
     }
   ],
   "selections": [
@@ -145,14 +159,14 @@ const node/*: ConcreteFragment*/ = {
             {
               "kind": "ScalarField",
               "alias": null,
-              "name": "hasPreviousPage",
+              "name": "hasNextPage",
               "args": null,
               "storageKey": null
             },
             {
               "kind": "ScalarField",
               "alias": null,
-              "name": "startCursor",
+              "name": "endCursor",
               "args": null,
               "storageKey": null
             }
@@ -162,5 +176,5 @@ const node/*: ConcreteFragment*/ = {
     }
   ]
 };
-(node/*: any*/).hash = 'ae41f424298245b196c1fd18f2d52ffe';
+(node/*: any*/).hash = 'a83094fc02eb2f7b75a7282d33b6a370';
 module.exports = node;

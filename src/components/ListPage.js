@@ -1,15 +1,20 @@
 import React, { PureComponent } from 'react'
 import {
-  createFragmentContainer,
+  createPaginationContainer,
   graphql
 } from 'react-relay'
 import { Link } from 'react-router-dom'
 import Post from './Post'
 import styled, { css } from 'styled-components'
+import Loading from '../assets/images/loading.gif'
+import InfiniteScroll from 'react-infinite-scroller'
+import { GC_USER_ID, ITEMS_PER_PAGE } from '../constants'
+
+const userId = localStorage.getItem(GC_USER_ID)
 
 class ListPage extends PureComponent {
   render() {
-    const { viewer } = this.props,
+    const { viewer, relay } = this.props,
     userInfo = viewer.User,
     userName = userInfo && userInfo.name
 
@@ -23,7 +28,16 @@ class ListPage extends PureComponent {
         <StyledLink to={userName ? '/create' : '/login'}>
           + {userName ? 'New Post' : 'Sign In'}
         </StyledLink>
-        <InnerWrapper>
+        <InfiniteScroll
+          pageStart={0}
+          loadMore={this._loadMore}
+          hasMore={relay.hasMore()}
+          loader={
+            <PostsLoading key={0}>
+              <img src={Loading} alt="Loading..."/>
+            </PostsLoading>
+          }
+        >
           {viewer.allPosts.edges.map(({ node }) =>
             <Post
               key={node.__id}
@@ -31,33 +45,72 @@ class ListPage extends PureComponent {
               viewer={viewer}
             />
           )}
-        </InnerWrapper>
+        </InfiniteScroll>
       </Wrapper>
     )
   }
+  _loadMore = () => {
+    const { relay } = this.props
+    if(!relay.hasMore()) return
+    relay.loadMore(ITEMS_PER_PAGE)
+  }
 }
 
-export default createFragmentContainer(ListPage, graphql`
-  fragment ListPage_viewer on Viewer {
-    ...Post_viewer
-    User(id: $id) {
-      name
-    }
-    allPosts(
-      last: 100,
-      orderBy: createdAt_DESC
-    ) @connection(
-      key: "ListPage_allPosts",
-      filters: []
-    ) {
-      edges {
-        node {
-          ...Post_post
+export default createPaginationContainer(
+  ListPage,
+  {
+    viewer: graphql`
+      fragment ListPage_viewer on Viewer {
+        ...Post_viewer
+        User(id: $id) {
+          name
         }
+        allPosts(
+          first: $count,
+          after: $cursor,
+          orderBy: createdAt_DESC
+        ) @connection(
+          key: "ListPage_allPosts",
+          filters: []
+        ) {
+          edges {
+            node {
+              ...Post_post
+            }
+          }
+          pageInfo {
+            hasNextPage,
+            endCursor
+          }
+        }
+      }
+    `
+  },
+  {
+    direction: 'forward',
+    query: graphql`
+      query ListPagePaginationQuery(
+        $count: Int!
+        $cursor: String,
+        $id: ID
+      ) {
+        viewer {
+          ...ListPage_viewer
+        }
+      }
+    `,
+    getConnectionFromProps(props) {
+      return props.viewer && props.viewer.allPosts
+    },
+    getVariables(props, { count, cursor }) {
+      return {
+        count,
+        cursor,
+        id: userId
       }
     }
   }
-`)
+)
 
 const Decorated = css`
   position: fixed;
@@ -79,10 +132,10 @@ Wrapper = styled.div`
   width: 100%;
   justify-content: center;
   display: flex;
-`,
-InnerWrapper = styled.div`
-  width: 100%;
-  max-width: 400px;
+
+  div {
+    max-width: 400px;
+  }
 `,
 WelcomeUser = styled.div`
   left: 0;
@@ -94,4 +147,19 @@ StyledLink = styled(Link)`
   color: black;
   ${Dim}
   ${Decorated}
+`,
+PostsLoading = styled.div`
+  width: 100%;
+  max-width: 100%;
+  padding: 2rem;
+  justify-content: center;
+  display: flex;
+  background-color: transparent;
+  box-sizing: border-box;
+
+  img {
+    width: 5rem;
+    height: 5rem;
+    mix-blend-mode: multiply;
+  }
 `

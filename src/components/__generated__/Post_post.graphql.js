@@ -26,6 +26,10 @@ export type Post_post = {|
         +$fragmentRefs: Comment_comment$ref,
       |},
     |}>,
+    +pageInfo: {|
+      +hasNextPage: boolean,
+      +endCursor: ?string,
+    |},
   |},
   +$refType: Post_post$ref,
 |};
@@ -47,16 +51,27 @@ return {
   "metadata": {
     "connection": [
       {
-        "count": null,
-        "cursor": null,
-        "direction": "backward",
+        "count": "count",
+        "cursor": "cursor",
+        "direction": "forward",
         "path": [
           "comments"
         ]
       }
     ]
   },
-  "argumentDefinitions": [],
+  "argumentDefinitions": [
+    {
+      "kind": "RootArgument",
+      "name": "count",
+      "type": "Int"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "cursor",
+      "type": "String"
+    }
+  ],
   "selections": [
     v0,
     {
@@ -161,14 +176,14 @@ return {
             {
               "kind": "ScalarField",
               "alias": null,
-              "name": "hasPreviousPage",
+              "name": "hasNextPage",
               "args": null,
               "storageKey": null
             },
             {
               "kind": "ScalarField",
               "alias": null,
-              "name": "startCursor",
+              "name": "endCursor",
               "args": null,
               "storageKey": null
             }
@@ -179,5 +194,5 @@ return {
   ]
 };
 })();
-(node/*: any*/).hash = 'ace18e3b0fdedf164e156f0c7379729a';
+(node/*: any*/).hash = '1cf4a8af3db4d2fe4580f919e4096ea3';
 module.exports = node;
