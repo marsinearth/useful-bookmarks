@@ -21,20 +21,38 @@ class Post extends PureComponent {
     this.state = {
       menu: false,
       commentMode: false,
-      commentLoading: false
+      commentLoading: false,
+      endCursor: null
     }
     this.optionTooltip = createRef()
   }
+  componentDidMount() {
+    const { comments } = this.props.post,
+    commentsPageInfo = comments && comments.pageInfo,
+    endCursor = commentsPageInfo && commentsPageInfo.endCursor
+    this.setState({ endCursor })
+  }
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { comments } = nextProps.post,
+    commentsPageInfo = comments && comments.pageInfo,
+    endCursor = commentsPageInfo && commentsPageInfo.endCursor
+    if(endCursor !== prevState.endCursor)
+      return {
+        endCursor,
+        commentLoading: false
+      }
+    return null
+  }
+
   componentDidUpdate(prevProps, prevState) {
     if(this.props.post.comments.pageInfo.endCursor
       !== prevProps.post.comments.pageInfo.endCursor
     ) this.setState({ commentLoading: false })
   }
   render() {
-    const { id, description, imageUrl, siteUrl, postedBy, comments } = this.props.post,
+    const { post, viewer, relay } = this.props,
     { menu, commentMode, commentLoading } = this.state,
-    viewer = this.props.viewer,
-    { relay } = this.props,
+    { id, description, imageUrl, siteUrl, postedBy, comments } = post,
     viewerId = viewer && viewer.id,
     userInfo = viewer && viewer.User,
     userId = userInfo && userInfo.id,
@@ -117,7 +135,9 @@ class Post extends PureComponent {
   _loadMore = () => {
     const { relay } = this.props
     if(!relay.hasMore()) return
-    this.setState({ CommentsLoading: true }, () => relay.loadMore(ITEMS_PER_PAGE))
+    this.setState({ CommentsLoading: true }, () =>
+      relay.loadMore(ITEMS_PER_PAGE)
+    )
   }
   _openMenuPanel = () => {
     this.setState({ menu: true }, () => {
@@ -298,7 +318,6 @@ CommentMoreContainer = styled.div`
   text-align: center;
 
   div {
-    width: 1rem;
     color: #aaa;
     cursor: pointer;
 
