@@ -43,12 +43,6 @@ class Post extends PureComponent {
       }
     return null
   }
-
-  componentDidUpdate(prevProps, prevState) {
-    if(this.props.post.comments.pageInfo.endCursor
-      !== prevProps.post.comments.pageInfo.endCursor
-    ) this.setState({ commentLoading: false })
-  }
   render() {
     const { post, viewer, relay } = this.props,
     { menu, commentMode, commentLoading } = this.state,
