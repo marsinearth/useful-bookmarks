@@ -10,17 +10,22 @@ const mutation = graphql`
       comment {
         id
         content
+        commentedBy {
+          name
+        }
       }
     }
   }
 `
 
-function getOptimisticResponse(content, comment) {
+function getOptimisticResponse(comment) {
+  const { id, content, commentedBy } = comment
   return {
     updateComment: {
       comment: {
-        id: comment.id,
-        content
+        id,
+        content,
+        commentedBy
       }
     }
   }
@@ -32,13 +37,12 @@ export default function UpdateCommentMutation(
   viewerId,
   callback
 ) {
-  const { id, commentedBy, commentedPost } = comment,
+  const { id, commentedBy } = comment,
   variables = {
     input: {
-      content,
       id,
+      content,
       commentedById: commentedBy.id,
-      commentedPostId: commentedPost.id,
       clientMutationId: ""
     },
   }
@@ -53,7 +57,7 @@ export default function UpdateCommentMutation(
         callback()
       },
       onError: err => console.error(err),
-      optimisticResponse: getOptimisticResponse(content, comment)
+      optimisticResponse: getOptimisticResponse(comment)
     }
   )
 }

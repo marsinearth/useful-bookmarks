@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 5816a5905097415390ab91cbaf60c358
+ * @relayHash 38ace18b7272b63439424c2ffba36f22
  */
 
 /* eslint-disable */
@@ -70,6 +70,9 @@ export type UpdateCommentMutationResponse = {|
     +comment: ?{|
       +id: string,
       +content: string,
+      +commentedBy: ?{|
+        +name: string,
+      |},
     |},
   |},
 |};
@@ -84,6 +87,10 @@ mutation UpdateCommentMutation(
     comment {
       id
       content
+      commentedBy {
+        name
+        id
+      }
     }
   }
 }
@@ -100,55 +107,39 @@ var v0 = [
 ],
 v1 = [
   {
-    "kind": "LinkedField",
-    "alias": null,
-    "name": "updateComment",
-    "storageKey": null,
-    "args": [
-      {
-        "kind": "Variable",
-        "name": "input",
-        "variableName": "input",
-        "type": "UpdateCommentInput!"
-      }
-    ],
-    "concreteType": "UpdateCommentPayload",
-    "plural": false,
-    "selections": [
-      {
-        "kind": "LinkedField",
-        "alias": null,
-        "name": "comment",
-        "storageKey": null,
-        "args": null,
-        "concreteType": "Comment",
-        "plural": false,
-        "selections": [
-          {
-            "kind": "ScalarField",
-            "alias": null,
-            "name": "id",
-            "args": null,
-            "storageKey": null
-          },
-          {
-            "kind": "ScalarField",
-            "alias": null,
-            "name": "content",
-            "args": null,
-            "storageKey": null
-          }
-        ]
-      }
-    ]
+    "kind": "Variable",
+    "name": "input",
+    "variableName": "input",
+    "type": "UpdateCommentInput!"
   }
-];
+],
+v2 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "id",
+  "args": null,
+  "storageKey": null
+},
+v3 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "content",
+  "args": null,
+  "storageKey": null
+},
+v4 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "name",
+  "args": null,
+  "storageKey": null
+};
 return {
   "kind": "Request",
   "operationKind": "mutation",
   "name": "UpdateCommentMutation",
   "id": null,
-  "text": "mutation UpdateCommentMutation(\n  $input: UpdateCommentInput!\n) {\n  updateComment(input: $input) {\n    comment {\n      id\n      content\n    }\n  }\n}\n",
+  "text": "mutation UpdateCommentMutation(\n  $input: UpdateCommentInput!\n) {\n  updateComment(input: $input) {\n    comment {\n      id\n      content\n      commentedBy {\n        name\n        id\n      }\n    }\n  }\n}\n",
   "metadata": {},
   "fragment": {
     "kind": "Fragment",
@@ -156,15 +147,90 @@ return {
     "type": "Mutation",
     "metadata": null,
     "argumentDefinitions": v0,
-    "selections": v1
+    "selections": [
+      {
+        "kind": "LinkedField",
+        "alias": null,
+        "name": "updateComment",
+        "storageKey": null,
+        "args": v1,
+        "concreteType": "UpdateCommentPayload",
+        "plural": false,
+        "selections": [
+          {
+            "kind": "LinkedField",
+            "alias": null,
+            "name": "comment",
+            "storageKey": null,
+            "args": null,
+            "concreteType": "Comment",
+            "plural": false,
+            "selections": [
+              v2,
+              v3,
+              {
+                "kind": "LinkedField",
+                "alias": null,
+                "name": "commentedBy",
+                "storageKey": null,
+                "args": null,
+                "concreteType": "User",
+                "plural": false,
+                "selections": [
+                  v4
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
   },
   "operation": {
     "kind": "Operation",
     "name": "UpdateCommentMutation",
     "argumentDefinitions": v0,
-    "selections": v1
+    "selections": [
+      {
+        "kind": "LinkedField",
+        "alias": null,
+        "name": "updateComment",
+        "storageKey": null,
+        "args": v1,
+        "concreteType": "UpdateCommentPayload",
+        "plural": false,
+        "selections": [
+          {
+            "kind": "LinkedField",
+            "alias": null,
+            "name": "comment",
+            "storageKey": null,
+            "args": null,
+            "concreteType": "Comment",
+            "plural": false,
+            "selections": [
+              v2,
+              v3,
+              {
+                "kind": "LinkedField",
+                "alias": null,
+                "name": "commentedBy",
+                "storageKey": null,
+                "args": null,
+                "concreteType": "User",
+                "plural": false,
+                "selections": [
+                  v4,
+                  v2
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
   }
 };
 })();
-(node/*: any*/).hash = 'fd93ff817b12ad00bd30729054ea17ce';
+(node/*: any*/).hash = 'f9d4a8436d6e61486afc8ff949d75be7';
 module.exports = node;

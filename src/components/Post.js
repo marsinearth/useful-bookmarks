@@ -24,8 +24,7 @@ class Post extends PureComponent {
     commentMode: false,
     commentLoading: false,
     endCursor: null,
-    editComment: false,
-    editingComment: null
+    editComment: null
   }
   optionTooltip = createRef()
 
@@ -46,7 +45,6 @@ class Post extends PureComponent {
       menu,
       commentMode,
       editComment,
-      editingComment,
       commentLoading
     } = this.state,
     {
@@ -91,7 +89,7 @@ class Post extends PureComponent {
             </TooltipMenu>
             {posterAuth &&
               <Fragment>
-                <TooltipMenu edit onClick={this._editComment}>
+                <TooltipMenu edit /*onClick={this._editComment}*/>
                   <FontAwesomeIcon icon={faPencilAlt} size='xs'/>
                   &nbsp;Edit
                 </TooltipMenu>
@@ -133,8 +131,7 @@ class Post extends PureComponent {
           }
           <CreateComment
             mode={commentMode}
-            edit={editComment}
-            editingComment={editingComment}
+            editComment={editComment}
             commentedPostId={id}
             viewerId={viewerId}
             userName={userName}
@@ -157,12 +154,11 @@ class Post extends PureComponent {
     })
   }
   _handleBlur = e => {
-    let target = e, stateObj = {}
+    let target = e, stateObj = { editComment: null }
     if(e.target) target = e.target || e.srcElement
     const tagName = target && target.tagName
     if(tagName === 'INPUT') stateObj['commentMode'] = false
     else stateObj['menu'] = false
-
     this.setState(stateObj)
   }
   _addComment = () => {
@@ -171,12 +167,12 @@ class Post extends PureComponent {
       menu: false
     })
   }
-  _editComment = () => {
+  /*_editComment = () => {
     this.setState({
       commentMode: true,
       menu: false
     })
-  }
+  }*/
   _handleDelete = () => {
     const { post, viewer } = this.props
     if(window.confirm(`Are you sure to delete: ${post.description}?`))
@@ -186,8 +182,7 @@ class Post extends PureComponent {
   _handleCommentEdit = comment => {
     this.setState({
       commentMode: true,
-      editComment: true ,
-      editingComment: comment
+      editComment: comment
     })
   }
 }

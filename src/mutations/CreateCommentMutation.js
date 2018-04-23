@@ -11,6 +11,9 @@ const mutation = graphql`
       comment {
         id
         content
+        commentedBy {
+          name
+        }
       }
     }
   }

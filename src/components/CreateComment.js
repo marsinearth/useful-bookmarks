@@ -7,23 +7,28 @@ import UpdateCommentMutation from '../mutations/UpdateCommentMutation'
 
 class CreateComment extends PureComponent {
   state = {
-    edit: false,
+    editCommentId: null,
     content: ''
   }
   commentNode = createRef()
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const { edit, editingComment } = nextProps
-    if(edit && !prevState.edit)
-      return { content: editingComment.content, edit: true }
+    const { editComment } = nextProps
+    if(editComment && !prevState.editCommentId) {
+      const { id, content } = editComment
+      return {
+        editCommentId: id,
+        content
+      }
+    }
     return null
   }
   componentDidUpdate() {
     if(this.props.mode) this.commentNode.current.focus()
   }
   render(){
-    const { mode, handleBlur } = this.props,
-    { edit } = this.state
+    const { mode } = this.props,
+    { editCommentId, content } = this.state
 
     return (
       <AnimateHeight
@@ -34,14 +39,20 @@ class CreateComment extends PureComponent {
           <Input
             type='text'
             innerRef={this.commentNode}
-            placeholder={`${edit ? 'Edit' : 'Add'} Comment`}
+            placeholder={`${editCommentId ? 'Edit' : 'Add'} Comment`}
             onChange={this._handleChange}
-            onBlur={handleBlur}
-            value={this.state.content}
+            onBlur={this._onBlur}
+            value={content}
           />
         </form>
       </AnimateHeight>
     )
+  }
+  _onBlur = e => {
+    this.setState({
+      editCommentId: null,
+      content: ''
+    }, this.props.handleBlur(e))
   }
   _handleChange = e => {
     const target = e.target || e.srcElement,
@@ -51,10 +62,10 @@ class CreateComment extends PureComponent {
   _handleSubmit = e => {
     e.preventDefault()
     const commentedById = localStorage.getItem(GC_USER_ID),
-    { content, edit } = this.state,
+    { content, editCommentId } = this.state,
     {
       commentedPostId,
-      editingComment,
+      editComment,
       viewerId,
       userName,
       handleBlur
@@ -62,14 +73,14 @@ class CreateComment extends PureComponent {
     target = e.target || e.srcElement,
     targetInput = target && target.querySelector('input')
 
-    if(edit) UpdateCommentMutation(
+    if(editCommentId) UpdateCommentMutation(
       content,
-      editingComment,
+      editComment,
       viewerId,
       () => this.setState({
-        content: '',
-        edit: false
-      }, () => handleBlur(targetInput))
+        editCommentId: null,
+        content: ''
+      }, handleBlur(targetInput))
     )
 
     else CreateCommentMutation(
@@ -78,7 +89,9 @@ class CreateComment extends PureComponent {
       userName,
       commentedPostId,
       viewerId,
-      () => this.setState({ content: '' }, () => handleBlur(targetInput))
+      () => this.setState({
+        content: ''
+      }, handleBlur(targetInput))
     )
   }
 }

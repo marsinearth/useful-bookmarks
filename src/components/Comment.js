@@ -170,7 +170,7 @@ VertOptionContainer = styled.div`
 `,
 Tooltip = styled.div`
   position: absolute;
-  top: 0;
+  bottom: 0;
   right: 0;
   height: auto;
   padding: .075rem;
@@ -180,7 +180,7 @@ Tooltip = styled.div`
   flex-flow: column;
   align-items: flex-end;
   justify-content: center;
-  margin-top: -7px;
+  margin-bottom: -7px;
   margin-right: -10px;
 `,
 TooltipMenu = styled.div`
