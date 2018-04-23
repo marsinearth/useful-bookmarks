@@ -1,4 +1,8 @@
-import React, { createRef, PureComponent } from 'react'
+import React, {
+  createRef,
+  Fragment,
+  PureComponent
+} from 'react'
 import {
   createPaginationContainer,
   graphql
@@ -8,24 +12,23 @@ import CreateComment from './CreateComment'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faEllipsisV from '@fortawesome/fontawesome-free-solid/faEllipsisV'
 import faCaretDown from '@fortawesome/fontawesome-free-solid/faCaretDown'
+import faPencilAlt from '@fortawesome/fontawesome-free-solid/faPencilAlt'
 import Comment from './Comment'
 import Loading from '../assets/images/loading.gif'
 import styled, { css } from 'styled-components'
 import { ITEMS_PER_PAGE } from '../constants'
 
-const vertOptionIcon = <FontAwesomeIcon icon={faEllipsisV}/>
-
 class Post extends PureComponent {
-  constructor(props){
-    super(props)
-    this.state = {
-      menu: false,
-      commentMode: false,
-      commentLoading: false,
-      endCursor: null
-    }
-    this.optionTooltip = createRef()
+  state = {
+    menu: false,
+    commentMode: false,
+    commentLoading: false,
+    endCursor: null,
+    editComment: false,
+    editingComment: null
   }
+  optionTooltip = createRef()
+
   static getDerivedStateFromProps(nextProps, prevState) {
     const { comments } = nextProps.post,
     commentsPageInfo = comments && comments.pageInfo,
@@ -39,8 +42,21 @@ class Post extends PureComponent {
   }
   render() {
     const { post, viewer, relay } = this.props,
-    { menu, commentMode, commentLoading } = this.state,
-    { id, description, imageUrl, siteUrl, postedBy, comments } = post,
+    {
+      menu,
+      commentMode,
+      editComment,
+      editingComment,
+      commentLoading
+    } = this.state,
+    {
+      id,
+      description,
+      imageUrl,
+      siteUrl,
+      postedBy,
+      comments
+    } = post,
     viewerId = viewer && viewer.id,
     userInfo = viewer && viewer.User,
     userId = userInfo && userInfo.id,
@@ -61,7 +77,7 @@ class Post extends PureComponent {
           {description}
           {userId &&
             <VertOptionContainer onClick={this._openMenuPanel}>
-              {vertOptionIcon}
+              <FontAwesomeIcon icon={faEllipsisV}/>
             </VertOptionContainer>
           }
           <Tooltip
@@ -74,9 +90,15 @@ class Post extends PureComponent {
               + Comment
             </TooltipMenu>
             {posterAuth &&
-              <TooltipMenu onClick={this._handleDelete}>
-                Delete
-              </TooltipMenu>
+              <Fragment>
+                <TooltipMenu edit onClick={this._editComment}>
+                  <FontAwesomeIcon icon={faPencilAlt} size='xs'/>
+                  &nbsp;Edit
+                </TooltipMenu>
+                <TooltipMenu onClick={this._handleDelete}>
+                  Delete
+                </TooltipMenu>
+              </Fragment>
             }
           </Tooltip>
           {comments.edges && comments.edges.length > 0 &&
@@ -96,7 +118,7 @@ class Post extends PureComponent {
                   comment={node}
                   postId={id}
                   viewer={viewer}
-                  vertOptionIcon={vertOptionIcon}
+                  handleEdit={this._handleCommentEdit}
                 />
               )}
               {relay.hasMore() &&
@@ -111,6 +133,8 @@ class Post extends PureComponent {
           }
           <CreateComment
             mode={commentMode}
+            edit={editComment}
+            editingComment={editingComment}
             commentedPostId={id}
             viewerId={viewerId}
             userName={userName}
@@ -142,13 +166,29 @@ class Post extends PureComponent {
     this.setState(stateObj)
   }
   _addComment = () => {
-    this.setState({ commentMode: true, menu: false })
+    this.setState({
+      commentMode: true,
+      menu: false
+    })
+  }
+  _editComment = () => {
+    this.setState({
+      commentMode: true,
+      menu: false
+    })
   }
   _handleDelete = () => {
     const { post, viewer } = this.props
     if(window.confirm(`Are you sure to delete: ${post.description}?`))
       DeletePostMutation(post.id, viewer.id)
     this.setState({ menu: false })
+  }
+  _handleCommentEdit = comment => {
+    this.setState({
+      commentMode: true,
+      editComment: true ,
+      editingComment: comment
+    })
   }
 }
 
@@ -261,7 +301,8 @@ Tooltip = styled.div`
   position: absolute;
   top: 0;
   right: 0;
-  height: 3rem;
+  height: auto;
+  padding: .25rem;
   background-color: white;
   outline: 0;
   display: ${props => props.menu ? 'flex' : 'none'};
@@ -272,7 +313,7 @@ Tooltip = styled.div`
   margin-right: -15px;
 `,
 TooltipMenu = styled.div`
-  color: ${props => props.comment ? '#aaa' : 'red'};
+  color: ${props => (props.comment || props.edit) ? '#aaa' : 'red'};
   font-size: .875rem;
   padding: .25rem .5rem;
   vertical-align: middle;

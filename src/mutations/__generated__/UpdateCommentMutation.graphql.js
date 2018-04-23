@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash a115312be1ad6314a0e1dc3b1bec00d8
+ * @relayHash 5816a5905097415390ab91cbaf60c358
  */
 
 /* eslint-disable */
@@ -9,8 +9,9 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-type CreateCommentInputVariables = {|
-  content: string,
+type UpdateCommentInputVariables = {|
+  content: ?string,
+  id: string,
   commentedById: ?string,
   commentedBy: ?CommentcommentedByUserVariables,
   commentedPostId: ?string,
@@ -61,11 +62,11 @@ type PostcommentsCommentVariables = {|
   commentedById: ?string,
   commentedBy: ?CommentcommentedByUserVariables,
 |};
-export type CreateCommentMutationVariables = {|
-  input: CreateCommentInputVariables,
+export type UpdateCommentMutationVariables = {|
+  input: UpdateCommentInputVariables,
 |};
-export type CreateCommentMutationResponse = {|
-  +createComment: ?{|
+export type UpdateCommentMutationResponse = {|
+  +updateComment: ?{|
     +comment: ?{|
       +id: string,
       +content: string,
@@ -76,10 +77,10 @@ export type CreateCommentMutationResponse = {|
 
 
 /*
-mutation CreateCommentMutation(
-  $input: CreateCommentInput!
+mutation UpdateCommentMutation(
+  $input: UpdateCommentInput!
 ) {
-  createComment(input: $input) {
+  updateComment(input: $input) {
     comment {
       id
       content
@@ -93,7 +94,7 @@ var v0 = [
   {
     "kind": "LocalArgument",
     "name": "input",
-    "type": "CreateCommentInput!",
+    "type": "UpdateCommentInput!",
     "defaultValue": null
   }
 ],
@@ -101,17 +102,17 @@ v1 = [
   {
     "kind": "LinkedField",
     "alias": null,
-    "name": "createComment",
+    "name": "updateComment",
     "storageKey": null,
     "args": [
       {
         "kind": "Variable",
         "name": "input",
         "variableName": "input",
-        "type": "CreateCommentInput!"
+        "type": "UpdateCommentInput!"
       }
     ],
-    "concreteType": "CreateCommentPayload",
+    "concreteType": "UpdateCommentPayload",
     "plural": false,
     "selections": [
       {
@@ -145,13 +146,13 @@ v1 = [
 return {
   "kind": "Request",
   "operationKind": "mutation",
-  "name": "CreateCommentMutation",
+  "name": "UpdateCommentMutation",
   "id": null,
-  "text": "mutation CreateCommentMutation(\n  $input: CreateCommentInput!\n) {\n  createComment(input: $input) {\n    comment {\n      id\n      content\n    }\n  }\n}\n",
+  "text": "mutation UpdateCommentMutation(\n  $input: UpdateCommentInput!\n) {\n  updateComment(input: $input) {\n    comment {\n      id\n      content\n    }\n  }\n}\n",
   "metadata": {},
   "fragment": {
     "kind": "Fragment",
-    "name": "CreateCommentMutation",
+    "name": "UpdateCommentMutation",
     "type": "Mutation",
     "metadata": null,
     "argumentDefinitions": v0,
@@ -159,11 +160,11 @@ return {
   },
   "operation": {
     "kind": "Operation",
-    "name": "CreateCommentMutation",
+    "name": "UpdateCommentMutation",
     "argumentDefinitions": v0,
     "selections": v1
   }
 };
 })();
-(node/*: any*/).hash = '7f4415792866721a646a2a98aac05a49';
+(node/*: any*/).hash = 'fd93ff817b12ad00bd30729054ea17ce';
 module.exports = node;

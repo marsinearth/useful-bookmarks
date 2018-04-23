@@ -1,17 +1,30 @@
-import React, { PureComponent } from 'react'
+import React, { PureComponent, createRef } from 'react'
 import CreateCommentMutation from '../mutations/CreateCommentMutation'
 import AnimateHeight from 'react-animate-height'
 import { GC_USER_ID } from '../constants'
 import styled from 'styled-components'
+import UpdateCommentMutation from '../mutations/UpdateCommentMutation'
 
-//let's practice the new context with commenting theme!!!
 class CreateComment extends PureComponent {
   state = {
+    edit: false,
     content: ''
   }
+  commentNode = createRef()
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { edit, editingComment } = nextProps
+    if(edit && !prevState.edit)
+      return { content: editingComment.content, edit: true }
+    return null
+  }
+  componentDidUpdate() {
+    if(this.props.mode) this.commentNode.current.focus()
+  }
   render(){
-    const { mode, handleBlur } = this.props
-    //console.log('createcomment this.props: ', this.props)
+    const { mode, handleBlur } = this.props,
+    { edit } = this.state
+
     return (
       <AnimateHeight
         duration={500}
@@ -20,7 +33,8 @@ class CreateComment extends PureComponent {
         <form onSubmit={this._handleSubmit}>
           <Input
             type='text'
-            placeholder='Add Comment'
+            innerRef={this.commentNode}
+            placeholder={`${edit ? 'Edit' : 'Add'} Comment`}
             onChange={this._handleChange}
             onBlur={handleBlur}
             value={this.state.content}
@@ -37,12 +51,28 @@ class CreateComment extends PureComponent {
   _handleSubmit = e => {
     e.preventDefault()
     const commentedById = localStorage.getItem(GC_USER_ID),
-    { content } = this.state,
-    { commentedPostId, viewerId, userName, handleBlur } = this.props,
+    { content, edit } = this.state,
+    {
+      commentedPostId,
+      editingComment,
+      viewerId,
+      userName,
+      handleBlur
+    } = this.props,
     target = e.target || e.srcElement,
     targetInput = target && target.querySelector('input')
 
-    CreateCommentMutation(
+    if(edit) UpdateCommentMutation(
+      content,
+      editingComment,
+      viewerId,
+      () => this.setState({
+        content: '',
+        edit: false
+      }, () => handleBlur(targetInput))
+    )
+
+    else CreateCommentMutation(
       content,
       commentedById,
       userName,

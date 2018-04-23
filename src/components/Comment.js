@@ -1,23 +1,28 @@
-import React, { createRef, PureComponent } from 'react'
+import React, {
+  createRef,
+  Fragment,
+  PureComponent
+} from 'react'
 import {
   createFragmentContainer,
   graphql
 } from 'react-relay'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import faEllipsisV from '@fortawesome/fontawesome-free-solid/faEllipsisV'
+import faPencilAlt from '@fortawesome/fontawesome-free-solid/faPencilAlt'
 import styled, { css } from 'styled-components'
 import DeleteCommentMutation from '../mutations/DeleteCommentMutation'
 
 class Comment extends PureComponent {
-  constructor(props){
-    super(props)
-    this.state = {
-      menu: false,
-      hover: false,
-      //commentMode: false
-    }
-    this.optionTooltip = createRef()
+  state = {
+    menu: false,
+    hover: false,
+    //commentMode: false
   }
+  optionTooltip = createRef()
+
   render() {
-    const { comment, vertOptionIcon, viewer } = this.props,
+    const { comment, viewer } = this.props,
     { menu, hover } = this.state,
     content = comment && comment.content,
     commentedBy = comment && comment.commentedBy,
@@ -42,7 +47,7 @@ class Comment extends PureComponent {
           hover={hover}
           onClick={this._openMenuPanel}
         >
-          {vertOptionIcon}
+          <FontAwesomeIcon icon={faEllipsisV}/>
         </VertOptionContainer>
         <Tooltip
           innerRef={this.optionTooltip}
@@ -50,13 +55,16 @@ class Comment extends PureComponent {
           menu={menu}
           tabIndex='-1'
         >
-          {/*<TooltipMenu comment>
-            + Comment
-          </TooltipMenu>*/}
           {commentAuth &&
-            <TooltipMenu onClick={this._handleDelete}>
-              Delete
-            </TooltipMenu>
+            <Fragment>
+              <TooltipMenu edit onClick={this._handleEdit}>
+                <FontAwesomeIcon icon={faPencilAlt} size='xs'/>
+                &nbsp;Edit
+              </TooltipMenu>
+              <TooltipMenu onClick={this._handleDelete}>
+                Delete
+              </TooltipMenu>
+            </Fragment>
           }
         </Tooltip>
       </Container>
@@ -83,6 +91,10 @@ class Comment extends PureComponent {
     if(tagName === 'INPUT') stateObj['commentMode'] = false
     else stateObj['menu'] = false
     this.setState(stateObj)
+  }
+  _handleEdit = () => {
+    const { comment, handleEdit } = this.props
+    this.setState({ menu: false }, () => handleEdit(comment))
   }
   _handleDelete = () => {
     const { comment, postId } = this.props
@@ -158,20 +170,21 @@ VertOptionContainer = styled.div`
 `,
 Tooltip = styled.div`
   position: absolute;
-  bottom: 0;
+  top: 0;
   right: 0;
-  height: 1rem;
+  height: auto;
+  padding: .075rem;
   background-color: white;
   outline: 0;
   display: ${props => props.menu ? 'flex' : 'none'};
   flex-flow: column;
   align-items: flex-end;
   justify-content: center;
-  margin-bottom: 2px;
+  margin-top: -7px;
   margin-right: -10px;
 `,
 TooltipMenu = styled.div`
-  color: ${props => props.comment ? '#aaa' : 'red'};
+  color: ${props => (props.comment || props.edit) ? '#aaa' : 'red'};
   font-size: .5rem;
   padding: .25rem .5rem;
   vertical-align: middle;
