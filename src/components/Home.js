@@ -1,4 +1,6 @@
-import React, { PureComponent } from 'react'
+import React, {
+  PureComponent
+ } from 'react'
 import {
   QueryRenderer,
   graphql
@@ -20,6 +22,7 @@ const HomeAllPostQuery = graphql`
 class Home extends PureComponent {
   render() {
     const userId = localStorage.getItem(GC_USER_ID)
+
     return (
       <QueryRenderer
         environment={environment}

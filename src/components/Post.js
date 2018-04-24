@@ -17,6 +17,7 @@ import Comment from './Comment'
 import Loading from '../assets/images/loading.gif'
 import styled, { css } from 'styled-components'
 import { ITEMS_PER_PAGE } from '../constants'
+import history from '../history'
 
 class Post extends PureComponent {
   state = {
@@ -89,7 +90,7 @@ class Post extends PureComponent {
             </TooltipMenu>
             {posterAuth &&
               <Fragment>
-                <TooltipMenu edit /*onClick={this._editComment}*/>
+                <TooltipMenu edit onClick={this._editComment}>
                   <FontAwesomeIcon icon={faPencilAlt} size='xs'/>
                   &nbsp;Edit
                 </TooltipMenu>
@@ -167,12 +168,16 @@ class Post extends PureComponent {
       menu: false
     })
   }
-  /*_editComment = () => {
+  _editComment = () => {
+    const { post } = this.props
     this.setState({
       commentMode: true,
       menu: false
-    })
-  }*/
+    }, () => history.push({
+      pathname: '/create',
+      state: { editPost: post }
+    }))
+  }
   _handleDelete = () => {
     const { post, viewer } = this.props
     if(window.confirm(`Are you sure to delete: ${post.description}?`))
@@ -270,6 +275,7 @@ const Dim = css`
   }
 `,
 Container = styled.div`
+  width: 365px;
   padding: 1rem;
   background-color: rgba(0, 0, 0, .05);
   margin: 1rem;

@@ -129,9 +129,10 @@ Dim = css`
   }
 `,
 Wrapper = styled.div`
-  width: 100%;
-  justify-content: center;
   display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 
   div {
     max-width: 400px;
