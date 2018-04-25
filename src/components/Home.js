@@ -1,6 +1,4 @@
-import React, {
-  PureComponent
- } from 'react'
+import React, { PureComponent } from 'react'
 import {
   QueryRenderer,
   graphql
@@ -54,7 +52,6 @@ class Home extends PureComponent {
 export default Home;
 
 const Wrapper = styled.div`
-  width: 100%;
   padding: 2rem;
   justify-content: center;
   display: flex;
