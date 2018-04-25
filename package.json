@@ -68,7 +68,6 @@
   "devDependencies": {
     "@monastic.panic/relay-compiler-recusion-fix": "^1.5.0",
     "babel-plugin-relay": "^1.5.0",
-    "relay-devtools": "^1.4.0",
     "tachyons": "^4.9.1"
   },
   "jest": {
