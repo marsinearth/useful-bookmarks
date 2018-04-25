@@ -135,7 +135,7 @@ Wrapper = styled.div`
   align-items: center;
 
   div {
-    max-width: 400px;
+    max-width: 100%;
   }
 `,
 WelcomeUser = styled.div`

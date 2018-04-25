@@ -278,7 +278,8 @@ Container = styled.div`
   width: 365px;
   padding: 1rem;
   background-color: rgba(0, 0, 0, .05);
-  margin: 1rem;
+  margin: 1.5rem 0;
+  box-sizing: border-box;
 `,
 ImgContainer = styled.div`
   width: 100%;
