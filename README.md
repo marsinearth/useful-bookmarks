@@ -12,7 +12,9 @@ used fixed version of relay-compiler: [Explanation](https://github.com/facebook/
   - added comments system
   - will complete comments system by adding mutations for CUD, relay's pagination func for browsing a many of them
   - will Edit funcs for Posts and Comments
-  - will add likes(exactly same as hackernews' votes) (ongoing)
+  - deploy to github pages (ongoing)
+  
+  - will add likes(exactly same as hackernews' votes)
   - will add small chatting system using relay's subscription func
   - will add some kind of console page for stats and browsing users-posts-comments-likes relationships
   - will transform graphcool to traditional DB by writing own resolver (maybe I can use [Prisma](https://gist.github.com/marktani/2cbbe6467cb66bc9959b63313a248988) for AWS RDS MySQL or if it works, definitely for my local DB or whatever, too. pretty awesome!)
