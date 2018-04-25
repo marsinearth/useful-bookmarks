@@ -1,8 +1,7 @@
 {
-  "name": "usefulbookmarks",
+  "name": "useful-bookmarks",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://marsinearth.github.io/usefulbookmarks",
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.5",
     "@fortawesome/fontawesome-free-solid": "^5.0.10",
@@ -57,8 +56,7 @@
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy": "npm run build && netlify deploy -p build -s edaa70d3-5fdb-4dab-b11d-c848e82b6aa0",
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
