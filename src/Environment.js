@@ -4,9 +4,6 @@ import {
   RecordSource,
   Store,
 } from 'relay-runtime'
-//import { installRelayDevTools } from 'relay-devtools'
-
-//.installRelayDevTools()
 
 export default new Environment({
   network: Network.create((operation, variables) =>
