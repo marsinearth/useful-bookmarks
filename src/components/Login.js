@@ -68,26 +68,33 @@ class Login extends PureComponent {
   }
 
   _confirm = () => {
-    const { login, name, email, password } = this.state,
-    { history } = this.props
+    const { login, name, email, password } = this.state
     this.setState({ loading: true }, () => {
-      if(login) {
-        AuthenticateUserMutation(email, password, (id, token) => {
-          this._saveUserData(id, token)
-          history.push('/')
-        })
-      } else {
-        SignupUserMutation(name, email, password, (id, token) => {
-          this._saveUserData(id, token)
-          history.push('/')
-        })
-      }
+      if(login) AuthenticateUserMutation(
+        email,
+        password,
+        (id, token) => this._saveUserData(id, token),
+        () => this._failedAuth()
+      )
+      else SignupUserMutation(
+        name,
+        email,
+        password, 
+        (id, token) => this._saveUserData(id, token),
+        () => this._failedAuth()
+      )
     })
   }
 
   _saveUserData = (id, token) => {
-    localStorage.setItem(GC_USER_ID, id)
-    localStorage.setItem(GC_AUTH_TOKEN, token)
+    if(id && token) {
+      localStorage.setItem(GC_USER_ID, id)
+      localStorage.setItem(GC_AUTH_TOKEN, token)
+      this.props.history.push('/')
+    }
+  }
+  _failedAuth = () => {
+    this.setState({ loading: false })
   }
 }
 

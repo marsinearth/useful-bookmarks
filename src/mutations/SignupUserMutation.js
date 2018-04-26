@@ -21,7 +21,7 @@ const mutation = graphql`
     }
 `
 
-export default function SignupUserMutation(name, email, password, callback) {
+export default function SignupUserMutation(name, email, password, successCb, failCb) {
   const variables = {
     name,
     email,
@@ -35,9 +35,13 @@ export default function SignupUserMutation(name, email, password, callback) {
       mutation,
       variables,
       onCompleted: res => {
-          console.log('res: ', res)
-          const { id, token } = res.signupUser
-          callback(id, token)
+          const signup = res.signupUser
+          if(signup) {
+            const { id, token } = signup
+            successCb(id, token)
+          } else {
+            failCb()
+          }
       },
       onError: err => console.error(err),
     },

@@ -19,7 +19,7 @@ const mutation = graphql`
     }
 `
 
-export default function AuthenticateUserMutation(email, password, callback) {
+export default function AuthenticateUserMutation(email, password, successCb, failCb) {
     const variables = {
         email,
         password,
@@ -32,10 +32,19 @@ export default function AuthenticateUserMutation(email, password, callback) {
             mutation,
             variables,
             onCompleted: res => {
-                const { id, token } = res.authenticateUser
-                callback(id, token)
+              const auth = res.authenticateUser
+              if(auth) {
+                const { id, token } = auth
+                successCb(id, token)
+              }
+              else {
+                alert('email and password doesn\'t match.')
+                failCb()
+              }
             },
-            onError: err => console.error(err),
+            onError: err => {
+              console.error(err)
+            }
         },
     )
 }

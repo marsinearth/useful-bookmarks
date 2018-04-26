@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 import Post from './Post'
 import styled, { css } from 'styled-components'
 import Loading from '../assets/images/loading.gif'
+import { isMobile } from 'react-device-detect'
 import InfiniteScroll from 'react-infinite-scroller'
 import { GC_USER_ID, ITEMS_PER_PAGE } from '../constants'
 
@@ -27,7 +28,10 @@ class ListPage extends PureComponent {
             Hello {userName}!
           </WelcomeUser>
         }
-        <StyledLink to={userName ? '/create' : '/login'}>
+        <StyledLink
+          mobile={isMobile ? 'true' : 'false'}
+          to={userName ? '/create' : '/login'}
+        >
           + {userName ? 'New Post' : 'Sign In'}
         </StyledLink>
         <InfiniteScroll
@@ -122,8 +126,8 @@ const Decorated = css`
   text-transform: uppercase;
 `,
 Dim = css`
-  transition: opacity .15s ease-in;
   cursor: pointer;
+  transition: opacity .15s ease-in;
   &:hover,
   &:focus {
     opacity: .5;
@@ -149,7 +153,7 @@ WelcomeUser = styled.div`
 StyledLink = styled(Link)`
   right: 0;
   color: black;
-  ${Dim}
+  ${props => props.mobile === 'false' ? Dim : ''}
   ${Decorated}
 `,
 PostsLoading = styled.div`

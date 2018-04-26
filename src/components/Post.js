@@ -7,6 +7,7 @@ import {
   createPaginationContainer,
   graphql
 } from 'react-relay'
+import { isMobile } from 'react-device-detect'
 import DeletePostMutation from '../mutations/DeletePostMutation'
 import CreateComment from './CreateComment'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
@@ -63,8 +64,6 @@ class Post extends PureComponent {
     posterId = postedBy && postedBy.id,
     posterAuth = posterId === userId
 
-    //console.log('post: ', post)
-
     return (
       <Container>
         <a
@@ -72,7 +71,10 @@ class Post extends PureComponent {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <ImgContainer url={imageUrl} />
+          <ImgContainer
+            url={imageUrl}
+            mobile={isMobile ? 'true' : 'false'}
+          />
         </a>
         <InfoContainer>
           {description}
@@ -294,7 +296,7 @@ ImgContainer = styled.div`
   background-size: cover;
   background-image: ${props => props.url && 'url(' + props.url + ')'};
   padding-bottom: 100%;
-  ${Dim}
+  ${props => props.mobile === 'false' ? Dim : ''}
 `,
 InfoContainer = styled.div`
   padding-top: 1rem;
