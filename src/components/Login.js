@@ -69,21 +69,33 @@ class Login extends PureComponent {
 
   _confirm = () => {
     const { login, name, email, password } = this.state
-    this.setState({ loading: true }, () => {
-      if(login) AuthenticateUserMutation(
-        email,
-        password,
-        (id, token) => this._saveUserData(id, token),
-        () => this._failedAuth()
-      )
-      else SignupUserMutation(
-        name,
-        email,
-        password, 
-        (id, token) => this._saveUserData(id, token),
-        () => this._failedAuth()
-      )
-    })
+    if(email.trim() !== '' && password.trim() !== '') {
+      this.setState({ loading: true }, () => {
+        if(login) AuthenticateUserMutation(
+          email,
+          password,
+          (id, token) => this._saveUserData(id, token),
+          () => this._failedAuth()
+        )
+        else {
+          if(name.trim() !== '')
+            SignupUserMutation(
+              name,
+              email,
+              password,
+              (id, token) => this._saveUserData(id, token),
+              () => this._failedAuth()
+            )
+          else {
+            alert('name is required')
+            this._failedAuth()
+          }
+        }
+      })
+    } else {
+      if(email.trim() === '') alert('email is required')
+      else if(password.trim() === '') alert('password is required')
+    }
   }
 
   _saveUserData = (id, token) => {

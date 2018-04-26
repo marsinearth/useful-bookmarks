@@ -40,6 +40,7 @@ export default function SignupUserMutation(name, email, password, successCb, fai
             const { id, token } = signup
             successCb(id, token)
           } else {
+            alert('email is malformed.')
             failCb()
           }
       },
