@@ -104,7 +104,6 @@ const Dim = css`
   }
 `,
 Wrapper = styled.div`
-  width: 100%;
   padding: 2rem;
   justify-content: center;
   display: flex;

@@ -8,7 +8,6 @@
 
 /*::
 import type { ConcreteFragment } from 'relay-runtime';
-type Comment_viewer$ref = any;
 import type { FragmentReference } from 'relay-runtime';
 declare export opaque type Post_viewer$ref: FragmentReference;
 export type Post_viewer = {|
@@ -17,7 +16,6 @@ export type Post_viewer = {|
     +id: string,
     +name: string,
   |},
-  +$fragmentRefs: Comment_viewer$ref,
   +$refType: Post_viewer$ref,
 |};
 */
@@ -44,11 +42,6 @@ return {
     }
   ],
   "selections": [
-    {
-      "kind": "FragmentSpread",
-      "name": "Comment_viewer",
-      "args": null
-    },
     v0,
     {
       "kind": "LinkedField",
@@ -79,5 +72,5 @@ return {
   ]
 };
 })();
-(node/*: any*/).hash = 'f9fd2f1ea4eb9385dd86289e7951724a';
+(node/*: any*/).hash = '29194bb3c93c4860c083e6e98890e178';
 module.exports = node;

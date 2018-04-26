@@ -17,7 +17,6 @@ class Comment extends PureComponent {
   state = {
     menu: false,
     hover: false,
-    //commentMode: false
   }
   optionTooltip = createRef()
 
@@ -105,25 +104,6 @@ class Comment extends PureComponent {
 }
 
 export default createFragmentContainer(Comment, graphql`
-  fragment Comment_viewer on Viewer {
-    id
-    User(id: $id) {
-      id
-    }
-    allComments(
-      last: 100,
-      orderBy: createdAt_ASC
-    ) @connection(
-      key: "Comment_allComments",
-      filters: []
-    ) {
-      edges {
-        node {
-          id
-        }
-      }
-    }
-  }
   fragment Comment_comment on Comment {
     id
     content

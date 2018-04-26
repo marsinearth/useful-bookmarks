@@ -193,7 +193,6 @@ const Dim = css`
   }
 `,
 Wrapper = styled.div`
-  width: 100%;
   padding: 2rem;
   justify-content: center;
   display: flex;
@@ -214,7 +213,8 @@ Input = styled.input`
   margin-top: .5rem;
   margin-bottom: .5rem;
   box-sizing: border-box;
-  border-color: ${props => props.error ? 'red' : 'initial'}
+  border-width: 1px;
+  border-color: ${props => props.error ? 'red' : 'lightgray'}
 `,
 LinkContainer = styled.div`
   text-align: center;

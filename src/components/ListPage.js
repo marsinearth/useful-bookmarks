@@ -18,6 +18,8 @@ class ListPage extends PureComponent {
     userInfo = viewer.User,
     userName = userInfo && userInfo.name
 
+    //console.log('pageInfo: ', viewer.allPosts.pageInfo)
+
     return (
       <Wrapper>
         {userName &&
@@ -114,7 +116,7 @@ export default createPaginationContainer(
 
 const Decorated = css`
   position: fixed;
-  background-color: white;
+  background-color: rgba(255, 255, 255, .5);
   top: 0;
   padding: 2rem;
   text-transform: uppercase;
@@ -133,6 +135,7 @@ Wrapper = styled.div`
   justify-content: center;
   flex-direction: column;
   align-items: center;
+  margin-top: 4rem;
 
   div {
     max-width: 100%;

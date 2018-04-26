@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 160c7267e201da2097146336c983fe7a
+ * @relayHash 2976ab9ca0f60d5e620f96834e69375a
  */
 
 /* eslint-disable */
@@ -11,12 +11,18 @@
 import type { ConcreteRequest } from 'relay-runtime';
 type Post_post$ref = any;
 export type PostPaginationQueryVariables = {|
+  id: string,
   count: number,
   cursor: ?string,
   postID: string,
 |};
 export type PostPaginationQueryResponse = {|
   +viewer: {|
+    +id: string,
+    +User: ?{|
+      +id: string,
+      +name: string,
+    |},
     +Post: ?{|
       +$fragmentRefs: Post_post$ref,
     |},
@@ -27,16 +33,21 @@ export type PostPaginationQueryResponse = {|
 
 /*
 query PostPaginationQuery(
+  $id: ID!
   $count: Int!
   $cursor: String
   $postID: ID!
 ) {
   viewer {
+    id
+    User(id: $id) {
+      id
+      name
+    }
     Post(id: $postID) {
       ...Post_post
       id
     }
-    id
   }
 }
 
@@ -82,6 +93,12 @@ const node/*: ConcreteRequest*/ = (function(){
 var v0 = [
   {
     "kind": "LocalArgument",
+    "name": "id",
+    "type": "ID!",
+    "defaultValue": null
+  },
+  {
+    "kind": "LocalArgument",
     "name": "count",
     "type": "Int!",
     "defaultValue": null
@@ -99,23 +116,15 @@ var v0 = [
     "defaultValue": null
   }
 ],
-v1 = [
-  {
-    "kind": "Variable",
-    "name": "id",
-    "variableName": "postID",
-    "type": "ID"
-  }
-],
-v2 = {
+v1 = {
   "kind": "ScalarField",
   "alias": null,
   "name": "id",
   "args": null,
   "storageKey": null
 },
-v3 = [
-  v2,
+v2 = [
+  v1,
   {
     "kind": "ScalarField",
     "alias": null,
@@ -123,13 +132,38 @@ v3 = [
     "args": null,
     "storageKey": null
   }
+],
+v3 = {
+  "kind": "LinkedField",
+  "alias": null,
+  "name": "User",
+  "storageKey": null,
+  "args": [
+    {
+      "kind": "Variable",
+      "name": "id",
+      "variableName": "id",
+      "type": "ID"
+    }
+  ],
+  "concreteType": "User",
+  "plural": false,
+  "selections": v2
+},
+v4 = [
+  {
+    "kind": "Variable",
+    "name": "id",
+    "variableName": "postID",
+    "type": "ID"
+  }
 ];
 return {
   "kind": "Request",
   "operationKind": "query",
   "name": "PostPaginationQuery",
   "id": null,
-  "text": "query PostPaginationQuery(\n  $count: Int!\n  $cursor: String\n  $postID: ID!\n) {\n  viewer {\n    Post(id: $postID) {\n      ...Post_post\n      id\n    }\n    id\n  }\n}\n\nfragment Post_post on Post {\n  id\n  description\n  imageUrl\n  siteUrl\n  postedBy {\n    id\n    name\n  }\n  comments(first: $count, after: $cursor, orderBy: createdAt_ASC) {\n    edges {\n      node {\n        ...Comment_comment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n\nfragment Comment_comment on Comment {\n  id\n  content\n  commentedBy {\n    id\n    name\n  }\n  commentedPost {\n    id\n  }\n}\n",
+  "text": "query PostPaginationQuery(\n  $id: ID!\n  $count: Int!\n  $cursor: String\n  $postID: ID!\n) {\n  viewer {\n    id\n    User(id: $id) {\n      id\n      name\n    }\n    Post(id: $postID) {\n      ...Post_post\n      id\n    }\n  }\n}\n\nfragment Post_post on Post {\n  id\n  description\n  imageUrl\n  siteUrl\n  postedBy {\n    id\n    name\n  }\n  comments(first: $count, after: $cursor, orderBy: createdAt_ASC) {\n    edges {\n      node {\n        ...Comment_comment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n\nfragment Comment_comment on Comment {\n  id\n  content\n  commentedBy {\n    id\n    name\n  }\n  commentedPost {\n    id\n  }\n}\n",
   "metadata": {},
   "fragment": {
     "kind": "Fragment",
@@ -147,12 +181,14 @@ return {
         "concreteType": "Viewer",
         "plural": false,
         "selections": [
+          v1,
+          v3,
           {
             "kind": "LinkedField",
             "alias": null,
             "name": "Post",
             "storageKey": null,
-            "args": v1,
+            "args": v4,
             "concreteType": "Post",
             "plural": false,
             "selections": [
@@ -181,16 +217,18 @@ return {
         "concreteType": "Viewer",
         "plural": false,
         "selections": [
+          v1,
+          v3,
           {
             "kind": "LinkedField",
             "alias": null,
             "name": "Post",
             "storageKey": null,
-            "args": v1,
+            "args": v4,
             "concreteType": "Post",
             "plural": false,
             "selections": [
-              v2,
+              v1,
               {
                 "kind": "ScalarField",
                 "alias": null,
@@ -220,7 +258,7 @@ return {
                 "args": null,
                 "concreteType": "User",
                 "plural": false,
-                "selections": v3
+                "selections": v2
               },
               {
                 "kind": "LinkedField",
@@ -268,7 +306,7 @@ return {
                         "concreteType": "Comment",
                         "plural": false,
                         "selections": [
-                          v2,
+                          v1,
                           {
                             "kind": "ScalarField",
                             "alias": null,
@@ -284,7 +322,7 @@ return {
                             "args": null,
                             "concreteType": "User",
                             "plural": false,
-                            "selections": v3
+                            "selections": v2
                           },
                           {
                             "kind": "LinkedField",
@@ -295,7 +333,7 @@ return {
                             "concreteType": "Post",
                             "plural": false,
                             "selections": [
-                              v2
+                              v1
                             ]
                           },
                           {
@@ -372,13 +410,12 @@ return {
                 "filters": []
               }
             ]
-          },
-          v2
+          }
         ]
       }
     ]
   }
 };
 })();
-(node/*: any*/).hash = 'a2346c885ae95d15f602bbecc4477c98';
+(node/*: any*/).hash = '2483034a76828ed81e6202c366c3190d';
 module.exports = node;

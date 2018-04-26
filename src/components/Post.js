@@ -63,6 +63,8 @@ class Post extends PureComponent {
     posterId = postedBy && postedBy.id,
     posterAuth = posterId === userId
 
+    //console.log('post: ', post)
+
     return (
       <Container>
         <a
@@ -90,7 +92,7 @@ class Post extends PureComponent {
             </TooltipMenu>
             {posterAuth &&
               <Fragment>
-                <TooltipMenu edit onClick={this._editComment}>
+                <TooltipMenu edit onClick={this._editPost}>
                   <FontAwesomeIcon icon={faPencilAlt} size='xs'/>
                   &nbsp;Edit
                 </TooltipMenu>
@@ -168,7 +170,7 @@ class Post extends PureComponent {
       menu: false
     })
   }
-  _editComment = () => {
+  _editPost = () => {
     const { post } = this.props
     this.setState({
       commentMode: true,
@@ -197,7 +199,6 @@ export default createPaginationContainer(
   {
     viewer: graphql`
       fragment Post_viewer on Viewer {
-        ...Comment_viewer
         id
         User(id: $id) {
           id
@@ -240,13 +241,19 @@ export default createPaginationContainer(
     direction: 'forward',
     query: graphql`
       query PostPaginationQuery(
+        $id: ID!
         $count: Int!
         $cursor: String
         $postID: ID!
       ) {
         viewer {
+          id,
+          User(id: $id) {
+            id,
+            name
+          },
           Post(id: $postID) {
-              ...Post_post
+            ...Post_post
           }
         }
       }
@@ -256,6 +263,7 @@ export default createPaginationContainer(
     },
     getVariables(props, { count, cursor }) {
       return {
+        id: props.viewer.User.id,
         count,
         cursor,
         postID: props.post.id
