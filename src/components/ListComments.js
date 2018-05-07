@@ -33,19 +33,15 @@ class ListComments extends PureComponent {
   _loadMore = () => {
     const { relay } = this.props
     if(!relay.hasMore()) return
-    this.setState({ closable: true },
-      () => { relay.loadMore(ITEMS_PER_PAGE) }
-    )
+    relay.loadMore(ITEMS_PER_PAGE, e => this.setState({ closable: true }))
   }
 
   _closeMoreComments = () => {
     const { relay } = this.props
-    this.setState({ closable: false },
-      () => relay.refetchConnection(
-        ITEMS_PER_PAGE,
-        e => null,
-        { after: null }
-      )
+    relay.refetchConnection(
+      ITEMS_PER_PAGE,
+      e => this.setState({ closable: false }),
+      { after: null }
     )
   }
 

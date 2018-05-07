@@ -142,7 +142,10 @@ TopPart = styled.div`
   position: fixed;
   top: 0;
   width: 100%;
-  background-color: ${props => props.width > 700 ? 'transparent' : 'rgba(255, 255, 255, .5)'};
+  background-color: ${props => props.width > 700
+    ? 'transparent'
+    : 'rgba(255, 255, 255, .5)'
+  };
   height: 5.2rem;
 `,
 WelcomeUser = styled.div`
