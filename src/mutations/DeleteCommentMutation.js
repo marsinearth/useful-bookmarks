@@ -3,7 +3,7 @@ import {
   graphql,
 } from 'react-relay'
 import { ConnectionHandler } from 'relay-runtime'
-import environment from '../Environment'
+import environment from '../utils/Environment'
 
 const mutation = graphql`
   mutation DeleteCommentMutation($input: DeleteCommentInput!) {
@@ -30,8 +30,8 @@ export default function DeleteCommentMutation(commentId, postId) {
         const deletePostField = proxyStore.getRootField('deleteComment'),
         deletedId = deletePostField.getValue('deletedId'),
         postProxy = proxyStore.get(postId),
-        connection = ConnectionHandler.getConnection(postProxy, 'Post_comments')
-        
+        connection = ConnectionHandler.getConnection(postProxy, 'ListComments_comments')
+
         if (connection) ConnectionHandler.deleteNode(connection, deletedId)
       },
     },

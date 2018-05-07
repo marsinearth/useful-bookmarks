@@ -3,7 +3,7 @@ import {
   graphql,
 } from 'react-relay'
 import { ConnectionHandler } from 'relay-runtime'
-import environment from '../Environment'
+import environment from '../utils/Environment'
 
 const mutation = graphql`
   mutation CreateCommentMutation($input: CreateCommentInput!) {
@@ -21,7 +21,7 @@ const mutation = graphql`
 
 function sharedUpdater(store, postId, newComment) {
   const postProxy = store.get(postId),
-  connection = ConnectionHandler.getConnection(postProxy, 'Post_comments'),
+  connection = ConnectionHandler.getConnection(postProxy, 'ListComments_comments'),
   newEdge = ConnectionHandler.createEdge(store, connection, newComment, 'CommentEdge')
 
   if(connection) ConnectionHandler.insertEdgeAfter(connection, newEdge)
@@ -32,7 +32,7 @@ let tempID = 0
 export default function CreateCommentMutation(
   content,
   commentedById,
-  commentedByUserName,
+  commentedByName,
   commentedPostId,
   viewerId,
   callback
@@ -72,7 +72,7 @@ export default function CreateCommentMutation(
         newComment.setValue(id, 'id')
         newComment.setValue(content, 'content')
         commentedUser.setValue(commentedById, 'id')
-        commentedUser.setValue(commentedByUserName, 'name')
+        commentedUser.setValue(commentedByName, 'name')
         commentedPost.setValue(commentedPostId, 'id')
         newComment.setLinkedRecord(commentedUser, 'commentedBy')
         newComment.setLinkedRecord(commentedPost, 'commentedPost')

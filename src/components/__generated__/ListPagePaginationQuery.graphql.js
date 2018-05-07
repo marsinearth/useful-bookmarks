@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 4b7f4f36bb5f619fb8398787d5524248
+ * @relayHash 9f5c8de655996f63299581e1994d867f
  */
 
 /* eslint-disable */
@@ -12,8 +12,8 @@ import type { ConcreteRequest } from 'relay-runtime';
 type ListPage_viewer$ref = any;
 export type ListPagePaginationQueryVariables = {|
   count: number,
-  cursor: ?string,
-  id: ?string,
+  pCursor: ?string,
+  cCursor: ?string,
 |};
 export type ListPagePaginationQueryResponse = {|
   +viewer: {|
@@ -26,8 +26,8 @@ export type ListPagePaginationQueryResponse = {|
 /*
 query ListPagePaginationQuery(
   $count: Int!
-  $cursor: String
-  $id: ID
+  $pCursor: String
+  $cCursor: String
 ) {
   viewer {
     ...ListPage_viewer
@@ -36,12 +36,8 @@ query ListPagePaginationQuery(
 }
 
 fragment ListPage_viewer on Viewer {
-  ...Post_viewer
-  User(id: $id) {
-    name
-    id
-  }
-  allPosts(first: $count, after: $cursor, orderBy: createdAt_DESC) {
+  id
+  allPosts(first: $count, after: $pCursor, orderBy: createdAt_DESC) {
     edges {
       node {
         ...Post_post
@@ -57,14 +53,6 @@ fragment ListPage_viewer on Viewer {
   }
 }
 
-fragment Post_viewer on Viewer {
-  id
-  User(id: $id) {
-    id
-    name
-  }
-}
-
 fragment Post_post on Post {
   id
   description
@@ -74,7 +62,12 @@ fragment Post_post on Post {
     id
     name
   }
-  comments(first: $count, after: $cursor, orderBy: createdAt_ASC) {
+  ...ListComments_post
+}
+
+fragment ListComments_post on Post {
+  id
+  comments(first: $count, after: $cCursor) {
     edges {
       node {
         ...Comment_comment
@@ -87,6 +80,7 @@ fragment Post_post on Post {
       hasNextPage
       endCursor
     }
+    count
   }
 }
 
@@ -113,14 +107,14 @@ var v0 = [
   },
   {
     "kind": "LocalArgument",
-    "name": "cursor",
+    "name": "pCursor",
     "type": "String",
     "defaultValue": null
   },
   {
     "kind": "LocalArgument",
-    "name": "id",
-    "type": "ID",
+    "name": "cCursor",
+    "type": "String",
     "defaultValue": null
   }
 ],
@@ -131,7 +125,13 @@ v1 = {
   "args": null,
   "storageKey": null
 },
-v2 = [
+v2 = {
+  "kind": "Variable",
+  "name": "first",
+  "variableName": "count",
+  "type": "Int"
+},
+v3 = [
   v1,
   {
     "kind": "ScalarField",
@@ -141,33 +141,21 @@ v2 = [
     "storageKey": null
   }
 ],
-v3 = {
-  "kind": "Variable",
-  "name": "after",
-  "variableName": "cursor",
-  "type": "String"
-},
 v4 = {
-  "kind": "Variable",
-  "name": "first",
-  "variableName": "count",
-  "type": "Int"
-},
-v5 = {
   "kind": "ScalarField",
   "alias": null,
   "name": "__typename",
   "args": null,
   "storageKey": null
 },
-v6 = {
+v5 = {
   "kind": "ScalarField",
   "alias": null,
   "name": "cursor",
   "args": null,
   "storageKey": null
 },
-v7 = {
+v6 = {
   "kind": "LinkedField",
   "alias": null,
   "name": "pageInfo",
@@ -197,7 +185,7 @@ return {
   "operationKind": "query",
   "name": "ListPagePaginationQuery",
   "id": null,
-  "text": "query ListPagePaginationQuery(\n  $count: Int!\n  $cursor: String\n  $id: ID\n) {\n  viewer {\n    ...ListPage_viewer\n    id\n  }\n}\n\nfragment ListPage_viewer on Viewer {\n  ...Post_viewer\n  User(id: $id) {\n    name\n    id\n  }\n  allPosts(first: $count, after: $cursor, orderBy: createdAt_DESC) {\n    edges {\n      node {\n        ...Post_post\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n\nfragment Post_viewer on Viewer {\n  id\n  User(id: $id) {\n    id\n    name\n  }\n}\n\nfragment Post_post on Post {\n  id\n  description\n  imageUrl\n  siteUrl\n  postedBy {\n    id\n    name\n  }\n  comments(first: $count, after: $cursor, orderBy: createdAt_ASC) {\n    edges {\n      node {\n        ...Comment_comment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n\nfragment Comment_comment on Comment {\n  id\n  content\n  commentedBy {\n    id\n    name\n  }\n  commentedPost {\n    id\n  }\n}\n",
+  "text": "query ListPagePaginationQuery(\n  $count: Int!\n  $pCursor: String\n  $cCursor: String\n) {\n  viewer {\n    ...ListPage_viewer\n    id\n  }\n}\n\nfragment ListPage_viewer on Viewer {\n  id\n  allPosts(first: $count, after: $pCursor, orderBy: createdAt_DESC) {\n    edges {\n      node {\n        ...Post_post\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n\nfragment Post_post on Post {\n  id\n  description\n  imageUrl\n  siteUrl\n  postedBy {\n    id\n    name\n  }\n  ...ListComments_post\n}\n\nfragment ListComments_post on Post {\n  id\n  comments(first: $count, after: $cCursor) {\n    edges {\n      node {\n        ...Comment_comment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n    count\n  }\n}\n\nfragment Comment_comment on Comment {\n  id\n  content\n  commentedBy {\n    id\n    name\n  }\n  commentedPost {\n    id\n  }\n}\n",
   "metadata": {},
   "fragment": {
     "kind": "Fragment",
@@ -242,28 +230,16 @@ return {
           {
             "kind": "LinkedField",
             "alias": null,
-            "name": "User",
+            "name": "allPosts",
             "storageKey": null,
             "args": [
               {
                 "kind": "Variable",
-                "name": "id",
-                "variableName": "id",
-                "type": "ID"
-              }
-            ],
-            "concreteType": "User",
-            "plural": false,
-            "selections": v2
-          },
-          {
-            "kind": "LinkedField",
-            "alias": null,
-            "name": "allPosts",
-            "storageKey": null,
-            "args": [
-              v3,
-              v4,
+                "name": "after",
+                "variableName": "pCursor",
+                "type": "String"
+              },
+              v2,
               {
                 "kind": "Literal",
                 "name": "orderBy",
@@ -322,7 +298,7 @@ return {
                         "args": null,
                         "concreteType": "User",
                         "plural": false,
-                        "selections": v2
+                        "selections": v3
                       },
                       {
                         "kind": "LinkedField",
@@ -330,14 +306,13 @@ return {
                         "name": "comments",
                         "storageKey": null,
                         "args": [
-                          v3,
-                          v4,
                           {
-                            "kind": "Literal",
-                            "name": "orderBy",
-                            "value": "createdAt_ASC",
-                            "type": "CommentOrderBy"
-                          }
+                            "kind": "Variable",
+                            "name": "after",
+                            "variableName": "cCursor",
+                            "type": "String"
+                          },
+                          v2
                         ],
                         "concreteType": "CommentConnection",
                         "plural": false,
@@ -376,7 +351,7 @@ return {
                                     "args": null,
                                     "concreteType": "User",
                                     "plural": false,
-                                    "selections": v2
+                                    "selections": v3
                                   },
                                   {
                                     "kind": "LinkedField",
@@ -390,13 +365,20 @@ return {
                                       v1
                                     ]
                                   },
-                                  v5
+                                  v4
                                 ]
                               },
-                              v6
+                              v5
                             ]
                           },
-                          v7
+                          v6,
+                          {
+                            "kind": "ScalarField",
+                            "alias": null,
+                            "name": "count",
+                            "args": null,
+                            "storageKey": null
+                          }
                         ]
                       },
                       {
@@ -404,26 +386,25 @@ return {
                         "alias": null,
                         "name": "comments",
                         "args": [
-                          v3,
-                          v4,
                           {
-                            "kind": "Literal",
-                            "name": "orderBy",
-                            "value": "createdAt_ASC",
-                            "type": "CommentOrderBy"
-                          }
+                            "kind": "Variable",
+                            "name": "after",
+                            "variableName": "cCursor",
+                            "type": "String"
+                          },
+                          v2
                         ],
                         "handle": "connection",
-                        "key": "Post_comments",
+                        "key": "ListComments_comments",
                         "filters": []
                       },
-                      v5
+                      v4
                     ]
                   },
-                  v6
+                  v5
                 ]
               },
-              v7
+              v6
             ]
           },
           {
@@ -431,8 +412,13 @@ return {
             "alias": null,
             "name": "allPosts",
             "args": [
-              v3,
-              v4,
+              {
+                "kind": "Variable",
+                "name": "after",
+                "variableName": "pCursor",
+                "type": "String"
+              },
+              v2,
               {
                 "kind": "Literal",
                 "name": "orderBy",
@@ -450,5 +436,5 @@ return {
   }
 };
 })();
-(node/*: any*/).hash = 'c43835ddeda6ce5e609cb8ee112999a2';
+(node/*: any*/).hash = '5d26fb4d9b772d8d1dbc7251c1fabdc5';
 module.exports = node;

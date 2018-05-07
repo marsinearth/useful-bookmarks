@@ -4,65 +4,91 @@ import React, {
   PureComponent
 } from 'react'
 import {
-  createPaginationContainer,
+  createRefetchContainer,
   graphql
 } from 'react-relay'
 import { isMobile } from 'react-device-detect'
+import styled, { css } from 'styled-components'
 import DeletePostMutation from '../mutations/DeletePostMutation'
 import CreateComment from './CreateComment'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faEllipsisV from '@fortawesome/fontawesome-free-solid/faEllipsisV'
-import faCaretDown from '@fortawesome/fontawesome-free-solid/faCaretDown'
 import faPencilAlt from '@fortawesome/fontawesome-free-solid/faPencilAlt'
-import Comment from './Comment'
-import Loading from '../assets/images/loading.gif'
-import styled, { css } from 'styled-components'
-import { ITEMS_PER_PAGE } from '../constants'
-import history from '../history'
+import { UserConsumer } from '../utils/userContext'
+import ListComments from './ListComments'
+import history from '../utils/history'
 
 class Post extends PureComponent {
   state = {
     menu: false,
     commentMode: false,
-    commentLoading: false,
-    endCursor: null,
     editComment: null
   }
   optionTooltip = createRef()
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const { comments } = nextProps.post,
-    commentsPageInfo = comments && comments.pageInfo,
-    endCursor = commentsPageInfo && commentsPageInfo.endCursor
-    if(endCursor !== prevState.endCursor)
-      return {
-        endCursor,
-        commentLoading: false
-      }
-    return null
+  _openMenuPanel = () => {
+    this.setState({ menu: true }, () => {
+      this.optionTooltip.current.focus()
+    })
   }
+
+  _handleBlur = e => {
+    let target = e, stateObj = { editComment: null }
+    if(e.target) target = e.target || e.srcElement
+    const tagName = target && target.tagName
+    if(tagName === 'INPUT') stateObj['commentMode'] = false
+    else stateObj['menu'] = false
+    this.setState(stateObj)
+  }
+
+  _editPost = () => {
+    const { post } = this.props
+    this.setState({
+      commentMode: true,
+      menu: false
+    }, () => history.push({
+      pathname: '/create',
+      state: { editPost: post }
+    }))
+  }
+
+  _deletePost = () => {
+    const { post, viewer } = this.props
+    if(window.confirm(`Are you sure to delete: ${post.description}?`))
+      DeletePostMutation(post.id, viewer.id)
+    this.setState({ menu: false })
+  }
+
+  _addComment = () => {
+    this.setState({
+      commentMode: true,
+      menu: false
+    })
+  }
+
+  _editComment = comment => {
+    this.setState({
+      commentMode: true,
+      editComment: comment
+    })
+  }
+
   render() {
-    const { post, viewer, relay } = this.props,
+    const { post, viewer } = this.props,
     {
       menu,
       commentMode,
-      editComment,
-      commentLoading
+      editComment
     } = this.state,
     {
       id,
       description,
       imageUrl,
       siteUrl,
-      postedBy,
-      comments
+      postedBy
     } = post,
     viewerId = viewer && viewer.id,
-    userInfo = viewer && viewer.User,
-    userId = userInfo && userInfo.id,
-    userName = userInfo && userInfo.name,
-    posterId = postedBy && postedBy.id,
-    posterAuth = posterId === userId
+    posterId = postedBy && postedBy.id
 
     return (
       <Container>
@@ -76,202 +102,78 @@ class Post extends PureComponent {
             mobile={isMobile ? 'true' : 'false'}
           />
         </a>
-        <InfoContainer>
-          {description}
-          {userId &&
-            <VertOptionContainer onClick={this._openMenuPanel}>
-              <FontAwesomeIcon icon={faEllipsisV}/>
-            </VertOptionContainer>
-          }
-          <Tooltip
-            innerRef={this.optionTooltip}
-            onBlur={this._handleBlur}
-            menu={menu}
-            tabIndex='-1'
-          >
-            <TooltipMenu comment onClick={this._addComment}>
-              + Comment
-            </TooltipMenu>
-            {posterAuth &&
-              <Fragment>
-                <TooltipMenu edit onClick={this._editPost}>
-                  <FontAwesomeIcon icon={faPencilAlt} size='xs'/>
-                  &nbsp;Edit
-                </TooltipMenu>
-                <TooltipMenu onClick={this._handleDelete}>
-                  Delete
-                </TooltipMenu>
-              </Fragment>
-            }
-          </Tooltip>
-          {comments.edges && comments.edges.length > 0 &&
-            <CommentsContainer>
-              <p>Comments</p>
-              {commentLoading &&
-                <CommentsLoading>
-                  <img
-                    src={Loading}
-                    alt="Loading..."
-                  />
-                </CommentsLoading>
+        <UserConsumer>
+          {user => (
+            <InfoContainer>
+              {description}
+              {user.id &&
+                <VertOptionContainer onClick={this._openMenuPanel}>
+                  <FontAwesomeIcon icon={faEllipsisV}/>
+                </VertOptionContainer>
               }
-              {!commentLoading && comments.edges.map(({ node }) =>
-                <Comment
-                  key={node.__id}
-                  comment={node}
-                  postId={id}
-                  viewer={viewer}
-                  handleEdit={this._handleCommentEdit}
-                />
-              )}
-              {relay.hasMore() &&
-                <CommentMoreContainer onClick={this._loadMore}>
-                  <div>
-                    <span>More </span>
-                    <FontAwesomeIcon icon={faCaretDown}/>
-                  </div>
-                </CommentMoreContainer>
-              }
-            </CommentsContainer>
-          }
-          <CreateComment
-            mode={commentMode}
-            editComment={editComment}
-            commentedPostId={id}
-            viewerId={viewerId}
-            userName={userName}
-            handleBlur={this._handleBlur}
-          />
-        </InfoContainer>
+              <Tooltip
+                innerRef={this.optionTooltip}
+                onBlur={this._handleBlur}
+                menu={menu}
+                tabIndex='-1'
+              >
+                <TooltipMenu comment onClick={this._addComment}>
+                  + Comment
+                </TooltipMenu>
+                {posterId === user.id &&
+                  <Fragment>
+                    <TooltipMenu edit onClick={this._editPost}>
+                      <FontAwesomeIcon icon={faPencilAlt} size='xs'/>
+                      &nbsp;Edit
+                    </TooltipMenu>
+                    <TooltipMenu onClick={this._deletePost}>
+                      Delete
+                    </TooltipMenu>
+                  </Fragment>
+                }
+              </Tooltip>
+              <ListComments
+                post={post}
+                handleEdit={this._editComment}
+                userId={user.id}
+              />
+              <CreateComment
+                mode={commentMode}
+                editComment={editComment}
+                commentedPostId={id}
+                viewerId={viewerId}
+                user={user}
+                handleBlur={this._handleBlur}
+              />
+            </InfoContainer>
+          )}
+          </UserConsumer>
       </Container>
     )
   }
-  _loadMore = () => {
-    const { relay } = this.props
-    if(!relay.hasMore()) return
-    this.setState({ CommentsLoading: true }, () =>
-      relay.loadMore(ITEMS_PER_PAGE)
-    )
-  }
-  _openMenuPanel = () => {
-    this.setState({ menu: true }, () => {
-      this.optionTooltip.current.focus()
-    })
-  }
-  _handleBlur = e => {
-    let target = e, stateObj = { editComment: null }
-    if(e.target) target = e.target || e.srcElement
-    const tagName = target && target.tagName
-    if(tagName === 'INPUT') stateObj['commentMode'] = false
-    else stateObj['menu'] = false
-    this.setState(stateObj)
-  }
-  _addComment = () => {
-    this.setState({
-      commentMode: true,
-      menu: false
-    })
-  }
-  _editPost = () => {
-    const { post } = this.props
-    this.setState({
-      commentMode: true,
-      menu: false
-    }, () => history.push({
-      pathname: '/create',
-      state: { editPost: post }
-    }))
-  }
-  _handleDelete = () => {
-    const { post, viewer } = this.props
-    if(window.confirm(`Are you sure to delete: ${post.description}?`))
-      DeletePostMutation(post.id, viewer.id)
-    this.setState({ menu: false })
-  }
-  _handleCommentEdit = comment => {
-    this.setState({
-      commentMode: true,
-      editComment: comment
-    })
-  }
 }
 
-export default createPaginationContainer(
-  Post,
-  {
-    viewer: graphql`
-      fragment Post_viewer on Viewer {
-        id
-        User(id: $id) {
-          id
-          name
+export default createRefetchContainer(Post, graphql`
+  fragment Post_post on Post {
+    id
+    description
+    imageUrl
+    siteUrl
+    postedBy {
+      id
+      name
+    }
+    ...ListComments_post
+  }`,
+  graphql`
+    query PostRefetchQuery {
+      viewer {
+        Post {
+          ...Post_post
         }
-      }
-    `,
-    post: graphql`
-      fragment Post_post on Post {
-        id
-        description
-        imageUrl
-        siteUrl
-        postedBy {
-          id
-          name
-        }
-        comments(
-          first: $count,
-          after: $cursor,
-          orderBy: createdAt_ASC
-        ) @connection(
-          key: "Post_comments",
-          filters: []
-        ) {
-          edges {
-            node {
-              ...Comment_comment
-            }
-          }
-          pageInfo {
-            hasNextPage,
-            endCursor
-          }
-        }
-      }
-    `
-  },
-  {
-    direction: 'forward',
-    query: graphql`
-      query PostPaginationQuery(
-        $id: ID!
-        $count: Int!
-        $cursor: String
-        $postID: ID!
-      ) {
-        viewer {
-          id,
-          User(id: $id) {
-            id,
-            name
-          },
-          Post(id: $postID) {
-            ...Post_post
-          }
-        }
-      }
-    `,
-    getConnectionFromProps(props) {
-      return props.post && props.post.comments
-    },
-    getVariables(props, { count, cursor }) {
-      return {
-        id: props.viewer.User.id,
-        count,
-        cursor,
-        postID: props.post.id
       }
     }
-  }
+  `
 )
 
 const Dim = css`
@@ -288,7 +190,7 @@ Container = styled.div`
   width: 365px;
   padding: 1rem;
   background-color: rgba(0, 0, 0, .05);
-  margin: 1.5rem 0;
+  margin-bottom: 1.5rem;
   box-sizing: border-box;
 `,
 ImgContainer = styled.div`
@@ -330,45 +232,4 @@ TooltipMenu = styled.div`
   padding: .25rem .5rem;
   vertical-align: middle;
   ${Dim}
-`,
-CommentsContainer = styled.div`
-  width: 100%;
-
-  p {
-    color: #aaa;
-    font-weight: bold;
-    font-size: .875rem;
-  }
-`,
-CommentsLoading = styled.div`
-  width: 100%;
-  padding: 2rem;
-  justify-content: center;
-  display: flex;
-  background-color: transparent;
-  box-sizing: border-box;
-
-  img {
-    width: 5rem;
-    height: 5rem;
-    mix-blend-mode: multiply;
-  }
-`,
-CommentMoreContainer = styled.div`
-  width: 100%;
-  text-align: center;
-
-  div {
-    color: #aaa;
-    cursor: pointer;
-
-    span {
-      font-size: .75rem;
-      vertical-align: text-top;
-    }
-
-    &:active {
-      color: #444;
-    }
-  }
 `

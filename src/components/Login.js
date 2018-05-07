@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react'
 import { withRouter, Link } from 'react-router-dom'
-import { GC_USER_ID, GC_AUTH_TOKEN } from '../constants'
+import { GC_USER_ID, GC_AUTH_TOKEN } from '../utils/constants'
 import AuthenticateUserMutation from '../mutations/AuthenticateUserMutation'
 import SignupUserMutation from '../mutations/SignupUserMutation'
 import Loading from '../assets/images/loading.gif'
 import styled, { css } from 'styled-components'
+import history from '../utils/history'
 
 class Login extends PureComponent {
   state = {
@@ -39,7 +40,7 @@ class Login extends PureComponent {
             <Input
               value={email}
               onChange={e => this.setState({ email: e.target.value })}
-              type='text'
+              type='email'
               placeholder='email'
             />
             <Input
@@ -102,7 +103,7 @@ class Login extends PureComponent {
     if(id && token) {
       localStorage.setItem(GC_USER_ID, id)
       localStorage.setItem(GC_AUTH_TOKEN, token)
-      this.props.history.push('/')
+      history.push('/')
     }
   }
   _failedAuth = () => {

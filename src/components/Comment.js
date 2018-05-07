@@ -7,6 +7,7 @@ import {
   createFragmentContainer,
   graphql
 } from 'react-relay'
+import { isMobile } from 'react-device-detect'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faEllipsisV from '@fortawesome/fontawesome-free-solid/faEllipsisV'
 import faPencilAlt from '@fortawesome/fontawesome-free-solid/faPencilAlt'
@@ -20,20 +21,56 @@ class Comment extends PureComponent {
   }
   optionTooltip = createRef()
 
+  _openMenuPanel = () => {
+    this.setState({ menu: true }, () => {
+      this.optionTooltip.current.focus()
+    })
+  }
+
+  _handleMouseEnter = () => {
+    const { userId } = this.props
+    if(userId) this.setState({ hover: true })
+  }
+
+  _handleMouseLeave = () => {
+    this.setState({ hover: false })
+  }
+
+  _handleBlur = e => {
+    let stateObj = {}
+    const target = e.target || e.srcElement,
+      tagName = target && target.tagName
+
+    if(tagName === 'INPUT') stateObj['commentMode'] = false
+    else stateObj['menu'] = false
+    this.setState(stateObj)
+  }
+
+  _handleEdit = () => {
+    const { comment, handleEdit } = this.props
+    this.setState({ menu: false }, () => handleEdit(comment))
+  }
+
+  _handleDelete = () => {
+    const { comment, postId } = this.props
+    if(window.confirm(`Are you sure to delete: ${comment.content}?`))
+      DeleteCommentMutation(comment.id, postId)
+    this.setState({ menu: false })
+  }
+
   render() {
-    const { comment, viewer } = this.props,
+    const { comment, userId } = this.props,
     { menu, hover } = this.state,
     content = comment && comment.content,
     commentedBy = comment && comment.commentedBy,
     commentedId = commentedBy && commentedBy.id,
     commentedName = commentedBy && commentedBy.name,
-    userInfo = viewer && viewer.User,
-    userId = userInfo && userInfo.id,
     commentAuth = commentedId === userId
 
     return (
       <Container
-        onMouseEnter={this._handleMouseEnter}
+        onClick={() => isMobile && this._handleMouseEnter()}
+        onMouseEnter={() => !isMobile && this._handleMouseEnter()}
         onMouseLeave={this._handleMouseLeave}
       >
         <Writer>
@@ -68,38 +105,6 @@ class Comment extends PureComponent {
         </Tooltip>
       </Container>
     )
-  }
-  _openMenuPanel = () => {
-    this.setState({ menu: true }, () => {
-      this.optionTooltip.current.focus()
-    })
-  }
-  _handleMouseEnter = () => {
-    const viewer = this.props.viewer,
-    userInfo = viewer && viewer.User,
-    userId = userInfo && userInfo.id
-    if(userId) this.setState({ hover: true })
-  }
-  _handleMouseLeave = () => {
-    this.setState({ hover: false })
-  }
-  _handleBlur = e => {
-    let stateObj = {}
-    const target = e.target || e.srcElement,
-    tagName = target && target.tagName
-    if(tagName === 'INPUT') stateObj['commentMode'] = false
-    else stateObj['menu'] = false
-    this.setState(stateObj)
-  }
-  _handleEdit = () => {
-    const { comment, handleEdit } = this.props
-    this.setState({ menu: false }, () => handleEdit(comment))
-  }
-  _handleDelete = () => {
-    const { comment, postId } = this.props
-    if(window.confirm(`Are you sure to delete: ${comment.content}?`))
-      DeleteCommentMutation(comment.id, postId)
-    this.setState({ menu: false })
   }
 }
 

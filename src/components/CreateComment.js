@@ -1,7 +1,6 @@
 import React, { PureComponent, createRef } from 'react'
 import CreateCommentMutation from '../mutations/CreateCommentMutation'
 import AnimateHeight from 'react-animate-height'
-import { GC_USER_ID } from '../constants'
 import styled from 'styled-components'
 import UpdateCommentMutation from '../mutations/UpdateCommentMutation'
 
@@ -61,28 +60,28 @@ class CreateComment extends PureComponent {
   }
   _handleSubmit = e => {
     e.preventDefault()
-    const commentedById = localStorage.getItem(GC_USER_ID),
-    { content, editCommentId } = this.state,
+    const { content } = this.state,
     {
       commentedPostId,
       editComment,
       viewerId,
-      userName
+      user
     } = this.props,
+    { id, name } = user,
     target = e.target || e.srcElement,
     targetInput = target && target.querySelector('input')
 
-    if(editCommentId) UpdateCommentMutation(
+    if(editComment) UpdateCommentMutation(
       content,
       editComment,
       viewerId,
       () => this._onBlur(targetInput)
     )
 
-    else CreateCommentMutation(
+    else if(id && name) CreateCommentMutation(
       content,
-      commentedById,
-      userName,
+      id,
+      name,
       commentedPostId,
       viewerId,
       () => this._onBlur(targetInput)

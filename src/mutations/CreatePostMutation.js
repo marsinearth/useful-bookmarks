@@ -3,7 +3,7 @@ import {
   graphql,
 } from 'react-relay'
 import { ConnectionHandler } from 'relay-runtime'
-import environment from '../Environment'
+import environment from '../utils/Environment'
 
 const mutation = graphql`
   mutation CreatePostMutation($input: CreatePostInput!) {

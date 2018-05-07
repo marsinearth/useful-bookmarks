@@ -9,31 +9,39 @@ import styled, { css } from 'styled-components'
 import Loading from '../assets/images/loading.gif'
 import { isMobile } from 'react-device-detect'
 import InfiniteScroll from 'react-infinite-scroller'
-import { GC_USER_ID, ITEMS_PER_PAGE } from '../constants'
-
-const userId = localStorage.getItem(GC_USER_ID)
+import { UserConsumer } from '../utils/userContext'
+import { ITEMS_PER_PAGE } from '../utils/constants'
 
 class ListPage extends PureComponent {
-  render() {
-    const { viewer, relay } = this.props,
-    userInfo = viewer.User,
-    userName = userInfo && userInfo.name
 
-    //console.log('pageInfo: ', viewer.allPosts.pageInfo)
+  _loadMore = () => {
+    const { relay } = this.props
+    if(!relay.hasMore()) return
+    relay.loadMore(ITEMS_PER_PAGE)
+  }
+
+  render() {
+    const { viewer, relay } = this.props
 
     return (
       <Wrapper>
-        {userName &&
-          <WelcomeUser>
-            Hello {userName}!
-          </WelcomeUser>
-        }
-        <StyledLink
-          mobile={isMobile ? 'true' : 'false'}
-          to={userName ? '/create' : '/login'}
-        >
-          + {userName ? 'New Post' : 'Sign In'}
-        </StyledLink>
+        <UserConsumer>
+          {user => (
+            <TopPart width={window.innerWidth}>
+              {user.name &&
+                <WelcomeUser>
+                  Hello {user.name}!
+                </WelcomeUser>
+              }
+              <StyledLink
+                mobile={isMobile ? 'true' : 'false'}
+                to={user.name ? '/create' : '/login'}
+              >
+                + {user.name ? 'New Post' : 'Sign In'}
+              </StyledLink>
+            </TopPart>
+          )}
+        </UserConsumer>
         <InfiniteScroll
           pageStart={0}
           loadMore={this._loadMore}
@@ -55,50 +63,37 @@ class ListPage extends PureComponent {
       </Wrapper>
     )
   }
-  _loadMore = () => {
-    const { relay } = this.props
-    if(!relay.hasMore()) return
-    relay.loadMore(ITEMS_PER_PAGE)
-  }
 }
 
-export default createPaginationContainer(
-  ListPage,
-  {
-    viewer: graphql`
-      fragment ListPage_viewer on Viewer {
-        ...Post_viewer
-        User(id: $id) {
-          name
-        }
-        allPosts(
-          first: $count,
-          after: $cursor,
-          orderBy: createdAt_DESC
-        ) @connection(
-          key: "ListPage_allPosts",
-          filters: []
-        ) {
-          edges {
-            node {
-              ...Post_post
-            }
-          }
-          pageInfo {
-            hasNextPage,
-            endCursor
-          }
+export default createPaginationContainer(ListPage, graphql`
+  fragment ListPage_viewer on Viewer {
+    id
+    allPosts(
+      first: $count,
+      after: $pCursor,
+      orderBy: createdAt_DESC
+    ) @connection(
+      key: "ListPage_allPosts",
+      filters: []
+    ) {
+      edges {
+        node {
+          ...Post_post
         }
       }
-    `
-  },
+      pageInfo {
+        hasNextPage,
+        endCursor
+      }
+    }
+  }`,
   {
     direction: 'forward',
     query: graphql`
       query ListPagePaginationQuery(
         $count: Int!
-        $cursor: String,
-        $id: ID
+        $pCursor: String,
+        $cCursor: String
       ) {
         viewer {
           ...ListPage_viewer
@@ -111,16 +106,14 @@ export default createPaginationContainer(
     getVariables(props, { count, cursor }) {
       return {
         count,
-        cursor,
-        id: userId
+        pCursor: cursor
       }
     }
   }
 )
 
 const Decorated = css`
-  position: fixed;
-  background-color: rgba(255, 255, 255, .5);
+  position: absolute;
   top: 0;
   padding: 2rem;
   text-transform: uppercase;
@@ -139,11 +132,18 @@ Wrapper = styled.div`
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  margin-top: 4rem;
+  margin-top: 5.2rem;
 
   div {
     max-width: 100%;
   }
+`,
+TopPart = styled.div`
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: ${props => props.width > 700 ? 'transparent' : 'rgba(255, 255, 255, .5)'};
+  height: 5.2rem;
 `,
 WelcomeUser = styled.div`
   left: 0;

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 82fdcccf79b00c2b805c43c5b351994f
+ * @relayHash 1eab791f7ae626c3c72d702b7a22e62f
  */
 
 /* eslint-disable */
@@ -29,7 +29,7 @@ export type CreatePostViewerQueryResponse = {|
 query CreatePostViewerQuery {
   viewer {
     id
-    allPosts(last: 100, orderBy: createdAt_DESC) {
+    allPosts(last: 10, orderBy: createdAt_DESC) {
       edges {
         node {
           id
@@ -123,7 +123,7 @@ return {
   "operationKind": "query",
   "name": "CreatePostViewerQuery",
   "id": null,
-  "text": "query CreatePostViewerQuery {\n  viewer {\n    id\n    allPosts(last: 100, orderBy: createdAt_DESC) {\n      edges {\n        node {\n          id\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        hasPreviousPage\n        startCursor\n      }\n    }\n  }\n}\n",
+  "text": "query CreatePostViewerQuery {\n  viewer {\n    id\n    allPosts(last: 10, orderBy: createdAt_DESC) {\n      edges {\n        node {\n          id\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        hasPreviousPage\n        startCursor\n      }\n    }\n  }\n}\n",
   "metadata": {
     "connection": [
       {
@@ -187,12 +187,12 @@ return {
             "kind": "LinkedField",
             "alias": null,
             "name": "allPosts",
-            "storageKey": "allPosts(last:100,orderBy:\"createdAt_DESC\")",
+            "storageKey": "allPosts(last:10,orderBy:\"createdAt_DESC\")",
             "args": [
               {
                 "kind": "Literal",
                 "name": "last",
-                "value": 100,
+                "value": 10,
                 "type": "Int"
               },
               {
@@ -214,7 +214,7 @@ return {
               {
                 "kind": "Literal",
                 "name": "last",
-                "value": 100,
+                "value": 10,
                 "type": "Int"
               },
               {
@@ -234,5 +234,5 @@ return {
   }
 };
 })();
-(node/*: any*/).hash = 'c5bb9e4ee9f58b213e723aae7798476b';
+(node/*: any*/).hash = '7b29219dab42577f10bf933c8109936e';
 module.exports = node;

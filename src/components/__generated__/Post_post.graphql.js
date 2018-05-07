@@ -8,7 +8,7 @@
 
 /*::
 import type { ConcreteFragment } from 'relay-runtime';
-type Comment_comment$ref = any;
+type ListComments_post$ref = any;
 import type { FragmentReference } from 'relay-runtime';
 declare export opaque type Post_post$ref: FragmentReference;
 export type Post_post = {|
@@ -20,17 +20,7 @@ export type Post_post = {|
     +id: string,
     +name: string,
   |},
-  +comments: ?{|
-    +edges: ?$ReadOnlyArray<?{|
-      +node: {|
-        +$fragmentRefs: Comment_comment$ref,
-      |},
-    |}>,
-    +pageInfo: {|
-      +hasNextPage: boolean,
-      +endCursor: ?string,
-    |},
-  |},
+  +$fragmentRefs: ListComments_post$ref,
   +$refType: Post_post$ref,
 |};
 */
@@ -48,30 +38,8 @@ return {
   "kind": "Fragment",
   "name": "Post_post",
   "type": "Post",
-  "metadata": {
-    "connection": [
-      {
-        "count": "count",
-        "cursor": "cursor",
-        "direction": "forward",
-        "path": [
-          "comments"
-        ]
-      }
-    ]
-  },
-  "argumentDefinitions": [
-    {
-      "kind": "RootArgument",
-      "name": "count",
-      "type": "Int"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "cursor",
-      "type": "String"
-    }
-  ],
+  "metadata": null,
+  "argumentDefinitions": [],
   "selections": [
     v0,
     {
@@ -115,84 +83,12 @@ return {
       ]
     },
     {
-      "kind": "LinkedField",
-      "alias": "comments",
-      "name": "__Post_comments_connection",
-      "storageKey": null,
-      "args": null,
-      "concreteType": "CommentConnection",
-      "plural": false,
-      "selections": [
-        {
-          "kind": "LinkedField",
-          "alias": null,
-          "name": "edges",
-          "storageKey": null,
-          "args": null,
-          "concreteType": "CommentEdge",
-          "plural": true,
-          "selections": [
-            {
-              "kind": "LinkedField",
-              "alias": null,
-              "name": "node",
-              "storageKey": null,
-              "args": null,
-              "concreteType": "Comment",
-              "plural": false,
-              "selections": [
-                {
-                  "kind": "FragmentSpread",
-                  "name": "Comment_comment",
-                  "args": null
-                },
-                {
-                  "kind": "ScalarField",
-                  "alias": null,
-                  "name": "__typename",
-                  "args": null,
-                  "storageKey": null
-                }
-              ]
-            },
-            {
-              "kind": "ScalarField",
-              "alias": null,
-              "name": "cursor",
-              "args": null,
-              "storageKey": null
-            }
-          ]
-        },
-        {
-          "kind": "LinkedField",
-          "alias": null,
-          "name": "pageInfo",
-          "storageKey": null,
-          "args": null,
-          "concreteType": "PageInfo",
-          "plural": false,
-          "selections": [
-            {
-              "kind": "ScalarField",
-              "alias": null,
-              "name": "hasNextPage",
-              "args": null,
-              "storageKey": null
-            },
-            {
-              "kind": "ScalarField",
-              "alias": null,
-              "name": "endCursor",
-              "args": null,
-              "storageKey": null
-            }
-          ]
-        }
-      ]
+      "kind": "FragmentSpread",
+      "name": "ListComments_post",
+      "args": null
     }
   ]
 };
 })();
-(node/*: any*/).hash = '1cf4a8af3db4d2fe4580f919e4096ea3';
+(node/*: any*/).hash = '51aec05c9c1cc80e60f5ceea3dfd0035';
 module.exports = node;

@@ -3,15 +3,25 @@ import {
   QueryRenderer,
   graphql
 } from 'react-relay'
-import environment from '../Environment'
+import environment from '../utils/Environment'
+import { UserProvider } from '../utils/userContext'
 import ListPage from './ListPage'
 import Loading from '../assets/images/loading.gif'
-import { GC_USER_ID, ITEMS_PER_PAGE } from '../constants'
+import { GC_USER_ID, ITEMS_PER_PAGE } from '../utils/constants'
 import styled from 'styled-components'
 
 const HomeAllPostQuery = graphql`
-  query HomeAllPostQuery($count: Int!, $id: ID, $cursor: String) {
+  query HomeAllPostQuery(
+    $count: Int!,
+    $id: ID,
+    $pCursor: String,
+    $cCursor: String
+  ) {
     viewer {
+      User(id: $id) {
+        id
+        name
+      }
       ...ListPage_viewer
     }
   }
@@ -33,7 +43,13 @@ class Home extends PureComponent {
           if (error) {
             return <div>{error.message}</div>
           } else if (props) {
-            return <ListPage viewer={props.viewer} />
+            const { User } = props.viewer,
+            userVal = User ? User : { id: null, name: null }
+            return (
+              <UserProvider value={userVal}>
+                <ListPage viewer={props.viewer} />
+              </UserProvider>
+            )
           }
           return (
             <Wrapper>

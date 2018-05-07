@@ -3,19 +3,20 @@ import { Link } from 'react-router-dom'
 import CreatePostMutation from '../mutations/CreatePostMutation'
 import UpdatePostMutation from '../mutations/UpdatePostMutation'
 import { QueryRenderer, graphql } from 'react-relay'
-import environment from '../Environment'
+import environment from '../utils/Environment'
 import Loading from '../assets/images/loading.gif'
 import DefaultImg from '../assets/images/default.jpeg'
-import { GC_USER_ID } from '../constants'
+import { GC_USER_ID } from '../utils/constants'
 import styled, { css } from 'styled-components'
-import { urlregex, validateURL } from '../utils'
+import { urlregex, validateURL } from '../utils/validateURL'
+import history from '../utils/history'
 
 const CreatePostViewerQuery = graphql`
   query CreatePostViewerQuery {
     viewer {
       id,
       allPosts(
-        last: 100,
+        last: 10,
         orderBy: createdAt_DESC
       ) @connection(
         key: "ListPage_allPosts",
@@ -43,7 +44,7 @@ class CreatePost extends PureComponent {
   siteUrlNode = createRef()
   componentDidMount(){
     const userId = localStorage.getItem(GC_USER_ID)
-    if(!userId) this.props.history.replace('/')
+    if(!userId) history.replace('/')
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     const { location } = nextProps,
@@ -59,6 +60,50 @@ class CreatePost extends PureComponent {
     }
     return null
   }
+
+  _handleChange = (e, input) => {
+    let { error } = this.state
+    const value = e.target.value,
+    valid = validateURL(value)
+    error[input] = valid ? false : true
+    this.setState({
+      [input]: value,
+      error
+    })
+  }
+
+  _handlePost = viewerId => {
+    const { imageUrl, siteUrl, error } = this.state
+
+    if(error.siteUrl || error.imageUrl) {
+      if(error.siteUrl) this.siteUrlNode.current.focus()
+      if(error.imageUrl) this.imageUrlNode.current.focus()
+    } else {
+      const { location } = this.props,
+      editPost = location.state && location.state.editPost,
+      { editing, description } = this.state,
+      postedById = localStorage.getItem(GC_USER_ID)
+
+      if(editing) UpdatePostMutation(
+        description,
+        imageUrl,
+        siteUrl,
+        editPost,
+        viewerId,
+        () => this.setState({ editing: false }, () => history.replace('/'))
+      )
+
+      else CreatePostMutation(
+        description,
+        imageUrl,
+        siteUrl,
+        postedById,
+        viewerId,
+        () => history.replace('/')
+      )
+    }
+  }
+
   render() {
     const {
       description,
@@ -136,47 +181,6 @@ class CreatePost extends PureComponent {
         }}
       />
     )
-  }
-  _handleChange = (e, input) => {
-    let { error } = this.state
-    const value = e.target.value,
-    valid = validateURL(value)
-    error[input] = valid ? false : true
-    this.setState({
-      [input]: value,
-      error
-    })
-  }
-  _handlePost = viewerId => {
-    const { imageUrl, siteUrl, error } = this.state
-
-    if(error.siteUrl || error.imageUrl) {
-      if(error.siteUrl) this.siteUrlNode.current.focus()
-      if(error.imageUrl) this.imageUrlNode.current.focus()
-    } else {
-      const { location, history } = this.props,
-      editPost = location.state && location.state.editPost,
-      { editing, description } = this.state,
-      postedById = localStorage.getItem(GC_USER_ID)
-
-      if(editing) UpdatePostMutation(
-        description,
-        imageUrl,
-        siteUrl,
-        editPost,
-        viewerId,
-        () => this.setState({ editing: false }, () => history.replace('/'))
-      )
-
-      else CreatePostMutation(
-        description,
-        imageUrl,
-        siteUrl,
-        postedById,
-        viewerId,
-        () => history.replace('/')
-      )
-    }
   }
 }
 
