@@ -83,7 +83,10 @@ class Comment extends PureComponent {
           hover={hover}
           onClick={this._openMenuPanel}
         >
-          <FontAwesomeIcon icon={faEllipsisV}/>
+          <FontAwesomeIcon
+            size='sm'
+            icon={faEllipsisV}
+          />
         </VertOptionContainer>
         <Tooltip
           innerRef={this.optionTooltip}

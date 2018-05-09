@@ -1,13 +1,18 @@
-import React, { PureComponent, Fragment } from 'react'
+import React, {
+  PureComponent,
+  createRef,
+  Fragment
+} from 'react'
 import {
   createPaginationContainer,
   graphql
 } from 'react-relay'
 import styled from 'styled-components'
-import Loading from '../assets/images/loading.gif'
+import AnimateHeight from 'react-animate-height'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faCaretUp from '@fortawesome/fontawesome-free-solid/faCaretUp'
 import faCaretDown from '@fortawesome/fontawesome-free-solid/faCaretDown'
+import Loading from '../assets/images/loading.gif'
 import { ITEMS_PER_PAGE } from '../utils/constants'
 import Comment from './Comment'
 
@@ -15,19 +20,57 @@ class ListComments extends PureComponent {
   state = {
     commentLoading: false,
     endCursor: null,
-    closable: false
+    closable: false,
+    contHeight: 'auto'
   }
+  listContainer = createRef()
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const { comments } = nextProps
-    if(comments) {
-      const { endCursor } = comments.pageInfo
+    if(nextProps.comments) {
+      const { endCursor } = nextProps.comments.pageInfo
       return {
         endCursor,
         commentLoading: false
       }
     }
     return null
+  }
+
+  componentDidMount() {
+    const { post } = this.props,
+    comments = post && post.comments
+    
+    if(comments && comments.count > 0) {
+      const contHeight = this.listContainer.current.clientHeight
+      this.setState({ contHeight })
+    }
+  }
+
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    const prevCommentsEdgesLen = (
+      prevProps.post
+      && prevProps.post.comments
+      && prevProps.post.comments.edges
+    ) && prevProps.post.comments.edges.length,
+    thisCommentsEdgesLen = (
+      this.props.post
+      && this.props.post.comments
+      && this.props.post.comments.edges
+      && this.props.post.comments.edges.length > 0
+    ) && this.props.post.comments.edges.length
+
+    if(prevCommentsEdgesLen !== thisCommentsEdgesLen) {
+      const container = this.listContainer.current
+      return container
+    }
+    return null
+  }
+
+  componentDidUpdate(prevProps, prevState, container) {
+    if(container) {
+      const contHeight = container.clientHeight
+      this.setState({ contHeight })
+    }
   }
 
   _loadMore = () => {
@@ -50,7 +93,7 @@ class ListComments extends PureComponent {
     { comments, id } = post,
     { edges, pageInfo, count } = comments,
     pageMore = pageInfo && pageInfo.hasNextPage,
-    { commentLoading, closable } = this.state
+    { commentLoading, closable, contHeight } = this.state
 
     return (
       <Fragment>
@@ -65,15 +108,23 @@ class ListComments extends PureComponent {
                 />
               </CommentsLoading>
             }
-            {!commentLoading && edges.map(({ node }) =>
-              <Comment
-                key={node.__id}
-                comment={node}
-                postId={id}
-                userId={userId}
-                handleEdit={handleEdit}
-              />
-            )}
+            <AnimateHeight
+              duration={350}
+              height={contHeight}
+              easing='ease-in-out'
+            >
+              <div ref={this.listContainer}>
+                {!commentLoading && edges.map(({ node }) =>
+                  <Comment
+                    key={node.__id}
+                    comment={node}
+                    postId={id}
+                    userId={userId}
+                    handleEdit={handleEdit}
+                  />
+                )}
+              </div>
+            </AnimateHeight>
             <CommentMoreContainer>
               {pageMore &&
                 <div onClick={this._loadMore}>
@@ -181,7 +232,7 @@ CommentMoreContainer = styled.div`
 
     span {
       font-size: .75rem;
-      vertical-align: text-top;
+      vertical-align: middle;
     }
 
     &:active {
