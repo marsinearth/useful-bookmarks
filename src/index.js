@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { render } from 'react-dom'
+import GitHubForkRibbon from 'react-github-fork-ribbon'
 import './index.css'
 import { unregister } from './registerServiceWorker'
 import { Router, Route, Switch } from 'react-router-dom'
@@ -16,14 +17,33 @@ window.onunload = function() {
   return
 }
 
+const ForkRibbon = () => (
+  <GitHubForkRibbon
+    position="right-bottom"
+    color="black"
+    href="//github.com/marsinearth/usefulbookmarks"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <b>Go To Source Code</b>
+  </GitHubForkRibbon>
+)
+
+const App = () => (
+  <Fragment>
+    <Router history={history}>
+      <Switch>
+        <Route exact path='/' component={Home} />
+        <Route exact path='/create' component={CreatePost} />
+        <Route exact path='/login' component={Login} />
+      </Switch>
+    </Router>
+    <ForkRibbon />
+  </Fragment>
+)
+
 render(
-  <Router history={history}>
-    <Switch>
-      <Route exact path='/' component={Home} />
-      <Route exact path='/create' component={CreatePost} />
-      <Route exact path='/login' component={Login} />
-    </Switch>
-  </Router>,
+  <App />,
   document.getElementById('root')
 )
 
