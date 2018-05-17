@@ -21,7 +21,7 @@ const ForkRibbon = () => (
   <GitHubForkRibbon
     position="right-bottom"
     color="black"
-    href="//github.com/marsinearth/usefulbookmarks"
+    href="//github.com/marsinearth/useful-bookmarks"
     target="_blank"
     rel="noopener noreferrer"
   >
