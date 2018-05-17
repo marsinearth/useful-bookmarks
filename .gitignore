@@ -5,7 +5,10 @@
 /server/.graphcoolrc
 
 # dependencies
-/node_modules
+/**/node_modules
+
+#netlify
+.netlify
 
 # testing
 /coverage
