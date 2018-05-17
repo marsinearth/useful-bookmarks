@@ -42,10 +42,13 @@ class CreatePost extends PureComponent {
   }
   imageUrlNode = createRef()
   siteUrlNode = createRef()
+  handlers = {}
+
   componentDidMount(){
     const userId = localStorage.getItem(GC_USER_ID)
     if(!userId) history.replace('/')
   }
+
   static getDerivedStateFromProps(nextProps, prevState) {
     const { location } = nextProps,
     editPost = location.state && location.state.editPost
@@ -61,18 +64,23 @@ class CreatePost extends PureComponent {
     return null
   }
 
-  _handleChange = (e, input) => {
-    let { error } = this.state
-    const value = e.target.value,
-    valid = validateURL(value)
-    error[input] = valid ? false : true
-    this.setState({
-      [input]: value,
-      error
-    })
+  _handleChange = input => {
+    if (!this.handlers[input]) {
+      this.handlers[input] = e => {
+        const { error } = this.state
+        const value = e.target.value,
+        valid = validateURL(value)
+        error[input] = valid ? false : true
+        this.setState({
+          [input]: value,
+          error
+        })
+      }
+    }
+    return this.handlers[input]
   }
 
-  _handlePost = viewerId => {
+  _handlePost = viewerId => e => {
     const { imageUrl, siteUrl, error } = this.state
 
     if(error.siteUrl || error.imageUrl) {
@@ -104,6 +112,11 @@ class CreatePost extends PureComponent {
     }
   }
 
+  onErrorImg = e => {
+    const target = e.target
+    if (target) target.src = DefaultImg
+  }
+
   render() {
     const {
       description,
@@ -129,7 +142,7 @@ class CreatePost extends PureComponent {
                     value={description}
                     error={error && error.description ? true : false}
                     placeholder='Description'
-                    onChange={e => this.setState({ description: e.target.value })}
+                    onChange={this._handleChange(description)}
                   />
                   <Input
                     type='url'
@@ -138,7 +151,7 @@ class CreatePost extends PureComponent {
                     value={imageUrl}
                     innerRef={this.imageUrlNode}
                     placeholder='Image Url'
-                    onChange={e => this._handleChange(e, 'imageUrl')}
+                    onChange={this._handleChange('imageUrl')}
                   />
                   <Input
                     type='url'
@@ -147,17 +160,17 @@ class CreatePost extends PureComponent {
                     value={siteUrl}
                     innerRef={this.siteUrlNode}
                     placeholder='Site Url'
-                    onChange={e => this._handleChange(e, 'siteUrl')}
+                    onChange={this._handleChange('siteUrl')}
                   />
                   {imageUrl &&
                     <img
                       src={imageUrl}
-                      onError={e => e.target.src = DefaultImg}
+                      onError={this.onErrorImg}
                       alt={description}
                     />
                   }
                   {description && imageUrl && siteUrl &&
-                    <PostBtn onClick={() => this._handlePost(props.viewer.id)}>
+                    <PostBtn onClick={this._handlePost(props.viewer.id)}>
                       {editing ? 'Edit' : 'Post'}
                     </PostBtn>
                   }

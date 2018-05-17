@@ -4,7 +4,7 @@ import React, {
   PureComponent
 } from 'react'
 import {
-  createRefetchContainer,
+  createFragmentContainer,
   graphql
 } from 'react-relay'
 import { isMobile } from 'react-device-detect'
@@ -74,7 +74,7 @@ class Post extends PureComponent {
   }
 
   render() {
-    const { post, viewer } = this.props,
+    const { post, viewerId } = this.props,
     {
       menu,
       commentMode,
@@ -87,7 +87,6 @@ class Post extends PureComponent {
       siteUrl,
       postedBy
     } = post,
-    viewerId = viewer && viewer.id,
     posterId = postedBy && postedBy.id
 
     return (
@@ -153,7 +152,7 @@ class Post extends PureComponent {
   }
 }
 
-export default createRefetchContainer(Post, graphql`
+export default createFragmentContainer(Post, graphql`
   fragment Post_post on Post {
     id
     description
@@ -164,17 +163,8 @@ export default createRefetchContainer(Post, graphql`
       name
     }
     ...ListComments_post
-  }`,
-  graphql`
-    query PostRefetchQuery {
-      viewer {
-        Post {
-          ...Post_post
-        }
-      }
-    }
-  `
-)
+  }
+`)
 
 const Dim = css`
   opacity: 1;

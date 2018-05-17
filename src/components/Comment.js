@@ -158,8 +158,8 @@ VertOptionContainer = styled.div`
 `,
 Tooltip = styled.div`
   position: absolute;
-  bottom: 0;
-  right: 0;
+  bottom: .5rem;
+  right: .75rem;
   height: auto;
   padding: .075rem;
   background-color: white;

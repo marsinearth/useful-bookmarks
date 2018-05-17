@@ -56,7 +56,8 @@ class ListPage extends PureComponent {
             <Post
               key={node.__id}
               post={node}
-              viewer={viewer}
+              viewerId={viewer.id}
+              //viewer={viewer}
             />
           )}
         </InfiniteScroll>

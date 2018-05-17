@@ -39,8 +39,8 @@ class ListComments extends PureComponent {
   componentDidMount() {
     const { post } = this.props,
     comments = post && post.comments
-    
-    if(comments && comments.count > 0) {
+
+    if(comments && comments.edges.length > 0) {
       const contHeight = this.listContainer.current.clientHeight
       this.setState({ contHeight })
     }
@@ -91,13 +91,13 @@ class ListComments extends PureComponent {
   render() {
     const { post, handleEdit, userId } = this.props,
     { comments, id } = post,
-    { edges, pageInfo, count } = comments,
+    { edges, pageInfo } = comments,
     pageMore = pageInfo && pageInfo.hasNextPage,
     { commentLoading, closable, contHeight } = this.state
 
     return (
       <Fragment>
-        {count > 0 &&
+        {edges.length > 0 &&
           <CommentsContainer>
             <p>Comments</p>
             {commentLoading &&
@@ -112,6 +112,10 @@ class ListComments extends PureComponent {
               duration={350}
               height={contHeight}
               easing='ease-in-out'
+              style={{
+                paddingTop: '1.25rem',
+                overflowX: 'visible'
+              }}
             >
               <div ref={this.listContainer}>
                 {!commentLoading && edges.map(({ node }) =>
@@ -165,7 +169,6 @@ export default createPaginationContainer(ListComments, graphql`
         hasNextPage,
         endCursor
       }
-      count
     }
   }`,
   {
@@ -203,6 +206,7 @@ const CommentsContainer = styled.div`
     color: #aaa;
     font-weight: bold;
     font-size: .875rem;
+    margin-bottom: 0;
   }
 `,
 CommentsLoading = styled.div`

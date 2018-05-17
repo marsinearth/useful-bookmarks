@@ -20,7 +20,9 @@ fetch('https://api.graph.cool/relay/v1/cjfph4rrc1uhx0135aao4tpfg', {
 .then(res => res.json())
 .then(res => {
   console.log(res);
-  const schemaString = printSchema(buildClientSchema(res.data));
+  const schemaString = printSchema(buildClientSchema(res.data), {
+    commentDescriptions: true,
+  });
   fs.writeFileSync('schema.graphql', schemaString)
 })
 .catch(err => console.error(err))
