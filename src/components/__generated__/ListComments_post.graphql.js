@@ -23,7 +23,6 @@ export type ListComments_post = {|
       +hasNextPage: boolean,
       +endCursor: ?string,
     |},
-    +count: number,
   |},
   +$refType: ListComments_post$ref,
 |};
@@ -140,17 +139,10 @@ const node/*: ConcreteFragment*/ = {
               "storageKey": null
             }
           ]
-        },
-        {
-          "kind": "ScalarField",
-          "alias": null,
-          "name": "count",
-          "args": null,
-          "storageKey": null
         }
       ]
     }
   ]
 };
-(node/*: any*/).hash = 'bc9c84583205e9e1f74ba2c8cdb979cc';
+(node/*: any*/).hash = '5769065f1691c1a1fd830704419911c1';
 module.exports = node;

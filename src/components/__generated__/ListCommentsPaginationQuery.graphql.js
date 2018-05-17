@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 5badc501e3b1e5cbbfedf892d3af9444
+ * @relayHash 14a0774ade65ad622d0eeb93af24461e
  */
 
 /* eslint-disable */
@@ -55,7 +55,6 @@ fragment ListComments_post on Post {
       hasNextPage
       endCursor
     }
-    count
   }
 }
 
@@ -113,7 +112,7 @@ return {
   "operationKind": "query",
   "name": "ListCommentsPaginationQuery",
   "id": null,
-  "text": "query ListCommentsPaginationQuery(\n  $count: Int!\n  $cCursor: String\n  $id: ID\n) {\n  viewer {\n    Post(id: $id) {\n      ...ListComments_post\n      id\n    }\n    id\n  }\n}\n\nfragment ListComments_post on Post {\n  id\n  comments(first: $count, after: $cCursor) {\n    edges {\n      node {\n        ...Comment_comment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n    count\n  }\n}\n\nfragment Comment_comment on Comment {\n  id\n  content\n  commentedBy {\n    id\n    name\n  }\n  commentedPost {\n    id\n  }\n}\n",
+  "text": "query ListCommentsPaginationQuery(\n  $count: Int!\n  $cCursor: String\n  $id: ID\n) {\n  viewer {\n    Post(id: $id) {\n      ...ListComments_post\n      id\n    }\n    id\n  }\n}\n\nfragment ListComments_post on Post {\n  id\n  comments(first: $count, after: $cCursor) {\n    edges {\n      node {\n        ...Comment_comment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n\nfragment Comment_comment on Comment {\n  id\n  content\n  commentedBy {\n    id\n    name\n  }\n  commentedPost {\n    id\n  }\n}\n",
   "metadata": {},
   "fragment": {
     "kind": "Fragment",
@@ -296,13 +295,6 @@ return {
                         "storageKey": null
                       }
                     ]
-                  },
-                  {
-                    "kind": "ScalarField",
-                    "alias": null,
-                    "name": "count",
-                    "args": null,
-                    "storageKey": null
                   }
                 ]
               },
