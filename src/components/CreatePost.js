@@ -142,7 +142,7 @@ class CreatePost extends PureComponent {
                     value={description}
                     error={error && error.description ? true : false}
                     placeholder='Description'
-                    onChange={this._handleChange(description)}
+                    onChange={this._handleChange('description')}
                   />
                   <Input
                     type='url'
