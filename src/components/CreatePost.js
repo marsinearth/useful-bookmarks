@@ -67,9 +67,10 @@ class CreatePost extends PureComponent {
   _handleChange = input => {
     if (!this.handlers[input]) {
       this.handlers[input] = e => {
+        let valid = true
         const { error } = this.state
-        const value = e.target.value,
-        valid = validateURL(value)
+        const value = e.target.value
+        if(input !== 'description') valid = validateURL(value)
         error[input] = valid ? false : true
         this.setState({
           [input]: value,
