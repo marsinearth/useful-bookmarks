@@ -15,57 +15,18 @@ class Login extends PureComponent {
     name: '',
     loading: false
   }
-  render() {
-    const { login, name, email, password, loading } = this.state
-    return (
-      <Wrapper>
-        {loading
-          ? <img
-            src={Loading}
-            alt="Loading..."
-          />
-          :
-          <InnerWrapper>
-            <Title>
-              {login ? 'Sign In' : 'Sign Up'}
-            </Title>
-            {!login &&
-              <Input
-                value={name}
-                onChange={e => this.setState({ name: e.target.value })}
-                type='text'
-                placeholder='your name'
-              />
-            }
-            <Input
-              value={email}
-              onChange={e => this.setState({ email: e.target.value })}
-              type='email'
-              placeholder='email'
-            />
-            <Input
-              value={password}
-              onChange={e => this.setState({ password: e.target.value })}
-              type='password'
-              placeholder='safe password'
-            />
-            <ButtonConatiner>
-              <Button onClick={() => this._confirm()}>
-                {login ? 'Sign In' : 'Sign Up'}
-              </Button>
-              <Button right onClick={() => this.setState({ login: !login })}>
-                {login ? 'Sign Up' : 'Sign In'}
-              </Button>
-            </ButtonConatiner>
-            <LinkContainer>
-              <Link to="/" >
-                Cancel
-              </Link>
-            </LinkContainer>
-          </InnerWrapper>
-        }
-      </Wrapper>
-      );
+
+  _handleChange = e => {
+    const target = e.target,
+    value = target && target.value,
+    label = target && target.dataset && target.dataset.label
+    this.setState({ [label]: value })
+  }
+
+  _login = e => {
+    const target = e.target,
+    label = target && target.dataset && target.dataset.label
+    this.setState({ login: label })
   }
 
   _confirm = () => {
@@ -108,6 +69,66 @@ class Login extends PureComponent {
   }
   _failedAuth = () => {
     this.setState({ loading: false })
+  }
+
+  render() {
+    const { login, name, email, password, loading } = this.state
+    return (
+      <Wrapper>
+        {loading
+          ? <img
+            src={Loading}
+            alt="Loading..."
+            />
+          :
+          <InnerWrapper>
+            <Title>
+              {login ? 'Sign In' : 'Sign Up'}
+            </Title>
+            {!login &&
+              <Input
+                value={name}
+                data-label='name'
+                onChange={this._handleChange}
+                type='text'
+                placeholder='your name'
+              />
+            }
+            <Input
+              value={email}
+              data-label='email'
+              onChange={this._handleChange}
+              type='email'
+              placeholder='email'
+            />
+            <Input
+              value={password}
+              data-label='password'
+              onChange={this._handleChange}
+              type='password'
+              placeholder='safe password'
+            />
+            <ButtonConatiner>
+              <Button onClick={this._confirm}>
+                {login ? 'Sign In' : 'Sign Up'}
+              </Button>
+              <Button
+                right
+                data-label={!login}
+                onClick={this._login}
+              >
+                {login ? 'Sign Up' : 'Sign In'}
+              </Button>
+            </ButtonConatiner>
+            <LinkContainer>
+              <Link to="/" >
+                Cancel
+              </Link>
+            </LinkContainer>
+          </InnerWrapper>
+        }
+      </Wrapper>
+      );
   }
 }
 

@@ -27,9 +27,13 @@ class Comment extends PureComponent {
     })
   }
 
-  _handleMouseEnter = () => {
-    const { userId } = this.props
-    if(userId) this.setState({ hover: true })
+  _handleMouseEnter = e => {
+    const { userId } = this.props,
+    eType = e.type
+    if(userId
+      && ((isMobile && eType === 'click')
+        || (!isMobile && eType === 'mouseenter')
+    )) this.setState({ hover: true })
   }
 
   _handleMouseLeave = () => {
@@ -69,8 +73,8 @@ class Comment extends PureComponent {
 
     return (
       <Container
-        onClick={() => isMobile && this._handleMouseEnter()}
-        onMouseEnter={() => !isMobile && this._handleMouseEnter()}
+        onClick={this._handleMouseEnter}
+        onMouseEnter={this._handleMouseEnter}
         onMouseLeave={this._handleMouseLeave}
       >
         <Writer>
