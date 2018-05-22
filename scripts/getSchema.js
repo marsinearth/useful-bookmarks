@@ -9,7 +9,7 @@ fs = require('fs'),
 
 console.log(introspectionQuery)
 
-fetch('https://api.graph.cool/relay/v1/cjfph4rrc1uhx0135aao4tpfg', {
+fetch('https://api.graph.cool/relay/v1/cjhh4m5wb64bh0187823nbudy', {
   method: 'POST',
   headers: {
     'Accept': 'application/json',

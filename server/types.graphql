@@ -1,47 +1,30 @@
-# project: cj3betypwbir40147qncjhnem
-# version: 1
-
-type File @model {
-  contentType: String!
+type Comment @model {
+  commentedBy: User @relation(name: "UsersComments")
+  commentedPost: Post @relation(name: "CommentsPost")
+  content: String!
   createdAt: DateTime!
   id: ID! @isUnique
-  name: String!
-  secret: String! @isUnique
-  size: Int!
   updatedAt: DateTime!
-  url: String! @isUnique
 }
 
 type Post @model {
+  comments: [Comment!]! @relation(name: "CommentsPost")
   createdAt: DateTime!
   description: String!
   id: ID! @isUnique
-  postedBy: User @relation(name: "UsersPosts")
-  comments: [Comment!]! @relation(name: "CommentsPosts")
   imageUrl: String!
+  postedBy: User @relation(name: "UsersPosts")
   siteUrl: String!
   updatedAt: DateTime!
 }
 
-# added by email-password template: (please uncomment)
 type User @model {
-  # Required system field:
-  id: ID! @isUnique # read-only (managed by Graphcool)
-  name: String!
-  # Optional system fields (remove if not needed):
-  createdAt: DateTime! # read-only (managed by Graphcool)
-  updatedAt: DateTime! # read-only (managed by Graphcool)
-  posts: [Post!]! @relation(name: "UsersPosts")
   comments: [Comment!]! @relation(name: "UsersComments")
-  email: String! @isUnique
-  password: String!
-}
-
-type Comment @model {
-  id: ID! @isUnique
-  commentedBy: User @relation(name: "UsersComments")
-  commentedPost: Post @relation(name: "CommentsPosts")
-  content: String!
   createdAt: DateTime!
+  email: String! @isUnique
+  id: ID! @isUnique
+  name: String!
+  password: String!
+  posts: [Post!]! @relation(name: "UsersPosts")
   updatedAt: DateTime!
 }
