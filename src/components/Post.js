@@ -104,12 +104,14 @@ class Post extends PureComponent {
         <UserConsumer>
           {user => (
             <InfoContainer>
-              {description}
-              {user.id &&
-                <VertOptionContainer onClick={this._openMenuPanel}>
-                  <FontAwesomeIcon icon={faEllipsisV}/>
-                </VertOptionContainer>
-              }
+              <TitleContainer>
+                <span>{description}</span>
+                {user.id &&
+                  <VertOptionContainer onClick={this._openMenuPanel}>
+                    <FontAwesomeIcon icon={faEllipsisV}/>
+                  </VertOptionContainer>
+                }
+              </TitleContainer>
               <Tooltip
                 innerRef={this.optionTooltip}
                 onBlur={this._handleBlur}
@@ -194,8 +196,13 @@ InfoContainer = styled.div`
   padding-top: 1rem;
   position: relative;
 `,
+TitleContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`,
 VertOptionContainer = styled.div`
-  float: right;
   cursor: pointer;
   color: #aaa;
   text-align: center;
