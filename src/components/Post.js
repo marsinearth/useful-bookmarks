@@ -53,9 +53,10 @@ class Post extends PureComponent {
   }
 
   _deletePost = () => {
-    const { post, viewer } = this.props
-    if(window.confirm(`Are you sure to delete: ${post.description}?`))
-      DeletePostMutation(post.id, viewer.id)
+    const { post, viewerId } = this.props    
+    if(window.confirm(`Are you sure to delete: ${post.description}?`)) {
+      DeletePostMutation(post.id, viewerId)
+    }
     this.setState({ menu: false })
   }
 

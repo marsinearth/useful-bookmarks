@@ -80,7 +80,7 @@ class CreatePost extends PureComponent {
   _handlePost = e => {
     const { imageUrl, siteUrl, error } = this.state,
     target = e.target,
-    viewerId = target && target.dataset && target.dataset.viewerId
+    viewerId = target && target.dataset && target.dataset.viewerid
 
     if(error.siteUrl || error.imageUrl) {
       if(error.siteUrl) this.siteUrlNode.current.focus()
@@ -173,7 +173,7 @@ class CreatePost extends PureComponent {
                   }
                   {description && imageUrl && siteUrl &&
                     <PostBtn
-                      data-viewerId={props.viewer.id}
+                      data-viewerid={props.viewer.id}
                       onClick={this._handlePost}
                     >
                       {editing ? 'Edit' : 'Post'}
