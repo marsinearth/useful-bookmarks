@@ -1,8 +1,7 @@
 {
   "name": "useful-bookmarks",
   "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
+  "private": true,
   "scripts": {
     "start": "react-static start",
     "stage": "react-static build --staging",

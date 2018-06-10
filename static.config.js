@@ -7,7 +7,7 @@ const typescriptWebpackPaths = require('./webpack.config.js')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 export default {
-  siteRoot: '//loalhost:3000',
+  siteRoot: '//useful-bookmarks.netlify.com/',
   entry: path.join(__dirname, 'src', 'index.tsx'),
   getSiteData: () => ({
     title: 'Useful Bookmarks with React Static/TypeScript/Relay/Prisma',
