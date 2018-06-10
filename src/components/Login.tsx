@@ -95,29 +95,34 @@ class Login extends PureComponent<any, State> {
             <Title>
               {login ? 'Sign In' : 'Sign Up'}
             </Title>
-            {!login &&
+            <form>
+              {!login &&
+                <Input
+                  value={name}
+                  data-label='name'
+                  onChange={this._onChange}
+                  type='text'
+                  placeholder='your name'
+                  autoComplete='name'
+                />
+              }
               <Input
-                value={name}
-                data-label='name'
+                value={email}
+                data-label='email'
                 onChange={this._onChange}
-                type='text'
-                placeholder='your name'
+                type='email'
+                placeholder='email'
+                autoComplete='username'
               />
-            }
-            <Input
-              value={email}
-              data-label='email'
-              onChange={this._onChange}
-              type='email'
-              placeholder='email'
-            />
-            <Input
-              value={password}
-              data-label='password'
-              onChange={this._onChange}
-              type='password'
-              placeholder='safe password'
-            />
+              <Input
+                value={password}
+                data-label='password'
+                onChange={this._onChange}
+                type='password'
+                placeholder='safe password'
+                autoComplete='current-password'
+              />
+            </form>
             <ButtonConatiner>
               <Button pos='left' onClick={this._confirm}>
                 {login ? 'Sign In' : 'Sign Up'}
@@ -130,7 +135,7 @@ class Login extends PureComponent<any, State> {
               <Link to="/" >
                 Cancel
               </Link>
-            </LinkContainer>
+            </LinkContainer>            
           </InnerWrapper>
         }
       </Wrapper>

@@ -4000,11 +4000,11 @@ graphql-compiler@1.6.0:
     fb-watchman "^2.0.0"
     immutable "~3.7.6"
 
-graphql@^14.0.0-rc.1:
-  version "14.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.0.0-rc.1.tgz#12e52018202c1aae4c65a9d60767b05a9993b6b6"
+graphql@^0.13.0:
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-0.13.0.tgz#d1b44a282279a9ce0a6ec1037329332f4c1079b6"
   dependencies:
-    iterall "^1.2.2"
+    iterall "1.1.x"
 
 gzip-size@3.0.0:
   version "3.0.0"
@@ -4821,9 +4821,9 @@ isurl@^1.0.0-alpha5:
     has-to-string-tag-x "^1.2.0"
     is-object "^1.0.1"
 
-iterall@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/iterall/-/iterall-1.2.2.tgz#92d70deb8028e0c39ff3164fdbf4d8b088130cd7"
+iterall@1.1.x:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/iterall/-/iterall-1.1.4.tgz#0db40d38fdcf53ae14dc8ec674e62ab190d52cfc"
 
 js-base64@^2.1.9:
   version "2.4.5"

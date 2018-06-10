@@ -64,7 +64,7 @@ const CreatePostViewerQuery = graphql`
 `
 
 class CreatePost extends PureComponent<Props, State> {
-  state = {
+  state: State = {
     editing: false,
     description: '',
     imageUrl: '',
@@ -95,8 +95,8 @@ class CreatePost extends PureComponent<Props, State> {
   }
 
   _handleChange = (e: ChangeEvent<HTMLInputElement>) =>  {    
-    const { error } = this.state as State
-    const target = e.target as HTMLInputElement
+    const { error } = this.state
+    const target = e.target
     const label: string = target && target.dataset.label
     const value: string = target && target.value
     let valid = true    
@@ -113,7 +113,7 @@ class CreatePost extends PureComponent<Props, State> {
   }
 
   _handlePost = (e: MouseEvent<HTMLButtonElement>) => {
-    const { imageUrl, siteUrl, error } = this.state as State
+    const { imageUrl, siteUrl, error } = this.state
     const target = e.target
     const viewerId: string | undefined = target instanceof HTMLButtonElement
       ? target.dataset.viewerid : ''
@@ -169,7 +169,7 @@ class CreatePost extends PureComponent<Props, State> {
         imageUrl,
         siteUrl,
         error
-      } = this.state as State
+      } = this.state
 
       return (
         <Wrapper>

@@ -11,6 +11,10 @@ import Loading from '../assets/images/loading.gif'
 import { GC_USER_ID, ITEMS_PER_PAGE } from '../utils/constants'
 import styled from 'styled-components'
 
+type State = {
+  userId: string
+}
+
 const HomeAllPostQuery = graphql`
   query HomeAllPostQuery(
     $count: Int!,
@@ -28,10 +32,14 @@ const HomeAllPostQuery = graphql`
   }
 `
 
-export default class Home extends PureComponent {
-  userId = ''
-  componentDidMount() {
-    this.userId = localStorage.getItem(GC_USER_ID)
+export default class Home extends PureComponent<any, State> {
+  state = {
+    userId: ''
+  }
+  static getDerivedStateFromProps(nextProps: any, prevState: State) {
+    if (localStorage.getItem(GC_USER_ID) && prevState.userId === '') {
+      return { userId: localStorage.getItem(GC_USER_ID)}
+    }
   }
   queryRender = ({ error, props }: ReadyState) => {
     if (error) {
@@ -62,7 +70,7 @@ export default class Home extends PureComponent {
         environment={environment}
         query={HomeAllPostQuery}
         variables={{
-          id: this.userId,
+          id: this.state.userId,
           count: ITEMS_PER_PAGE
         }}
         render={this.queryRender}
