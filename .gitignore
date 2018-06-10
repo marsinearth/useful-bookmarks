@@ -10,7 +10,7 @@
 
 # testing
 /coverage
-
+ 
 # production
 /dist
 /tmp
