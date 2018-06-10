@@ -38,8 +38,9 @@ export default class Home extends PureComponent<any, State> {
   }
   static getDerivedStateFromProps(nextProps: any, prevState: State) {
     if (localStorage.getItem(GC_USER_ID) && prevState.userId === '') {
-      return { userId: localStorage.getItem(GC_USER_ID)}
+      return { userId: localStorage.getItem(GC_USER_ID) }
     }
+    return null
   }
   queryRender = ({ error, props }: ReadyState) => {
     if (error) {
