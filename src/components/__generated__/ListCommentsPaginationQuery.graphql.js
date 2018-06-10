@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 14a0774ade65ad622d0eeb93af24461e
+ * @relayHash c25db4b3ffd0a07b3ed6cd3ab9bff7c9
  */
 
 /* eslint-disable */
@@ -12,15 +12,15 @@ import type { ConcreteRequest } from 'relay-runtime';
 type ListComments_post$ref = any;
 export type ListCommentsPaginationQueryVariables = {|
   count: number,
-  cCursor: ?string,
-  id: ?string,
+  cCursor?: ?string,
+  id?: ?string,
 |};
 export type ListCommentsPaginationQueryResponse = {|
   +viewer: {|
     +Post: ?{|
-      +$fragmentRefs: ListComments_post$ref,
-    |},
-  |},
+      +$fragmentRefs: ListComments_post$ref
+    |}
+  |}
 |};
 */
 
@@ -55,6 +55,7 @@ fragment ListComments_post on Post {
       hasNextPage
       endCursor
     }
+    count
   }
 }
 
@@ -112,7 +113,7 @@ return {
   "operationKind": "query",
   "name": "ListCommentsPaginationQuery",
   "id": null,
-  "text": "query ListCommentsPaginationQuery(\n  $count: Int!\n  $cCursor: String\n  $id: ID\n) {\n  viewer {\n    Post(id: $id) {\n      ...ListComments_post\n      id\n    }\n    id\n  }\n}\n\nfragment ListComments_post on Post {\n  id\n  comments(first: $count, after: $cCursor) {\n    edges {\n      node {\n        ...Comment_comment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n\nfragment Comment_comment on Comment {\n  id\n  content\n  commentedBy {\n    id\n    name\n  }\n  commentedPost {\n    id\n  }\n}\n",
+  "text": "query ListCommentsPaginationQuery(\n  $count: Int!\n  $cCursor: String\n  $id: ID\n) {\n  viewer {\n    Post(id: $id) {\n      ...ListComments_post\n      id\n    }\n    id\n  }\n}\n\nfragment ListComments_post on Post {\n  id\n  comments(first: $count, after: $cCursor) {\n    edges {\n      node {\n        ...Comment_comment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n    count\n  }\n}\n\nfragment Comment_comment on Comment {\n  id\n  content\n  commentedBy {\n    id\n    name\n  }\n  commentedPost {\n    id\n  }\n}\n",
   "metadata": {},
   "fragment": {
     "kind": "Fragment",
@@ -295,6 +296,13 @@ return {
                         "storageKey": null
                       }
                     ]
+                  },
+                  {
+                    "kind": "ScalarField",
+                    "alias": null,
+                    "name": "count",
+                    "args": null,
+                    "storageKey": null
                   }
                 ]
               },
@@ -329,5 +337,6 @@ return {
   }
 };
 })();
+// prettier-ignore
 (node/*: any*/).hash = 'b0938554bfc5325b4b477def4746b3bd';
 module.exports = node;

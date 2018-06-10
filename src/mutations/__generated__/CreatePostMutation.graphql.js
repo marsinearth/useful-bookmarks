@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash d08b17bb196310e4ed2cd65f96c96b7d
+ * @relayHash d3a2e1133280723619c9ae719fa94ee3
  */
 
 /* eslint-disable */
@@ -9,62 +9,62 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-type CreatePostInputVariables = {|
+export type CreatePostInput = {
   description: string,
   imageUrl: string,
   siteUrl: string,
-  postedById: ?string,
-  postedBy: ?PostpostedByUserVariables,
-  commentsIds: ?$ReadOnlyArray<string>,
-  comments: ?$ReadOnlyArray<PostcommentsCommentVariables>,
+  postedById?: ?string,
+  postedBy?: ?PostpostedByUser,
+  commentsIds?: ?$ReadOnlyArray<string>,
+  comments?: ?$ReadOnlyArray<PostcommentsComment>,
   clientMutationId: string,
-|};
-type PostpostedByUserVariables = {|
+};
+export type PostpostedByUser = {
   email: string,
   name: string,
   password: string,
-  commentsIds: ?$ReadOnlyArray<string>,
-  comments: ?$ReadOnlyArray<UsercommentsCommentVariables>,
-  postsIds: ?$ReadOnlyArray<string>,
-  posts: ?$ReadOnlyArray<UserpostsPostVariables>,
-|};
-type UsercommentsCommentVariables = {|
+  commentsIds?: ?$ReadOnlyArray<string>,
+  comments?: ?$ReadOnlyArray<UsercommentsComment>,
+  postsIds?: ?$ReadOnlyArray<string>,
+  posts?: ?$ReadOnlyArray<UserpostsPost>,
+};
+export type UsercommentsComment = {
   content: string,
-  commentedPostId: ?string,
-  commentedPost: ?CommentcommentedPostPostVariables,
-|};
-type CommentcommentedPostPostVariables = {|
+  commentedPostId?: ?string,
+  commentedPost?: ?CommentcommentedPostPost,
+};
+export type CommentcommentedPostPost = {
   description: string,
   imageUrl: string,
   siteUrl: string,
-  postedById: ?string,
-  postedBy: ?PostpostedByUserVariables,
-  commentsIds: ?$ReadOnlyArray<string>,
-  comments: ?$ReadOnlyArray<PostcommentsCommentVariables>,
-|};
-type PostcommentsCommentVariables = {|
+  postedById?: ?string,
+  postedBy?: ?PostpostedByUser,
+  commentsIds?: ?$ReadOnlyArray<string>,
+  comments?: ?$ReadOnlyArray<PostcommentsComment>,
+};
+export type PostcommentsComment = {
   content: string,
-  commentedById: ?string,
-  commentedBy: ?CommentcommentedByUserVariables,
-|};
-type CommentcommentedByUserVariables = {|
+  commentedById?: ?string,
+  commentedBy?: ?CommentcommentedByUser,
+};
+export type CommentcommentedByUser = {
   email: string,
   name: string,
   password: string,
-  commentsIds: ?$ReadOnlyArray<string>,
-  comments: ?$ReadOnlyArray<UsercommentsCommentVariables>,
-  postsIds: ?$ReadOnlyArray<string>,
-  posts: ?$ReadOnlyArray<UserpostsPostVariables>,
-|};
-type UserpostsPostVariables = {|
+  commentsIds?: ?$ReadOnlyArray<string>,
+  comments?: ?$ReadOnlyArray<UsercommentsComment>,
+  postsIds?: ?$ReadOnlyArray<string>,
+  posts?: ?$ReadOnlyArray<UserpostsPost>,
+};
+export type UserpostsPost = {
   description: string,
   imageUrl: string,
   siteUrl: string,
-  commentsIds: ?$ReadOnlyArray<string>,
-  comments: ?$ReadOnlyArray<PostcommentsCommentVariables>,
-|};
+  commentsIds?: ?$ReadOnlyArray<string>,
+  comments?: ?$ReadOnlyArray<PostcommentsComment>,
+};
 export type CreatePostMutationVariables = {|
-  input: CreatePostInputVariables,
+  input: CreatePostInput
 |};
 export type CreatePostMutationResponse = {|
   +createPost: ?{|
@@ -73,8 +73,8 @@ export type CreatePostMutationResponse = {|
       +description: string,
       +imageUrl: string,
       +siteUrl: string,
-    |},
-  |},
+    |}
+  |}
 |};
 */
 
@@ -185,5 +185,6 @@ return {
   }
 };
 })();
+// prettier-ignore
 (node/*: any*/).hash = '2dd3161842beb80e7c841bb39c56a4ca';
 module.exports = node;

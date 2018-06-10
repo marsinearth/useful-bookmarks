@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 64930c71a4c597922f9292a107317f9f
+ * @relayHash 0ee404ec8473861b4501e764ddf3a562
  */
 
 /* eslint-disable */
@@ -17,7 +17,7 @@ export type AuthenticateUserMutationResponse = {|
   +authenticateUser: ?{|
     +id: string,
     +token: string,
-  |},
+  |}
 |};
 */
 
@@ -112,5 +112,6 @@ return {
   }
 };
 })();
+// prettier-ignore
 (node/*: any*/).hash = 'ed84b2d0611603bb09bbc310cc065908';
 module.exports = node;

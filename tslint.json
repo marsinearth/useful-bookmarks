@@ -1,0 +1,59 @@
+{
+  "extends": ["tslint-config-airbnb", "tslint-react"],
+  "linterOptions": {
+    "exclude": [
+      "config/**/*.js",
+      "node_modules/**/*",
+      "build/*",
+      "scripts",
+      "acceptance-tests",
+      "webpack",
+      "jest",
+      "src/setupTests.ts"
+    ]
+  },
+  "rules": {
+    "align": [
+      true,
+      "parameters",
+      "statements"
+    ],
+    "jsx-no-multiline-js": false,
+    "no-console": {
+      "severity": "warning",
+      "options": [
+        "debug",
+        "info",
+        "log",
+        "time",
+        "timeEnd",
+        "trace"
+      ]
+    },
+    "ter-arrow-parens": [true, "as-needed"],
+    "trailing-comma": false,
+    "variable-name": [
+      true,
+      "check-format",
+      "allow-leading-underscore",
+      "allow-pascal-case",
+      "allow-snake-case",
+      "ban-keywords"
+    ],
+    "semicolon": false,
+    "import-name": false,
+    "quotemark": false,
+    "whitespace": [
+      true,
+      "check-decl",
+      "check-operator",
+      "check-module",
+      "check-separator",
+      "check-rest-spread",
+      "check-type",
+      "check-typecast",
+      "check-type-operator",
+      "check-preblock"
+    ]
+  }
+}

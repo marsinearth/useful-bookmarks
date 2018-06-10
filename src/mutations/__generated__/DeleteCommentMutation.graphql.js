@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 6660e3afe0a40257e4caf05b4f1c5563
+ * @relayHash c006181bd898267a9074159964e0aa04
  */
 
 /* eslint-disable */
@@ -9,17 +9,17 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-type DeleteCommentInputVariables = {|
+export type DeleteCommentInput = {
   id: string,
   clientMutationId: string,
-|};
+};
 export type DeleteCommentMutationVariables = {|
-  input: DeleteCommentInputVariables,
+  input: DeleteCommentInput
 |};
 export type DeleteCommentMutationResponse = {|
   +deleteComment: ?{|
-    +deletedId: ?string,
-  |},
+    +deletedId: ?string
+  |}
 |};
 */
 
@@ -93,5 +93,6 @@ return {
   }
 };
 })();
+// prettier-ignore
 (node/*: any*/).hash = 'c445f0a568fbe1dc8729526979f6cc40';
 module.exports = node;

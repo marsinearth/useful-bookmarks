@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 1eab791f7ae626c3c72d702b7a22e62f
+ * @relayHash 084c6cc065ef05a45894924ea800fe04
  */
 
 /* eslint-disable */
@@ -9,27 +9,31 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-export type CreatePostViewerQueryVariables = {| |};
+export type CreatePostViewerQueryVariables = {|
+  initCount: number
+|};
 export type CreatePostViewerQueryResponse = {|
   +viewer: {|
     +id: string,
     +allPosts: {|
       +edges: ?$ReadOnlyArray<?{|
         +node: {|
-          +id: string,
-        |},
-      |}>,
+          +id: string
+        |}
+      |}>
     |},
-  |},
+  |}
 |};
 */
 
 
 /*
-query CreatePostViewerQuery {
+query CreatePostViewerQuery(
+  $initCount: Int!
+) {
   viewer {
     id
-    allPosts(last: 10, orderBy: createdAt_DESC) {
+    allPosts(last: $initCount, orderBy: createdAt_DESC) {
       edges {
         node {
           id
@@ -47,14 +51,22 @@ query CreatePostViewerQuery {
 */
 
 const node/*: ConcreteRequest*/ = (function(){
-var v0 = {
+var v0 = [
+  {
+    "kind": "LocalArgument",
+    "name": "initCount",
+    "type": "Int!",
+    "defaultValue": null
+  }
+],
+v1 = {
   "kind": "ScalarField",
   "alias": null,
   "name": "id",
   "args": null,
   "storageKey": null
 },
-v1 = [
+v2 = [
   {
     "kind": "LinkedField",
     "alias": null,
@@ -73,7 +85,7 @@ v1 = [
         "concreteType": "Post",
         "plural": false,
         "selections": [
-          v0,
+          v1,
           {
             "kind": "ScalarField",
             "alias": null,
@@ -123,11 +135,11 @@ return {
   "operationKind": "query",
   "name": "CreatePostViewerQuery",
   "id": null,
-  "text": "query CreatePostViewerQuery {\n  viewer {\n    id\n    allPosts(last: 10, orderBy: createdAt_DESC) {\n      edges {\n        node {\n          id\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        hasPreviousPage\n        startCursor\n      }\n    }\n  }\n}\n",
+  "text": "query CreatePostViewerQuery(\n  $initCount: Int!\n) {\n  viewer {\n    id\n    allPosts(last: $initCount, orderBy: createdAt_DESC) {\n      edges {\n        node {\n          id\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        hasPreviousPage\n        startCursor\n      }\n    }\n  }\n}\n",
   "metadata": {
     "connection": [
       {
-        "count": null,
+        "count": "initCount",
         "cursor": null,
         "direction": "backward",
         "path": [
@@ -142,7 +154,7 @@ return {
     "name": "CreatePostViewerQuery",
     "type": "Query",
     "metadata": null,
-    "argumentDefinitions": [],
+    "argumentDefinitions": v0,
     "selections": [
       {
         "kind": "LinkedField",
@@ -153,7 +165,7 @@ return {
         "concreteType": "Viewer",
         "plural": false,
         "selections": [
-          v0,
+          v1,
           {
             "kind": "LinkedField",
             "alias": "allPosts",
@@ -162,7 +174,7 @@ return {
             "args": null,
             "concreteType": "PostConnection",
             "plural": false,
-            "selections": v1
+            "selections": v2
           }
         ]
       }
@@ -171,7 +183,7 @@ return {
   "operation": {
     "kind": "Operation",
     "name": "CreatePostViewerQuery",
-    "argumentDefinitions": [],
+    "argumentDefinitions": v0,
     "selections": [
       {
         "kind": "LinkedField",
@@ -182,17 +194,17 @@ return {
         "concreteType": "Viewer",
         "plural": false,
         "selections": [
-          v0,
+          v1,
           {
             "kind": "LinkedField",
             "alias": null,
             "name": "allPosts",
-            "storageKey": "allPosts(last:10,orderBy:\"createdAt_DESC\")",
+            "storageKey": null,
             "args": [
               {
-                "kind": "Literal",
+                "kind": "Variable",
                 "name": "last",
-                "value": 10,
+                "variableName": "initCount",
                 "type": "Int"
               },
               {
@@ -204,7 +216,7 @@ return {
             ],
             "concreteType": "PostConnection",
             "plural": false,
-            "selections": v1
+            "selections": v2
           },
           {
             "kind": "LinkedHandle",
@@ -212,9 +224,9 @@ return {
             "name": "allPosts",
             "args": [
               {
-                "kind": "Literal",
+                "kind": "Variable",
                 "name": "last",
-                "value": 10,
+                "variableName": "initCount",
                 "type": "Int"
               },
               {
@@ -234,5 +246,6 @@ return {
   }
 };
 })();
-(node/*: any*/).hash = '7b29219dab42577f10bf933c8109936e';
+// prettier-ignore
+(node/*: any*/).hash = 'a63dfa49d78b7882b2f09115974cc769';
 module.exports = node;

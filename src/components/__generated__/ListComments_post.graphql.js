@@ -9,20 +9,21 @@
 /*::
 import type { ConcreteFragment } from 'relay-runtime';
 type Comment_comment$ref = any;
-import type { FragmentReference } from 'relay-runtime';
+import type { FragmentReference } from "relay-runtime";
 declare export opaque type ListComments_post$ref: FragmentReference;
 export type ListComments_post = {|
   +id: string,
   +comments: ?{|
     +edges: ?$ReadOnlyArray<?{|
       +node: {|
-        +$fragmentRefs: Comment_comment$ref,
-      |},
+        +$fragmentRefs: Comment_comment$ref
+      |}
     |}>,
     +pageInfo: {|
       +hasNextPage: boolean,
       +endCursor: ?string,
     |},
+    +count: number,
   |},
   +$refType: ListComments_post$ref,
 |};
@@ -139,10 +140,18 @@ const node/*: ConcreteFragment*/ = {
               "storageKey": null
             }
           ]
+        },
+        {
+          "kind": "ScalarField",
+          "alias": null,
+          "name": "count",
+          "args": null,
+          "storageKey": null
         }
       ]
     }
   ]
 };
-(node/*: any*/).hash = '5769065f1691c1a1fd830704419911c1';
+// prettier-ignore
+(node/*: any*/).hash = 'bc9c84583205e9e1f74ba2c8cdb979cc';
 module.exports = node;

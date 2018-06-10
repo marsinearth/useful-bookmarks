@@ -15,10 +15,10 @@ used fixed version of relay-compiler: [Explanation](https://github.com/facebook/
   - &#9745; will complete comments system by adding mutations for CUD, relay's pagination func for browsing a many of them
   - &#9745; will Edit funcs for Posts and Comments
   - &#9745; deploy to netlify pages
+  - &#9745; apply TypeScript on the project (using [React Static with TypeScript Template](https://github.com/nozzle/react-static#examples-and-templates))
   - &#9999; will add likes(exactly same as hackernews' votes)
   
   - &#9744; will add small chatting system using relay's subscription func
   - &#9744; will transform Graphcool to Prisma
-  - &#9744; apply TypeScript on the project
   - &#9744; will add some kind of console page for stats and browsing users-posts-comments-likes relationships
   - &#9744; will transform Prisma to traditional DB by writing own resolver (maybe I can use [Prisma](https://gist.github.com/marktani/2cbbe6467cb66bc9959b63313a248988) for AWS RDS MySQL or if it works, definitely for my local DB or whatever, too. pretty awesome!)

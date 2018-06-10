@@ -1,11 +1,9 @@
-# See https://help.github.com/ignore-files/ for more about ignoring files.
+# dependencies
+/**/node_modules
 
 #prisma prep server
 /yoga-server
 /prisma_backup
-
-# dependencies
-/**/node_modules
 
 #netlify
 .netlify
@@ -14,7 +12,8 @@
 /coverage
 
 # production
-/build
+/dist
+/tmp
 
 # misc
 .DS_Store

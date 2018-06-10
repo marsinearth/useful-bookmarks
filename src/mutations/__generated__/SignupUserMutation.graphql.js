@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 5ac6142eca75df150338ea992cd3a1ff
+ * @relayHash 25a0b0f3fdfb38ee36e9ee283c0d0b8b
  */
 
 /* eslint-disable */
@@ -18,7 +18,7 @@ export type SignupUserMutationResponse = {|
   +signupUser: ?{|
     +id: string,
     +token: string,
-  |},
+  |}
 |};
 */
 
@@ -126,5 +126,6 @@ return {
   }
 };
 })();
+// prettier-ignore
 (node/*: any*/).hash = '52459796041239bb08ff9a4980ac1f0d';
 module.exports = node;

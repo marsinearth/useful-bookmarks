@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 42dda1428686cf578793619aba4aee79
+ * @relayHash d9a208dc5c3f34a979109786617b6c77
  */
 
 /* eslint-disable */
@@ -12,9 +12,9 @@ import type { ConcreteRequest } from 'relay-runtime';
 type ListPage_viewer$ref = any;
 export type HomeAllPostQueryVariables = {|
   count: number,
-  id: ?string,
-  pCursor: ?string,
-  cCursor: ?string,
+  id?: ?string,
+  pCursor?: ?string,
+  cCursor?: ?string,
 |};
 export type HomeAllPostQueryResponse = {|
   +viewer: {|
@@ -23,7 +23,7 @@ export type HomeAllPostQueryResponse = {|
       +name: string,
     |},
     +$fragmentRefs: ListPage_viewer$ref,
-  |},
+  |}
 |};
 */
 
@@ -90,6 +90,7 @@ fragment ListComments_post on Post {
       hasNextPage
       endCursor
     }
+    count
   }
 }
 
@@ -217,7 +218,7 @@ return {
   "operationKind": "query",
   "name": "HomeAllPostQuery",
   "id": null,
-  "text": "query HomeAllPostQuery(\n  $count: Int!\n  $id: ID\n  $pCursor: String\n  $cCursor: String\n) {\n  viewer {\n    User(id: $id) {\n      id\n      name\n    }\n    ...ListPage_viewer\n    id\n  }\n}\n\nfragment ListPage_viewer on Viewer {\n  id\n  allPosts(first: $count, after: $pCursor, orderBy: createdAt_DESC) {\n    edges {\n      node {\n        ...Post_post\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n\nfragment Post_post on Post {\n  id\n  description\n  imageUrl\n  siteUrl\n  postedBy {\n    id\n    name\n  }\n  ...ListComments_post\n}\n\nfragment ListComments_post on Post {\n  id\n  comments(first: $count, after: $cCursor) {\n    edges {\n      node {\n        ...Comment_comment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n\nfragment Comment_comment on Comment {\n  id\n  content\n  commentedBy {\n    id\n    name\n  }\n  commentedPost {\n    id\n  }\n}\n",
+  "text": "query HomeAllPostQuery(\n  $count: Int!\n  $id: ID\n  $pCursor: String\n  $cCursor: String\n) {\n  viewer {\n    User(id: $id) {\n      id\n      name\n    }\n    ...ListPage_viewer\n    id\n  }\n}\n\nfragment ListPage_viewer on Viewer {\n  id\n  allPosts(first: $count, after: $pCursor, orderBy: createdAt_DESC) {\n    edges {\n      node {\n        ...Post_post\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n\nfragment Post_post on Post {\n  id\n  description\n  imageUrl\n  siteUrl\n  postedBy {\n    id\n    name\n  }\n  ...ListComments_post\n}\n\nfragment ListComments_post on Post {\n  id\n  comments(first: $count, after: $cCursor) {\n    edges {\n      node {\n        ...Comment_comment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n    count\n  }\n}\n\nfragment Comment_comment on Comment {\n  id\n  content\n  commentedBy {\n    id\n    name\n  }\n  commentedPost {\n    id\n  }\n}\n",
   "metadata": {},
   "fragment": {
     "kind": "Fragment",
@@ -405,7 +406,14 @@ return {
                               v6
                             ]
                           },
-                          v7
+                          v7,
+                          {
+                            "kind": "ScalarField",
+                            "alias": null,
+                            "name": "count",
+                            "args": null,
+                            "storageKey": null
+                          }
                         ]
                       },
                       {
@@ -463,5 +471,6 @@ return {
   }
 };
 })();
+// prettier-ignore
 (node/*: any*/).hash = 'd880a4427451ead755437a117e2e3896';
 module.exports = node;

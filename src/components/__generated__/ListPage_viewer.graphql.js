@@ -9,15 +9,15 @@
 /*::
 import type { ConcreteFragment } from 'relay-runtime';
 type Post_post$ref = any;
-import type { FragmentReference } from 'relay-runtime';
+import type { FragmentReference } from "relay-runtime";
 declare export opaque type ListPage_viewer$ref: FragmentReference;
 export type ListPage_viewer = {|
   +id: string,
   +allPosts: {|
     +edges: ?$ReadOnlyArray<?{|
       +node: {|
-        +$fragmentRefs: Post_post$ref,
-      |},
+        +$fragmentRefs: Post_post$ref
+      |}
     |}>,
     +pageInfo: {|
       +hasNextPage: boolean,
@@ -144,5 +144,6 @@ const node/*: ConcreteFragment*/ = {
     }
   ]
 };
+// prettier-ignore
 (node/*: any*/).hash = 'd1915e86c17f8e3791867dbb9129c080';
 module.exports = node;

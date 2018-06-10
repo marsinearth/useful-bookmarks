@@ -9,7 +9,7 @@
 /*::
 import type { ConcreteFragment } from 'relay-runtime';
 type ListComments_post$ref = any;
-import type { FragmentReference } from 'relay-runtime';
+import type { FragmentReference } from "relay-runtime";
 declare export opaque type Post_post$ref: FragmentReference;
 export type Post_post = {|
   +id: string,
@@ -90,5 +90,6 @@ return {
   ]
 };
 })();
+// prettier-ignore
 (node/*: any*/).hash = '51aec05c9c1cc80e60f5ceea3dfd0035';
 module.exports = node;
