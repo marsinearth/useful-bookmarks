@@ -1,16 +1,17 @@
 // import axios from 'axios'
+import React, { Component } from 'react'
 import path from 'path'
-
+import { ServerStyleSheet } from 'styled-components'
 // Paths Aliases defined through tsconfig.json
 const typescriptWebpackPaths = require('./webpack.config.js')
 
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-
 export default {
   siteRoot: '//useful-bookmarks.netlify.com/',
+  stagingSiteRoot: '//localhost:3000',
   entry: path.join(__dirname, 'src', 'index.tsx'),
+  preact: true,
   getSiteData: () => ({
-    title: 'Useful Bookmarks with React Static/TypeScript/Relay/Prisma',
+    title: 'Useful Bookmarks with React Static/TypeScript/Relay/GraphCool',
   }),
   getRoutes: async () => {
     // const { data: posts } = await axios.get('https://jsonplaceholder.typicode.com/posts')
@@ -71,19 +72,35 @@ export default {
               },
             ],
           },
-          {
-            test: /\.css$/,
-            use: ExtractTextPlugin.extract({
-              fallback: 'style-loader',
-              use: 'css-loader',
-            }),
-          },
-          // defaultLoaders.cssLoader,
+          defaultLoaders.cssLoader,
           defaultLoaders.fileLoader,
         ],
       },
     ]
-    config.plugins = [new ExtractTextPlugin('index.css')]
     return config
+  },
+  renderToHtml: (render, Comp, meta) => {
+    const sheet = new ServerStyleSheet()
+    const html = render(sheet.collectStyles(<Comp />))
+    meta.styleTags = sheet.getStyleElement()
+    return html
+  },
+  Document: class CustomHtml extends Component {
+    render () {
+      const { Html, Head, Body, children, siteData, renderMeta } = this.props
+      return (
+        <Html lang="en-US">
+          <Head>
+            <meta charSet="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" />
+            <title>{siteData.title}</title>
+            {renderMeta.styleTags}
+          </Head>
+          <Body>
+            {children}
+          </Body>
+        </Html>
+      )
+    }
   },
 }

@@ -28,7 +28,11 @@ const HomeAllPostQuery = graphql`
   }
 `
 
-class Home extends PureComponent {
+export default class Home extends PureComponent {
+  userId = ''
+  componentDidMount() {
+    this.userId = localStorage.getItem(GC_USER_ID)
+  }
   queryRender = ({ error, props }: ReadyState) => {
     if (error) {
       return <div>{error.message}</div>
@@ -53,14 +57,12 @@ class Home extends PureComponent {
   }
 
   render() {
-    const userId = localStorage.getItem(GC_USER_ID)
-
     return (
       <QueryRenderer
         environment={environment}
         query={HomeAllPostQuery}
         variables={{
-          id: userId,
+          id: this.userId,
           count: ITEMS_PER_PAGE
         }}
         render={this.queryRender}
@@ -68,8 +70,6 @@ class Home extends PureComponent {
     );
   }
 }
-
-export default Home;
 
 const Wrapper = styled.div`
   padding: 2rem;

@@ -4,21 +4,7 @@ import { hot } from 'react-hot-loader'
 import GitHubForkRibbon from 'react-github-fork-ribbon'
 import Routes from 'react-static-routes'
 import history from './utils/history'
-
-/*const App = () => (
-  <Router>
-    <div>
-      <nav>
-        <Link exact to="/">Home</Link>
-        <Link to="/about">About</Link>
-        <Link to="/blog">Blog</Link>
-      </nav>
-      <div className="content">
-        <Routes />
-      </div>
-    </div>
-  </Router>
-)*/
+import { GC_USER_ID, GC_AUTH_TOKEN } from './utils/constants'
 
 const ForkRibbon = () => (
   <GitHubForkRibbon
