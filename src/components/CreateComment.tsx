@@ -2,7 +2,9 @@ import React, {
   createRef,
   ChangeEvent,
   FormEvent,
-  PureComponent
+  PureComponent,
+  FocusEvent,
+  RefObject
  } from 'react'
 import CreateCommentMutation from '../mutations/CreateCommentMutation'
 import AnimateHeight from 'react-animate-height'
@@ -18,19 +20,19 @@ type State = {
 
 interface Props {
   editComment: IComment | null
-  handleBlur: (e: any) => void
+  handleBlur: (e: FocusEvent<HTMLDivElement | HTMLInputElement>) => void
   mode: boolean
   commentedPostId: string
   viewerId: string
   user: contextProps
 }
 
-class CreateComment extends PureComponent<Props, State> {
+export default class CreateComment extends PureComponent<Props, State> {
   state = {
     editing: false,
     content: ''
   }
-  commentNode: any = createRef()
+  commentNode: RefObject<HTMLElement> = createRef()
 
   static getDerivedStateFromProps(nextProps: Props, prevState: State) {
     const { editComment } = nextProps
@@ -70,22 +72,20 @@ class CreateComment extends PureComponent<Props, State> {
       user
     } = this.props
     const { id, name } = user
-    const target = e.target as HTMLDivElement
-    const targetInput = target.querySelector('input') as EventTarget
 
-    if (editComment) {
+    if (editComment && content !== '') {
       UpdateCommentMutation(
         content,
         editComment,
-        () => this._onBlur(targetInput)
+        () => this._onBlur(e)
       )
-    } else if (id && name) {
+    } else if (id && name && content !== '') {
       CreateCommentMutation(
         content,
         id,
         name,
         commentedPostId,
-        () => this._onBlur(targetInput)
+        () => this._onBlur(e)
       )
     }
   }
@@ -113,8 +113,6 @@ class CreateComment extends PureComponent<Props, State> {
     )
   }
 }
-
-export default CreateComment
 
 const Input = styled.input`
   width: 100%;

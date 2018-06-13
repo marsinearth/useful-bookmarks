@@ -1,7 +1,10 @@
 import React, {
   createRef,
   Fragment,
-  PureComponent
+  PureComponent,
+  FocusEvent,
+  FormEvent,
+  RefObject
 } from 'react'
 import {
   createFragmentContainer,
@@ -42,7 +45,7 @@ class Post extends PureComponent<Props, State> {
     editComment: null
   }
 
-  optionTooltip: any = createRef()
+  optionTooltip: RefObject<HTMLElement> = createRef()
 
   _openMenuPanel = () => {
     this.setState({ menu: true }, () => {
@@ -50,11 +53,11 @@ class Post extends PureComponent<Props, State> {
     })
   }
 
-  _handleBlur = (e: any) => {
-    const target = (e instanceof FocusEvent) ? e.target : e
+  _handleBlur = (e: FocusEvent<HTMLDivElement> | FormEvent<HTMLFormElement>) => {
+    const target = e.target
     const stateObj: State = { editComment: null }
-    if (target.tagName && target.tagName === 'INPUT') stateObj['commentMode'] = false
-    else stateObj['menu'] = false
+    if (target) stateObj['menu'] = false
+    else stateObj['commentMode'] = false
     this.setState(stateObj)
   }
 
@@ -144,7 +147,7 @@ class Post extends PureComponent<Props, State> {
                       &nbsp;Edit
                     </TooltipMenu>
                     <TooltipMenu onClick={this._deletePost}>
-                      Delete
+                      Delete 
                     </TooltipMenu>
                   </Fragment>
                 }
@@ -200,6 +203,7 @@ const Container = styled.div`
   background-color: rgba(0, 0, 0, .05);
   margin-bottom: 1.5rem;
   box-sizing: border-box;
+  border-radius: 0.5rem;
 `
 const ImgContainer = styled.div`
   width: 100%;
