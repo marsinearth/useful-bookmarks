@@ -1,3 +1,7 @@
+import {
+  FocusEvent,
+  FormEvent
+} from 'react'
 import { PageInfo } from 'react-relay'
 import {
   RecordSourceSelectorProxy,
@@ -26,9 +30,7 @@ export type Menu = {
   menu: boolean
 }
 
-export interface handleEdit<C> {
-  handleEdit: (comment: C) => void
-}
+export type handleEdit = (comment: IComment) => void
 
 type ICommentNodes = {
   node: IComment
@@ -45,6 +47,7 @@ export interface IPost {
     name: string
   },
   comments: {
+    count: number,
     edges: ICommentNodes[],
     pageInfo: PageInfo
   }
@@ -86,3 +89,5 @@ export type SHU = {
     newObj: RecordProxy
   ): void
 }
+
+export type BlurEvent = FocusEvent<HTMLDivElement> | FormEvent<HTMLFormElement>

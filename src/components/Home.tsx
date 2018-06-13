@@ -43,6 +43,7 @@ export default class Home extends PureComponent<any, State> {
       }
       return null
     } catch(e) {
+      console.log('error in Home getDerivedStateFromProps: ', e.message)
       return null
     }    
   }

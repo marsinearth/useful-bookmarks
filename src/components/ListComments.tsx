@@ -1,7 +1,8 @@
 import React, {
   PureComponent,
   createRef,
-  Fragment
+  Fragment,
+  RefObject
 } from 'react'
 import {
   createPaginationContainer,
@@ -16,19 +17,19 @@ import faCaretDown from '@fortawesome/fontawesome-free-solid/faCaretDown'
 import Loading from '../assets/images/loading.gif'
 import { ITEMS_PER_PAGE } from '../utils/constants'
 import Comment from './Comment'
-import { IPost, IComment } from '../types'
+import { IPost, handleEdit } from '../types'
 
 type State = {
   commentLoading: boolean,
   endCursor: string,
   closable: boolean,
-  contHeight: string | number
+  contHeight: number | string
 }
 
 type Props = {
   post: IPost,
   relay: RelayPaginationProp,
-  handleEdit: (comment: IComment) => void,
+  handleEdit: handleEdit,
   userId: string | null
 }
 
@@ -39,14 +40,15 @@ class ListComments extends PureComponent<Props, State> {
     closable: false,
     contHeight: 'auto'
   }
-  listContainer: any = createRef()
+  listContainer: RefObject<HTMLDivElement> = createRef()
 
   static getDerivedStateFromProps(
     nextProps: Props,
     prevState: State
   ) {
-    if (nextProps.post && nextProps.post.comments) {
-      const { endCursor } = nextProps.post.comments.pageInfo
+    const { post } = nextProps
+    if (post && post.comments) {
+      const { endCursor } = post.comments.pageInfo
       return {
         endCursor,
         commentLoading: false
@@ -68,22 +70,15 @@ class ListComments extends PureComponent<Props, State> {
   getSnapshotBeforeUpdate(
     prevProps: Props,
     prevState: State
-  ): HTMLElement | null {
-    const prevCommentsEdgesLen = (
-      prevProps.post
-      && prevProps.post.comments
-      && prevProps.post.comments.edges
-    ) && prevProps.post.comments.edges.length
-    const thisCommentsEdgesLen = (
-      this.props.post
-      && this.props.post.comments
-      && this.props.post.comments.edges
-      && this.props.post.comments.edges.length > 0
-    ) && this.props.post.comments.edges.length
-
-    if (prevCommentsEdgesLen !== thisCommentsEdgesLen) {
-      const container = this.listContainer.current
-      return container
+  ): boolean | null {   
+    const prevComments = prevProps.post && prevProps.post.comments
+    const thisComments = this.props.post && this.props.post.comments
+    const prevCommentsEdgesLen = prevComments && prevComments.edges.length
+    const thisCommentsEdgesLen = thisComments && thisComments.edges.length
+    if (prevCommentsEdgesLen === 1 && thisCommentsEdgesLen === 1
+      || prevCommentsEdgesLen !== thisCommentsEdgesLen   
+    ) {
+      return true
     }
     return null
   }
@@ -91,10 +86,11 @@ class ListComments extends PureComponent<Props, State> {
   componentDidUpdate(
     prevProps: Props,
     prevState: State,
-    container: HTMLElement | null
+    contDiff: boolean | null
   ) {
-    if (container) {
-      const contHeight = container.clientHeight
+    if (contDiff) {
+      const container = this.listContainer.current
+      const contHeight = container && container.clientHeight
       this.setState({ contHeight })
     }
   }
@@ -122,9 +118,9 @@ class ListComments extends PureComponent<Props, State> {
     const { commentLoading, closable, contHeight } = this.state
 
     return (
-      <Fragment>
+      <CommentsContainer>
         {edges.length > 0 &&
-          <CommentsContainer>
+          <Fragment>
             <p>Comments</p>
             {commentLoading &&
               <CommentsLoading>
@@ -166,9 +162,9 @@ class ListComments extends PureComponent<Props, State> {
                 </div>
               }
             </CommentMoreContainer>
-          </CommentsContainer>
+          </Fragment>
         }
-      </Fragment>
+      </CommentsContainer>
     )
   }
 }
@@ -193,7 +189,7 @@ export default createPaginationContainer(ListComments, graphql`
         endCursor
       }
       count
-    }
+    } 
   }`,
   {
     direction: 'forward',

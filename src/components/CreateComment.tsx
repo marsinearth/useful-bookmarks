@@ -2,8 +2,8 @@ import React, {
   createRef,
   ChangeEvent,
   FormEvent,
-  PureComponent,
   FocusEvent,
+  PureComponent,
   RefObject
  } from 'react'
 import CreateCommentMutation from '../mutations/CreateCommentMutation'
@@ -11,7 +11,7 @@ import AnimateHeight from 'react-animate-height'
 import styled from 'styled-components'
 import UpdateCommentMutation from '../mutations/UpdateCommentMutation'
 import { contextProps } from '../utils/userContext'
-import { IComment } from '../types'
+import { IComment, BlurEvent } from '../types'
 
 type State = {
   editing: boolean
@@ -20,7 +20,7 @@ type State = {
 
 interface Props {
   editComment: IComment | null
-  handleBlur: (e: FocusEvent<HTMLDivElement | HTMLInputElement>) => void
+  handleBlur: (e: BlurEvent) => void
   mode: boolean
   commentedPostId: string
   viewerId: string
@@ -32,7 +32,7 @@ export default class CreateComment extends PureComponent<Props, State> {
     editing: false,
     content: ''
   }
-  commentNode: RefObject<HTMLElement> = createRef()
+  commentNode: RefObject<HTMLInputElement> = createRef()
 
   static getDerivedStateFromProps(nextProps: Props, prevState: State) {
     const { editComment } = nextProps
@@ -50,7 +50,8 @@ export default class CreateComment extends PureComponent<Props, State> {
     if (this.props.mode) this.commentNode.current.focus()
   }
   
-  _onBlur = (e: any) => {
+  _onBlur = (e: BlurEvent) => {
+    e.persist()
     this.setState({
       editing: false,
       content: ''
@@ -65,6 +66,7 @@ export default class CreateComment extends PureComponent<Props, State> {
 
   _handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    e.persist()
     const { content } = this.state
     const {
       commentedPostId,

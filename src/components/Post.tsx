@@ -2,8 +2,6 @@ import React, {
   createRef,
   Fragment,
   PureComponent,
-  FocusEvent,
-  FormEvent,
   RefObject
 } from 'react'
 import {
@@ -20,7 +18,7 @@ import faPencilAlt from '@fortawesome/fontawesome-free-solid/faPencilAlt'
 import { UserConsumer } from '../utils/userContext'
 import ListComments from './ListComments'
 import history from '../utils/history'
-import { IPost, IComment, TooltipMenuProps, Menu } from '../types' 
+import { IPost, IComment, TooltipMenuProps, Menu, BlurEvent } from '../types' 
 
 type State = {
   menu?: boolean,
@@ -45,7 +43,7 @@ class Post extends PureComponent<Props, State> {
     editComment: null
   }
 
-  optionTooltip: RefObject<HTMLElement> = createRef()
+  optionTooltip: RefObject<HTMLDivElement> = createRef()
 
   _openMenuPanel = () => {
     this.setState({ menu: true }, () => {
@@ -53,11 +51,13 @@ class Post extends PureComponent<Props, State> {
     })
   }
 
-  _handleBlur = (e: FocusEvent<HTMLDivElement> | FormEvent<HTMLFormElement>) => {
+  _handleBlur = (e: BlurEvent) => {
     const target = e.target
     const stateObj: State = { editComment: null }
-    if (target) stateObj['menu'] = false
-    else stateObj['commentMode'] = false
+    if (target instanceof HTMLInputElement
+      || target instanceof HTMLFormElement
+    ) stateObj['commentMode'] = false
+    else stateObj['menu'] = false
     this.setState(stateObj)
   }
 

@@ -3,7 +3,8 @@ import React, {
   Fragment,
   PureComponent,
   FocusEvent,
-  MouseEvent
+  MouseEvent,
+  RefObject
 } from 'react'
 import {
   createFragmentContainer,
@@ -25,10 +26,11 @@ interface State extends Menu, Hover {
   commentMode?: boolean
 }
 
-interface Props extends handleEdit<IComment> {
+interface Props {
   userId: string | null,
   comment: IComment,
-  postId: string
+  postId: string,
+  handleEdit: handleEdit
 }
 
 class Comment extends PureComponent<Props, State> {
@@ -37,7 +39,7 @@ class Comment extends PureComponent<Props, State> {
     hover: false,
     commentMode: false
   }
-  optionTooltip: any = createRef()
+  optionTooltip: RefObject<HTMLDivElement> = createRef()
 
   _openMenuPanel = () => {
     this.setState({ menu: true }, () => {
@@ -58,14 +60,8 @@ class Comment extends PureComponent<Props, State> {
     this.setState({ hover: false })
   }
 
-  _handleBlur = (e: FocusEvent<HTMLDivElement>) => {
-    const stateObj = this.state
-    const target = e.target
-    const tagName = target && target.tagName
-
-    if (tagName === 'INPUT') stateObj['commentMode'] = false
-    else stateObj['menu'] = false
-    this.setState(stateObj)
+  _handleBlur = () => {
+    this.setState({ menu: false })
   }
 
   _handleEdit = () => {
@@ -161,6 +157,7 @@ const Dim = css`
 const Container = styled.div`
   font-size: .75rem;
   padding: .25rem .5rem;
+  position: relative;
 `
 const Content = styled.span`
   color: #aaa;

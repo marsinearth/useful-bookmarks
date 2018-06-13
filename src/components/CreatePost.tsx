@@ -3,7 +3,8 @@ import React, {
   PureComponent,
   ChangeEvent,
   MouseEvent,
-  SyntheticEvent
+  SyntheticEvent,
+  RefObject
  } from 'react'
 import { Link } from 'react-router-dom'
 import CreatePostMutation from '../mutations/CreatePostMutation'
@@ -42,6 +43,8 @@ type Props = {
   }
 }
 
+type RefInput = RefObject<HTMLInputElement>
+
 const CreatePostViewerQuery = graphql`
   query CreatePostViewerQuery($initCount: Int!) {
     viewer {
@@ -71,8 +74,8 @@ class CreatePost extends PureComponent<Props, State> {
     siteUrl: '',
     error: {}
   }
-  imageUrlNode: any = createRef()
-  siteUrlNode: any = createRef()
+  imageUrlNode: RefInput = createRef()
+  siteUrlNode: RefInput = createRef()
 
   componentDidMount() {
     const userId = localStorage.getItem(GC_USER_ID)
