@@ -6,7 +6,7 @@ import React, {
   SyntheticEvent,
   RefObject
  } from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-static'
 import CreatePostMutation from '../mutations/CreatePostMutation'
 import UpdatePostMutation from '../mutations/UpdatePostMutation'
 import { QueryRenderer, graphql, ReadyState } from 'react-relay'
@@ -138,7 +138,9 @@ class CreatePost extends PureComponent<Props, State> {
             siteUrl,
             editPost,
             viewerId,
-            () => this.setState({ editing: false }, () => history.replace('/'))
+            () => this.setState({ editing: false }, () => {
+              history.replace('/')
+            })
           )
         } else {
           CreatePostMutation(

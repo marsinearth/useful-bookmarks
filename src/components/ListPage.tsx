@@ -5,7 +5,7 @@ import {
   RelayPaginationProp,
   PageInfo
 } from 'react-relay'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-static'
 import Post from './Post'
 import styled, { css } from 'styled-components'
 import Loading from '../assets/images/loading.gif'

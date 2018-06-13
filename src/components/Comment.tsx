@@ -66,7 +66,9 @@ class Comment extends PureComponent<Props, State> {
 
   _handleEdit = () => {
     const { comment, handleEdit } = this.props
-    this.setState({ menu: false }, () => handleEdit(comment))
+    this.setState({ menu: false }, () => {
+      handleEdit(comment)
+    })
   }
 
   _handleDelete = () => {

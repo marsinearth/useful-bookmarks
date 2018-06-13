@@ -55,7 +55,9 @@ export default class CreateComment extends PureComponent<Props, State> {
     this.setState({
       editing: false,
       content: ''
-    }, () => this.props.handleBlur(e))
+    }, () => {
+      this.props.handleBlur(e)
+    })
   }
 
   _handleChange = (e: ChangeEvent<HTMLInputElement>) => {

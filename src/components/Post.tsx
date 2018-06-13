@@ -63,13 +63,12 @@ class Post extends PureComponent<Props, State> {
 
   _editPost = () => {
     const { post } = this.props
-    this.setState({
-      commentMode: true,
-      menu: false
-    }, () => history.push({
-      pathname: '/create',
-      state: { editPost: post }
-    }))
+    this.setState({ menu: false }, () => { 
+      history.push({
+        pathname: '/create',
+        state: { editPost: post }
+      })
+    })
   }
 
   _deletePost = () => {
@@ -141,11 +140,11 @@ class Post extends PureComponent<Props, State> {
                   + Comment
                 </TooltipMenu>
                 {posterId === user.id &&
-                  <Fragment>
-                    <TooltipMenu edit={true} onClick={this._editPost}>
+                  <Fragment>               
+                    <TooltipMenu edit={true} onClick={this._editPost}>                      
                       <FontAwesomeIcon icon={faPencilAlt} size='xs'/>
-                      &nbsp;Edit
-                    </TooltipMenu>
+                      &nbsp;Edit                      
+                    </TooltipMenu>                
                     <TooltipMenu onClick={this._deletePost}>
                       Delete 
                     </TooltipMenu>
