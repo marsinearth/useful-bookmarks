@@ -16,22 +16,23 @@ import faEllipsisV from '@fortawesome/fontawesome-free-solid/faEllipsisV'
 import faPencilAlt from '@fortawesome/fontawesome-free-solid/faPencilAlt'
 import styled, { css } from 'styled-components'
 import DeleteCommentMutation from '../mutations/DeleteCommentMutation'
-import { IComment, TooltipMenuProps, Menu, handleEdit } from '../types' 
+import { IComment, TooltipMenuProps, Menu, handleEdit } from '../types'
+import { contextProps } from '../utils/overlayContext'
 
 type Hover = {
   hover: boolean
 }
 
-interface State extends Menu, Hover {
+type State = {
   commentMode?: boolean
-}
+} & Menu & Hover
 
-interface Props {
+type Props = {
   userId: string | null,
   comment: IComment,
   postId: string,
   handleEdit: handleEdit
-}
+} & contextProps
 
 class Comment extends PureComponent<Props, State> {
   state = {
@@ -41,8 +42,17 @@ class Comment extends PureComponent<Props, State> {
   }
   optionTooltip: RefObject<HTMLDivElement> = createRef()
 
-  _openMenuPanel = () => {
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    if (prevProps.isOverlay && !this.props.isOverlay) {
+      this.setState({ menu: false, hover: false, commentMode: false })
+    }
+  }
+
+  _openMenuPanel = (e: MouseEvent<HTMLDivElement>) => {
     this.setState({ menu: true }, () => {
+      if (isMobile) {
+        this.props.toggleOverlay(e)
+      }
       this.optionTooltip.current.focus()
     })
   }
@@ -80,7 +90,7 @@ class Comment extends PureComponent<Props, State> {
   }
 
   render() {
-    const { comment, userId } = this.props
+    const { comment, userId, toggleOverlay } = this.props
     const { menu, hover } = this.state
     const content = comment && comment.content
     const commentedBy = comment && comment.commentedBy
@@ -117,7 +127,11 @@ class Comment extends PureComponent<Props, State> {
         >
           {commentAuth &&
             <Fragment>
-              <TooltipMenu edit={true} onClick={this._handleEdit}>
+              <TooltipMenu 
+                edit={true} 
+                onClick={this._handleEdit}
+                onTouchEnd={toggleOverlay}
+              >
                 <FontAwesomeIcon icon={faPencilAlt} size='xs'/>
                 &nbsp;Edit
               </TooltipMenu>
@@ -170,11 +184,13 @@ const Writer = Content.extend`
   margin-right: .5rem;
 `
 const VertOptionContainer = styled.div`
+  position: relative;
   float: right;
   cursor: pointer;
   color: #aaa;
   width: 1rem;
   text-align: center;
+  z-index: 3;
   display: ${(props: Hover) => props.hover ? 'block' : 'none'};
 `
 const Tooltip = styled.div`
@@ -191,6 +207,7 @@ const Tooltip = styled.div`
   justify-content: center;
   margin-bottom: -7px;
   margin-right: -10px;
+  z-index: 4;
 `
 const TooltipMenu = styled.div`
   color: ${(props: TooltipMenuProps) => (props.comment || props.edit) ? '#aaa' : 'red'};

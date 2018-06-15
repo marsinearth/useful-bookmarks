@@ -17,7 +17,8 @@ import faCaretDown from '@fortawesome/fontawesome-free-solid/faCaretDown'
 import Loading from '../assets/images/loading.gif'
 import { ITEMS_PER_PAGE } from '../utils/constants'
 import Comment from './Comment'
-import { IPost, handleEdit } from '../types'
+import { IPost, handleEdit } from '../types';
+import { OverlayConsumer } from '../utils/overlayContext';
 
 type State = {
   commentLoading: boolean,
@@ -137,15 +138,20 @@ class ListComments extends PureComponent<Props, State> {
               style={{ paddingTop: '1.25rem' }}
             >
               <div ref={this.listContainer}>
-                {!commentLoading && edges.map(({ node }) =>
-                  <Comment
-                    key={node.__id}
-                    comment={node}
-                    postId={id}
-                    userId={userId}
-                    handleEdit={handleEdit}
-                  />
-                )}
+              <OverlayConsumer>
+                {({ isOverlay, toggleOverlay }) => (     
+                  !commentLoading && edges.map(({ node }) => (
+                    <Comment
+                      key={node.__id}
+                      comment={node}
+                      postId={id}
+                      userId={userId}
+                      handleEdit={handleEdit}
+                      isOverlay={isOverlay}
+                      toggleOverlay={toggleOverlay}
+                    />
+                  )))}
+                </OverlayConsumer>
               </div>
             </AnimateHeight>
             <CommentMoreContainer>

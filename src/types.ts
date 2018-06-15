@@ -1,6 +1,8 @@
 import {
   FocusEvent,
-  FormEvent
+  FormEvent,
+  TouchEvent,
+  MouseEvent
 } from 'react'
 import { PageInfo } from 'react-relay'
 import {
@@ -90,4 +92,6 @@ export type SHU = {
   ): void
 }
 
-export type BlurEvent = FocusEvent<HTMLDivElement> | FormEvent<HTMLFormElement>
+export type BlurEvent = FocusEvent<HTMLDivElement> | FocusEvent<HTMLInputElement> | FormEvent<HTMLFormElement>
+
+export type toggleOverlay = (e:  TouchEvent<HTMLDivElement> | MouseEvent<HTMLDivElement> | TouchEvent<HTMLInputElement> | TouchEvent<HTMLFormElement>) => void

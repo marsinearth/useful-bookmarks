@@ -2,7 +2,6 @@ import React, {
   createRef,
   ChangeEvent,
   FormEvent,
-  FocusEvent,
   PureComponent,
   RefObject
  } from 'react'

@@ -2,7 +2,8 @@ import React, {
   createRef,
   Fragment,
   PureComponent,
-  RefObject
+  RefObject,
+  MouseEvent
 } from 'react'
 import {
   createFragmentContainer,
@@ -18,7 +19,8 @@ import faPencilAlt from '@fortawesome/fontawesome-free-solid/faPencilAlt'
 import { UserConsumer } from '../utils/userContext'
 import ListComments from './ListComments'
 import history from '../utils/history'
-import { IPost, IComment, TooltipMenuProps, Menu, BlurEvent } from '../types' 
+import { IPost, IComment, TooltipMenuProps, Menu, BlurEvent } from '../types';
+import { contextProps } from '../utils/overlayContext'
 
 type State = {
   menu?: boolean,
@@ -29,7 +31,7 @@ type State = {
 type Props = {
   post: IPost,
   viewerId: string
-}
+} & contextProps
 
 type ImgContainerProps = {
   url: string,
@@ -42,11 +44,19 @@ class Post extends PureComponent<Props, State> {
     commentMode: false,
     editComment: null
   }
-
   optionTooltip: RefObject<HTMLDivElement> = createRef()
 
-  _openMenuPanel = () => {
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    if (prevProps.isOverlay && !this.props.isOverlay) {      
+      this.setState({ menu: false, commentMode: false })
+    }
+  }
+
+  _openMenuPanel = (e: MouseEvent<HTMLDivElement>) => {    
     this.setState({ menu: true }, () => {
+      if (isMobile) {
+        this.props.toggleOverlay(e)
+      }
       this.optionTooltip.current.focus()
     })
   }
@@ -94,7 +104,11 @@ class Post extends PureComponent<Props, State> {
   }
 
   render() {
-    const { post, viewerId } = this.props
+    const { 
+      post, 
+      viewerId,
+      toggleOverlay 
+    } = this.props
     const {
       menu,
       commentMode,
@@ -124,19 +138,25 @@ class Post extends PureComponent<Props, State> {
         <UserConsumer>
           {user => (
             <InfoContainer>
-              {description}
-              {user.id &&
-                <VertOptionContainer onClick={this._openMenuPanel}>
-                  <FontAwesomeIcon icon={faEllipsisV}/>
-                </VertOptionContainer>
-              }
+              <TitleContainer>
+                <span>{description}</span>              
+                {user.id &&
+                  <VertOptionContainer onClick={this._openMenuPanel}>
+                    <FontAwesomeIcon icon={faEllipsisV}/>
+                  </VertOptionContainer>
+                }
+              </TitleContainer>
               <Tooltip
                 innerRef={this.optionTooltip}
                 onBlur={this._handleBlur}
                 menu={menu}
                 tabIndex={-1}
               >
-                <TooltipMenu comment={true} onClick={this._addComment}>
+                <TooltipMenu 
+                  comment={true} 
+                  onClick={this._addComment}
+                  onTouchEnd={toggleOverlay}
+                >
                   + Comment
                 </TooltipMenu>
                 {posterId === user.id &&
@@ -215,12 +235,19 @@ const InfoContainer = styled.div`
   padding-top: 1rem;
   position: relative;
 `
+const TitleContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`
 const VertOptionContainer = styled.div`
-  float: right;
+  position: relative;
   cursor: pointer;
   color: #aaa;
   text-align: center;
   width: 1rem;
+  z-index: 3;
 `
 const Tooltip = styled.div`
   position: absolute;
@@ -236,6 +263,7 @@ const Tooltip = styled.div`
   justify-content: center;
   margin-top: 1px;
   margin-right: -15px;
+  z-index: 4;
 `
 const TooltipMenu = styled.div`
   color: ${(props: TooltipMenuProps) => (props.comment || props.edit) ? '#aaa' : 'red'};

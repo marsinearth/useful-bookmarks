@@ -6,14 +6,15 @@ import {
   PageInfo
 } from 'react-relay'
 import { Link } from 'react-static'
-import Post from './Post'
-import styled, { css } from 'styled-components'
-import Loading from '../assets/images/loading.gif'
 import { isMobile } from 'react-device-detect'
+import styled, { css } from 'styled-components'
 import InfiniteScroll from 'react-infinite-scroller'
+import Post from './Post'
+import Loading from '../assets/images/loading.gif'
 import { UserConsumer } from '../utils/userContext'
 import { ITEMS_PER_PAGE } from '../utils/constants'
-import { IPost } from '../types'
+import { IPost, toggleOverlay } from '../types';
+import { OverlayProvider, OverlayConsumer } from '../utils/overlayContext'
 
 type PostNode = {
   node: IPost
@@ -30,7 +31,26 @@ type Props = {
   }
 }
 
-class ListPage extends PureComponent<Props> {
+type State = {
+  isOverlay: boolean
+}
+
+class ListPage extends PureComponent<Props, State> {
+  _toggleOverlay: toggleOverlay = e => {    
+    const target = e.target as HTMLDivElement
+    const overlayVal: string | undefined = (target && target.dataset) && target.dataset.overlay 
+    let overlay: boolean = false
+    if (!overlayVal) {
+      overlay = true
+    }
+    this.setState({ isOverlay: overlay })
+  }
+
+  state = {
+    isOverlay: false,
+    toggleOverlay: this._toggleOverlay
+  }
+
   _loadMore = () => {
     const { relay } = this.props
     if (!relay.hasMore()) return
@@ -42,42 +62,54 @@ class ListPage extends PureComponent<Props> {
     const edges = viewer.allPosts && viewer.allPosts.edges
 
     return (
-      <Wrapper>
-        <UserConsumer>
-          {user => (
-            <TopPart width={window.innerWidth}>
-              {user.name &&
-                <WelcomeUser>
-                  Hello {user.name}!
-                </WelcomeUser>
-              }
-              <StyledLink
-                mobile={isMobile ? 'true' : 'false'}
-                to={user.name ? '/create' : '/login'}
-              >
-                + {user.name ? 'New Post' : 'Sign In'}
-              </StyledLink>
-            </TopPart>
-          )}
-        </UserConsumer>
-        <InfiniteScroll
-          pageStart={0}
-          loadMore={this._loadMore}
-          hasMore={relay.hasMore()}
-          loader={
-            <PostsLoading key={0}>
-              <img src={Loading} alt="Loading..."/>
-            </PostsLoading>}
-        >
-          {edges && edges.map(({ node }) =>
-            <Post
-              key={node.__id}
-              post={node}
-              viewerId={viewer.id}
-            />
-          )}
-        </InfiniteScroll>
-      </Wrapper>
+      <OverlayProvider value={this.state}>
+        <Wrapper>
+          <OverlayConsumer>
+            {({ isOverlay, toggleOverlay }) => (
+              isMobile && <Overlay onTouchEnd={toggleOverlay} on={isOverlay} data-overlay="close" />
+            )}
+          </OverlayConsumer>
+          <UserConsumer>
+            {user => (
+              <TopPart width={window.innerWidth}>
+                {user.name &&
+                  <WelcomeUser>
+                    Hello {user.name}!
+                  </WelcomeUser>
+                }
+                <StyledLink
+                  mobile={isMobile ? 'true' : 'false'}
+                  to={user.name ? '/create' : '/login'}
+                >
+                  + {user.name ? 'New Post' : 'Sign In'}
+                </StyledLink>
+              </TopPart>
+            )}
+          </UserConsumer>
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={this._loadMore}
+            hasMore={relay.hasMore()}
+            loader={
+              <PostsLoading key={0}>
+                <img src={Loading} alt="Loading..."/>
+              </PostsLoading>}
+          >    
+            <OverlayConsumer>
+              {({ isOverlay, toggleOverlay }) => (      
+                edges && edges.map(({ node }) =>
+                  <Post
+                    key={node.__id}
+                    post={node}
+                    viewerId={viewer.id}
+                    isOverlay={isOverlay}
+                    toggleOverlay={toggleOverlay}
+                  />
+              ))}    
+            </OverlayConsumer>   
+          </InfiniteScroll>
+        </Wrapper>
+      </OverlayProvider>
     )
   }
 }
@@ -146,7 +178,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   margin-top: 5.2rem;
-
+  position: relative;
   div {
     max-width: 100%;
   }
@@ -186,4 +218,10 @@ const PostsLoading = styled.div`
     height: 5rem;
     mix-blend-mode: multiply;
   }
+`
+const Overlay = styled.div`
+  position: absolute;
+  width: 100%;
+  height: ${(props: { on: boolean }) => props.on ? '100%' : 0};
+  z-index: 2;
 `

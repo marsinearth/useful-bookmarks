@@ -100,7 +100,7 @@ class CreatePost extends PureComponent<Props, State> {
   _handleChange = (e: ChangeEvent<HTMLInputElement>) =>  {    
     const { error } = this.state
     const target = e.target
-    const label: string = target && target.dataset.label
+    const label: string = target && target.dataset && target.dataset.label
     const value: string = target && target.value
     let valid = true    
     if(label) {
@@ -118,7 +118,7 @@ class CreatePost extends PureComponent<Props, State> {
   _handlePost = (e: MouseEvent<HTMLButtonElement>) => {
     const { imageUrl, siteUrl, error } = this.state
     const target = e.target
-    const viewerId: string | undefined = target instanceof HTMLButtonElement
+    const viewerId: string | undefined = (target instanceof HTMLButtonElement && target.dataset)
       ? target.dataset.viewerid : ''
 
     if (error.siteUrl || error.imageUrl) {
