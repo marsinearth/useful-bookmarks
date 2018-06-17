@@ -217,7 +217,7 @@ class CreatePost extends PureComponent<Props, State> {
                 data-viewerid={props.viewer.id}
                 onClick={this._handlePost}
               >
-                {editing ? 'Edit' : 'Post'}
+                {editing ? 'Apply' : 'Post'}
               </PostBtn>
             }
             <LinkContainer>

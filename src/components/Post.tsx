@@ -16,6 +16,7 @@ import CreateComment from './CreateComment'
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faEllipsisV from '@fortawesome/fontawesome-free-solid/faEllipsisV'
 import faPencilAlt from '@fortawesome/fontawesome-free-solid/faPencilAlt'
+import Linkify from 'react-linkify'
 import { UserConsumer } from '../utils/userContext'
 import ListComments from './ListComments'
 import history from '../utils/history'
@@ -139,7 +140,14 @@ class Post extends PureComponent<Props, State> {
           {user => (
             <InfoContainer>
               <TitleContainer>
-                <span>{description}</span>              
+                <Linkify
+                  properties={{
+                    target: "_blank",
+                    rel: "noopener noreferrer"
+                  }}
+                >                
+                  {description}
+                </Linkify>              
                 {user.id &&
                   <VertOptionContainer onClick={this._openMenuPanel}>
                     <FontAwesomeIcon icon={faEllipsisV}/>

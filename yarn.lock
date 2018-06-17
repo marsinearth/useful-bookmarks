@@ -1260,7 +1260,7 @@ babel-polyfill@^6.20.0, babel-polyfill@^6.26.0:
     core-js "^2.5.0"
     regenerator-runtime "^0.10.5"
 
-babel-preset-env@^1.6.0, babel-preset-env@^1.6.1:
+babel-preset-env@^1.6.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/babel-preset-env/-/babel-preset-env-1.7.0.tgz#dea79fa4ebeb883cd35dab07e260c1c9c04df77a"
   dependencies:
@@ -4989,7 +4989,7 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-linkify-it@^2.0.0:
+linkify-it@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/linkify-it/-/linkify-it-2.0.3.tgz#d94a4648f9b1c179d64fa97291268bdb6ce9434f"
   dependencies:
@@ -6476,15 +6476,6 @@ rc@^1.0.1, rc@^1.1.2, rc@^1.1.6, rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-anchorify-text@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/react-anchorify-text/-/react-anchorify-text-2.2.0.tgz#95ed3a654664b1928a408f67cc89ba4dc59e215d"
-  dependencies:
-    babel-preset-env "^1.6.1"
-    linkify-it "^2.0.0"
-    prop-types "^15.5.10"
-    tlds "^1.145.0"
-
 react-animate-height@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/react-animate-height/-/react-animate-height-2.0.1.tgz#6ec3f8d5126d0d90fed591afad0adf76b707ee2f"
@@ -6609,6 +6600,14 @@ react-is@^16.3.1:
 react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
+
+react-linkify@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/react-linkify/-/react-linkify-0.2.2.tgz#55b99b1cc7244446a0f9bdebbe13b2c30f789e65"
+  dependencies:
+    linkify-it "^2.0.3"
+    prop-types "^15.5.8"
+    tlds "^1.57.0"
 
 react-relay@^1.6.0:
   version "1.6.0"
@@ -7875,7 +7874,7 @@ timers-browserify@^2.0.4:
   dependencies:
     setimmediate "^1.0.4"
 
-tlds@^1.145.0:
+tlds@^1.57.0:
   version "1.203.1"
   resolved "https://registry.yarnpkg.com/tlds/-/tlds-1.203.1.tgz#4dc9b02f53de3315bc98b80665e13de3edfc1dfc"
 
