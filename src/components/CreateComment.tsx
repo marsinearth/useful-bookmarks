@@ -122,4 +122,6 @@ const Input = styled.input`
   padding: 1rem;
   margin-top: 1rem;
   box-sizing: border-box;
+  position: relative;
+  z-index: 3;  
 `
