@@ -15,6 +15,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 import faEllipsisV from '@fortawesome/fontawesome-free-solid/faEllipsisV'
 import faPencilAlt from '@fortawesome/fontawesome-free-solid/faPencilAlt'
 import styled, { css } from 'styled-components'
+import AnchorifyText from 'react-anchorify-text'
 import DeleteCommentMutation from '../mutations/DeleteCommentMutation'
 import { IComment, TooltipMenuProps, Menu, handleEdit } from '../types'
 import { contextProps } from '../utils/overlayContext'
@@ -108,7 +109,7 @@ class Comment extends PureComponent<Props, State> {
           {commentedName}:
         </Writer>
         <Content>
-          {content}
+          <AnchorifyText text={content} />
         </Content>
         <VertOptionContainer
           hover={hover}
