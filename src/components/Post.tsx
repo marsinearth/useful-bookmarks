@@ -1,27 +1,29 @@
 import React, {
   createRef,
-  Fragment,
+  forwardRef,
   PureComponent,
-  RefObject,
-  MouseEvent
+  MouseEvent,
+  TouchEvent
 } from 'react'
 import {
   createFragmentContainer,
-  graphql
 } from 'react-relay'
+import graphql from 'babel-plugin-relay/macro'
 import { isMobile } from 'react-device-detect'
 import styled, { css } from 'styled-components'
+import Img from 'react-image'
 import DeletePostMutation from '../mutations/DeletePostMutation'
 import CreateComment from './CreateComment'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import faEllipsisV from '@fortawesome/fontawesome-free-solid/faEllipsisV'
-import faPencilAlt from '@fortawesome/fontawesome-free-solid/faPencilAlt'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Linkify from 'react-linkify'
 import { UserConsumer } from '../utils/userContext'
 import ListComments from './ListComments'
 import history from '../utils/history'
-import { IPost, IComment, TooltipMenuProps, Menu, BlurEvent } from '../types';
+import { IPost, IComment, TooltipMenuProps, Menu, toggleOverlay, BlurEvent } from '../types';
 import { contextProps } from '../utils/overlayContext'
+import { linkifyProps } from './Comment';
+import loadingGif from '../assets/images/loading.gif'
+import brokenImg from '../assets/images/broken-img.png'
 
 type State = {
   menu?: boolean,
@@ -34,10 +36,69 @@ type Props = {
   viewerId: string
 } & contextProps
 
-type ImgContainerProps = {
-  url: string,
-  mobile: string
+type TooltipProps = {
+  handleBlur: (e: BlurEvent) => void,
+  handleEdit: () => void,
+  handleDelete: () => void,
+  menu?: boolean, 
+  writerAuth: boolean,
+  toggleOverlay: toggleOverlay,
+  isPost?: boolean,
+  addComment?: () => void
 }
+
+export const TooltipComp = forwardRef<any, TooltipProps>(({
+  handleBlur, 
+  handleEdit,
+  handleDelete,
+  menu,
+  writerAuth,
+  toggleOverlay,
+  isPost,
+  addComment
+}, ref) => (
+  <Tooltip
+    ref={ref}
+    onBlur={handleBlur}
+    menu={menu}
+    tabIndex={-1}
+    isPost={isPost}
+    writerAuth={writerAuth}
+  >
+    {isPost && (
+      <TooltipMenu
+        comment
+        onClick={addComment}
+        onTouchEnd={toggleOverlay}
+        isPost={isPost}
+      >
+        + Comment
+      </TooltipMenu>
+    )}
+    {writerAuth && (
+      <>
+        <TooltipMenu
+          edit
+          onClick={handleEdit}
+          onTouchEnd={toggleOverlay}
+          isPost={isPost}
+        >
+          <FontAwesomeIcon icon="pencil-alt" size="xs"/>
+          {' Edit'}
+        </TooltipMenu>
+        <TooltipMenu onClick={handleDelete} isPost={isPost}>
+          Delete
+        </TooltipMenu>
+      </>
+    )}
+  </Tooltip>
+))
+
+const LoadingComp = ({ className }) => (
+  <div className={className}>
+    <img src={loadingGif} alt="Loading..." />
+  </div>
+)
 
 class Post extends PureComponent<Props, State> {
   state: State = {
@@ -45,15 +106,16 @@ class Post extends PureComponent<Props, State> {
     commentMode: false,
     editComment: null
   }
-  optionTooltip: RefObject<HTMLDivElement> = createRef()
+  optionTooltip = createRef<any>()
 
-  componentDidUpdate(prevProps: Props, prevState: State) {
-    if (prevProps.isOverlay && !this.props.isOverlay) {      
+  componentDidUpdate(prevProps: Props, _: unknown) {
+    if (prevProps.isOverlay && !this.props.isOverlay) {
       this.setState({ menu: false, commentMode: false })
     }
   }
 
-  _openMenuPanel = (e: MouseEvent<HTMLDivElement>) => {    
+  _openMenuPanel = (e: MouseEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>) => {
+    e.persist()
     this.setState({ menu: true }, () => {
       if (isMobile) {
         this.props.toggleOverlay(e)
@@ -63,7 +125,7 @@ class Post extends PureComponent<Props, State> {
   }
 
   _handleBlur = (e: BlurEvent) => {
-    const target = e.target
+    const { target } = e
     const stateObj: State = { editComment: null }
     if (target instanceof HTMLInputElement
       || target instanceof HTMLFormElement
@@ -74,7 +136,7 @@ class Post extends PureComponent<Props, State> {
 
   _editPost = () => {
     const { post } = this.props
-    this.setState({ menu: false }, () => { 
+    this.setState({ menu: false }, () => {
       history.push({
         pathname: '/create',
         state: { editPost: post }
@@ -83,9 +145,9 @@ class Post extends PureComponent<Props, State> {
   }
 
   _deletePost = () => {
-    const { post, viewerId } = this.props
-    if (window.confirm(`Are you sure to delete: ${post.description}?`)) {
-      DeletePostMutation(post.id, viewerId)
+    const { post: { id, description }, viewerId } = this.props
+    if (window.confirm(`Are you sure to delete: ${description}?`)) {
+      DeletePostMutation(id, viewerId)
     }
     this.setState({ menu: false })
   }
@@ -105,25 +167,26 @@ class Post extends PureComponent<Props, State> {
   }
 
   render() {
-    const { 
-      post, 
+    const {
+      post,
+      post: {
+        id,
+        description,
+        imageUrl,
+        siteUrl,
+        postedBy: { 
+          id: posterId,
+          name: posterName 
+        }
+      },
       viewerId,
-      toggleOverlay 
+      toggleOverlay
     } = this.props
     const {
       menu,
       commentMode,
       editComment
     } = this.state
-    const {
-      id,
-      description,
-      imageUrl,
-      siteUrl,
-      postedBy
-    } = post
-    const posterId = postedBy && postedBy.id
-
     return (
       <Container>
         <a
@@ -132,53 +195,40 @@ class Post extends PureComponent<Props, State> {
           rel="noopener noreferrer"
         >
           <ImgContainer
-            url={imageUrl}
-            mobile={isMobile ? 'true' : 'false'}
+            src={[imageUrl, brokenImg]}
+            mobile={isMobile.toString()}
+            loader={<LoadingWrapper />}
           />
         </a>
         <UserConsumer>
           {user => (
             <InfoContainer>
               <TitleContainer>
-                <Linkify
-                  properties={{
-                    target: "_blank",
-                    rel: "noopener noreferrer"
-                  }}
-                >                
-                  {description}
-                </Linkify>              
+                <div className="titleSection">
+                  <span className="username">
+                    {posterName}
+                  </span>
+                  <Linkify properties={linkifyProps}>
+                    {description}
+                  </Linkify>
+                </div>
                 {user.id &&
                   <VertOptionContainer onClick={this._openMenuPanel}>
-                    <FontAwesomeIcon icon={faEllipsisV}/>
+                    <FontAwesomeIcon icon="ellipsis-v" />
                   </VertOptionContainer>
                 }
               </TitleContainer>
-              <Tooltip
-                innerRef={this.optionTooltip}
-                onBlur={this._handleBlur}
+              <TooltipComp 
+                ref={this.optionTooltip}
+                handleBlur={this._handleBlur} 
+                handleEdit={this._editPost}
+                handleDelete={this._deletePost}
                 menu={menu}
-                tabIndex={-1}
-              >
-                <TooltipMenu 
-                  comment={true} 
-                  onClick={this._addComment}
-                  onTouchEnd={toggleOverlay}
-                >
-                  + Comment
-                </TooltipMenu>
-                {posterId === user.id &&
-                  <Fragment>               
-                    <TooltipMenu edit={true} onClick={this._editPost}>                      
-                      <FontAwesomeIcon icon={faPencilAlt} size='xs'/>
-                      &nbsp;Edit                      
-                    </TooltipMenu>                
-                    <TooltipMenu onClick={this._deletePost}>
-                      Delete 
-                    </TooltipMenu>
-                  </Fragment>
-                }
-              </Tooltip>
+                writerAuth={posterId === user.id}
+                toggleOverlay={toggleOverlay}
+                addComment={this._addComment}
+                isPost
+              />
               <ListComments
                 post={post}
                 handleEdit={this._editComment}
@@ -194,7 +244,7 @@ class Post extends PureComponent<Props, State> {
               />
             </InfoContainer>
           )}
-          </UserConsumer>
+        </UserConsumer>
       </Container>
     )
   }
@@ -214,7 +264,7 @@ export default createFragmentContainer(Post, graphql`
   }
 `)
 
-const Dim = css`
+export const Dim = css`
   opacity: 1;
   transition: opacity .15s ease-in;
   cursor: pointer;
@@ -228,16 +278,19 @@ const Container = styled.div`
   width: 365px;
   padding: 1rem;
   background-color: rgba(0, 0, 0, .05);
-  margin-bottom: 1.5rem;
   box-sizing: border-box;
   border-radius: 0.5rem;
 `
-const ImgContainer = styled.div`
+const ImgContainer = styled(Img)`
   width: 100%;
-  background-size: cover;
-  background-image: ${(props: ImgContainerProps) => props.url && 'url(' + props.url + ')'};
-  padding-bottom: 100%;
-  ${(props: ImgContainerProps) => props.mobile === 'false' ? Dim : ''}
+  max-height: 270px;
+  object-fit: cover;
+  ${({ mobile }) => mobile === 'true' ? '' : Dim}
+`
+const LoadingWrapper = styled<any>(LoadingComp)`
+  padding: 2rem;
+  justify-content: center;
+  display: flex;
 `
 const InfoContainer = styled.div`
   padding-top: 1rem;
@@ -248,8 +301,21 @@ const TitleContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+
+  div.titleSection {
+    display: flex;
+    flex-direction: column;
+
+    span.username {
+      font-size: .8rem;
+      color: #999;
+      font-weight: bold;
+      padding: 0 .5rem 0 0;  
+      text-transform: capitalize;    
+    }
+  }
 `
-const VertOptionContainer = styled.div`
+export const VertOptionContainer = styled.div`
   position: relative;
   cursor: pointer;
   color: #aaa;
@@ -257,25 +323,28 @@ const VertOptionContainer = styled.div`
   width: 1rem;
   z-index: 3;
 `
-const Tooltip = styled.div`
+const Tooltip = styled("div")<Menu>`
   position: absolute;
-  top: 0;
-  right: 0;
+  ${({ isPost, writerAuth }) => isPost 
+    ? (writerAuth ? 'top: 0' : 'top: 1rem') 
+    : 'bottom: .5rem'
+  };
+  right: ${({ isPost }) => isPost ? '0' : '.75rem'};
   height: auto;
   padding: .25rem;
   background-color: white;
   outline: 0;
-  display: ${(props: Menu) => props.menu ? 'flex' : 'none'};
+  display: ${({ menu }) => menu ? 'flex' : 'none'};
   flex-flow: column;
   align-items: flex-end;
   justify-content: center;
-  margin-top: 1px;
-  margin-right: -15px;
+  ${({ isPost }) => isPost ? 'margin-top: 1px' : 'margin-bottom: -7px' };
+  margin-right: ${({ isPost }) => isPost ? '-15px' : '-10px'};
   z-index: 4;
 `
-const TooltipMenu = styled.div`
-  color: ${(props: TooltipMenuProps) => (props.comment || props.edit) ? '#aaa' : 'red'};
-  font-size: .875rem;
+const TooltipMenu = styled("div")<TooltipMenuProps>`
+  color: ${({ comment, edit }) => (comment || edit) ? '#aaa' : 'red'};
+  font-size: ${({ isPost }) => isPost ? '.875rem' : '.5rem'};
   padding: .25rem .5rem;
   vertical-align: middle;
   ${Dim}

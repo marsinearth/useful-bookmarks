@@ -4,10 +4,11 @@ import {
   RecordSource,
   Store,
 } from 'relay-runtime'
-import fetch from 'isomorphic-fetch'
-// import { installRelayDevTools } from 'relay-devtools'
+import { installRelayDevTools } from 'relay-devtools'
 
-// installRelayDevTools()
+if (process.env.NODE_ENV === 'development') {
+  installRelayDevTools()
+}
 
 export default new Environment({
   network: Network.create((operation, variables) =>

@@ -12,7 +12,7 @@ interface EventData {
   password: string
 }
 
-const SALT_ROUNDS = 10
+// const SALT_ROUNDS = 10
 
 export default async (event: FunctionEvent<EventData>) => {
   console.log(event)
@@ -41,14 +41,14 @@ export default async (event: FunctionEvent<EventData>) => {
     // generate node token for existing User node
     const token = await graphcool.generateNodeToken(user.id, 'User')
 
-    return { data: { id: user.id, token} }
+    return { data: { token, id: user.id } }
   } catch (e) {
     console.log(e)
     return { error: 'An unexpected error occured during authentication.' }
   }
 }
 
-async function getUserByEmail(api: GraphQLClient, email: string): Promise<{ User }> {
+async function getUserByEmail(api: GraphQLClient, email: string): Promise<{ User: User }> {
   const query = `
     query getUserByEmail($email: String!) {
       User(email: $email) {
@@ -62,5 +62,5 @@ async function getUserByEmail(api: GraphQLClient, email: string): Promise<{ User
     email,
   }
 
-  return api.request<{ User }>(query, variables)
+  return api.request<{ User: User}>(query, variables)
 }

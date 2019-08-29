@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 0ee404ec8473861b4501e764ddf3a562
+ * @relayHash 7276992d566fb053ba1945bdf507d5e1
  */
 
 /* eslint-disable */
@@ -18,6 +18,10 @@ export type AuthenticateUserMutationResponse = {|
     +id: string,
     +token: string,
   |}
+|};
+export type AuthenticateUserMutation = {|
+  variables: AuthenticateUserMutationVariables,
+  response: AuthenticateUserMutationResponse,
 |};
 */
 

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash c25db4b3ffd0a07b3ed6cd3ab9bff7c9
+ * @relayHash 2d46279804768c5961f8e24b29723237
  */
 
 /* eslint-disable */
@@ -21,6 +21,10 @@ export type ListCommentsPaginationQueryResponse = {|
       +$fragmentRefs: ListComments_post$ref
     |}
   |}
+|};
+export type ListCommentsPaginationQuery = {|
+  variables: ListCommentsPaginationQueryVariables,
+  response: ListCommentsPaginationQueryResponse,
 |};
 */
 
@@ -107,7 +111,21 @@ v2 = {
   "name": "id",
   "args": null,
   "storageKey": null
-};
+},
+v3 = [
+  {
+    "kind": "Variable",
+    "name": "after",
+    "variableName": "cCursor",
+    "type": "String"
+  },
+  {
+    "kind": "Variable",
+    "name": "first",
+    "variableName": "count",
+    "type": "Int"
+  }
+];
 return {
   "kind": "Request",
   "operationKind": "query",
@@ -180,20 +198,7 @@ return {
                 "alias": null,
                 "name": "comments",
                 "storageKey": null,
-                "args": [
-                  {
-                    "kind": "Variable",
-                    "name": "after",
-                    "variableName": "cCursor",
-                    "type": "String"
-                  },
-                  {
-                    "kind": "Variable",
-                    "name": "first",
-                    "variableName": "count",
-                    "type": "Int"
-                  }
-                ],
+                "args": v3,
                 "concreteType": "CommentConnection",
                 "plural": false,
                 "selections": [
@@ -310,20 +315,7 @@ return {
                 "kind": "LinkedHandle",
                 "alias": null,
                 "name": "comments",
-                "args": [
-                  {
-                    "kind": "Variable",
-                    "name": "after",
-                    "variableName": "cCursor",
-                    "type": "String"
-                  },
-                  {
-                    "kind": "Variable",
-                    "name": "first",
-                    "variableName": "count",
-                    "type": "Int"
-                  }
-                ],
+                "args": v3,
                 "handle": "connection",
                 "key": "ListComments_comments",
                 "filters": []

@@ -1,19 +1,15 @@
 import React, {
   PureComponent,
-  createRef,
-  Fragment,
-  RefObject
+  createRef
 } from 'react'
 import {
   createPaginationContainer,
-  graphql,
   RelayPaginationProp
 } from 'react-relay'
+import graphql from 'babel-plugin-relay/macro'
 import styled from 'styled-components'
 import AnimateHeight from 'react-animate-height'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import faCaretUp from '@fortawesome/fontawesome-free-solid/faCaretUp'
-import faCaretDown from '@fortawesome/fontawesome-free-solid/faCaretDown'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Loading from '../assets/images/loading.gif'
 import { ITEMS_PER_PAGE } from '../utils/constants'
 import Comment from './Comment'
@@ -41,15 +37,12 @@ class ListComments extends PureComponent<Props, State> {
     closable: false,
     contHeight: 'auto'
   }
-  listContainer: RefObject<HTMLDivElement> = createRef()
+  listContainer = createRef<HTMLDivElement>()
 
-  static getDerivedStateFromProps(
-    nextProps: Props,
-    prevState: State
-  ) {
-    const { post } = nextProps
-    if (post && post.comments) {
-      const { endCursor } = post.comments.pageInfo
+  static getDerivedStateFromProps(nextProps: Props) {
+    const { post: { comments } } = nextProps
+    if (comments) {
+      const { pageInfo: { endCursor } } = comments
       return {
         endCursor,
         commentLoading: false
@@ -68,16 +61,11 @@ class ListComments extends PureComponent<Props, State> {
     }
   }
 
-  getSnapshotBeforeUpdate(
-    prevProps: Props,
-    prevState: State
-  ): boolean | null {   
-    const prevComments = prevProps.post && prevProps.post.comments
-    const thisComments = this.props.post && this.props.post.comments
-    const prevCommentsEdgesLen = prevComments && prevComments.edges.length
-    const thisCommentsEdgesLen = thisComments && thisComments.edges.length
-    if (prevCommentsEdgesLen === 1 && thisCommentsEdgesLen === 1
-      || prevCommentsEdgesLen !== thisCommentsEdgesLen   
+  getSnapshotBeforeUpdate(prevProps: Props): boolean | null {
+    const { post: { comments: { edges: { length: prevCommentsLen } } } } = prevProps
+    const { post: { comments: { edges: { length: thisCommentsLen } } } } = this.props
+    if ((thisCommentsLen === 1 && prevCommentsLen === 1)
+      || (prevCommentsLen !== thisCommentsLen)
     ) {
       return true
     }
@@ -85,8 +73,8 @@ class ListComments extends PureComponent<Props, State> {
   }
 
   componentDidUpdate(
-    prevProps: Props,
-    prevState: State,
+    _prevProps: Props,
+    _prevState: State,
     contDiff: boolean | null
   ) {
     if (contDiff) {
@@ -121,7 +109,7 @@ class ListComments extends PureComponent<Props, State> {
     return (
       <CommentsContainer>
         {edges.length > 0 &&
-          <Fragment>
+          <>
             <p>Comments</p>
             {commentLoading &&
               <CommentsLoading>
@@ -135,11 +123,11 @@ class ListComments extends PureComponent<Props, State> {
               duration={350}
               height={contHeight}
               easing='ease-in-out'
-              style={{ paddingTop: '1.25rem' }}
+              style={{ paddingTop: '1.75rem' }}
             >
               <div ref={this.listContainer}>
               <OverlayConsumer>
-                {({ isOverlay, toggleOverlay }) => (     
+                {({ isOverlay, toggleOverlay }) => (
                   !commentLoading && edges.map(({ node }) => (
                     <Comment
                       key={node.__id}
@@ -158,17 +146,17 @@ class ListComments extends PureComponent<Props, State> {
               {pageMore &&
                 <div onClick={this._loadMore}>
                   <span>More </span>
-                  <FontAwesomeIcon icon={faCaretDown}/>
+                  <FontAwesomeIcon icon="caret-down" />
                 </div>
               }
               {closable &&
                 <div onClick={this._closeMoreComments}>
                   <span>Close </span>
-                  <FontAwesomeIcon icon={faCaretUp}/>
+                  <FontAwesomeIcon icon="caret-up" />
                 </div>
               }
             </CommentMoreContainer>
-          </Fragment>
+          </>
         }
       </CommentsContainer>
     )
@@ -195,7 +183,7 @@ export default createPaginationContainer(ListComments, graphql`
         endCursor
       }
       count
-    } 
+    }
   }`,
   {
     direction: 'forward',
@@ -256,13 +244,14 @@ const CommentMoreContainer = styled.div`
   align-items: flex-end;
 
   div {
+    display: flex;
     color: #aaa;
     padding: 0 2rem;
     cursor: pointer;
 
     span {
+      margin-right: 0.25rem;
       font-size: .75rem;
-      vertical-align: middle;
     }
 
     &:active {

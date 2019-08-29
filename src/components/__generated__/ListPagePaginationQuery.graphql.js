@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 3f5135c1f51d59bd21ec5b927295df9c
+ * @relayHash 48667d853bb365475b55493ef4f81aae
  */
 
 /* eslint-disable */
@@ -19,6 +19,10 @@ export type ListPagePaginationQueryResponse = {|
   +viewer: {|
     +$fragmentRefs: ListPage_viewer$ref
   |}
+|};
+export type ListPagePaginationQuery = {|
+  variables: ListPagePaginationQueryVariables,
+  response: ListPagePaginationQueryResponse,
 |};
 */
 
@@ -132,6 +136,21 @@ v2 = {
   "type": "Int"
 },
 v3 = [
+  {
+    "kind": "Variable",
+    "name": "after",
+    "variableName": "pCursor",
+    "type": "String"
+  },
+  v2,
+  {
+    "kind": "Literal",
+    "name": "orderBy",
+    "value": "createdAt_DESC",
+    "type": "PostOrderBy"
+  }
+],
+v4 = [
   v1,
   {
     "kind": "ScalarField",
@@ -141,21 +160,30 @@ v3 = [
     "storageKey": null
   }
 ],
-v4 = {
+v5 = [
+  {
+    "kind": "Variable",
+    "name": "after",
+    "variableName": "cCursor",
+    "type": "String"
+  },
+  v2
+],
+v6 = {
   "kind": "ScalarField",
   "alias": null,
   "name": "__typename",
   "args": null,
   "storageKey": null
 },
-v5 = {
+v7 = {
   "kind": "ScalarField",
   "alias": null,
   "name": "cursor",
   "args": null,
   "storageKey": null
 },
-v6 = {
+v8 = {
   "kind": "LinkedField",
   "alias": null,
   "name": "pageInfo",
@@ -232,21 +260,7 @@ return {
             "alias": null,
             "name": "allPosts",
             "storageKey": null,
-            "args": [
-              {
-                "kind": "Variable",
-                "name": "after",
-                "variableName": "pCursor",
-                "type": "String"
-              },
-              v2,
-              {
-                "kind": "Literal",
-                "name": "orderBy",
-                "value": "createdAt_DESC",
-                "type": "PostOrderBy"
-              }
-            ],
+            "args": v3,
             "concreteType": "PostConnection",
             "plural": false,
             "selections": [
@@ -298,22 +312,14 @@ return {
                         "args": null,
                         "concreteType": "User",
                         "plural": false,
-                        "selections": v3
+                        "selections": v4
                       },
                       {
                         "kind": "LinkedField",
                         "alias": null,
                         "name": "comments",
                         "storageKey": null,
-                        "args": [
-                          {
-                            "kind": "Variable",
-                            "name": "after",
-                            "variableName": "cCursor",
-                            "type": "String"
-                          },
-                          v2
-                        ],
+                        "args": v5,
                         "concreteType": "CommentConnection",
                         "plural": false,
                         "selections": [
@@ -351,7 +357,7 @@ return {
                                     "args": null,
                                     "concreteType": "User",
                                     "plural": false,
-                                    "selections": v3
+                                    "selections": v4
                                   },
                                   {
                                     "kind": "LinkedField",
@@ -365,13 +371,13 @@ return {
                                       v1
                                     ]
                                   },
-                                  v4
+                                  v6
                                 ]
                               },
-                              v5
+                              v7
                             ]
                           },
-                          v6,
+                          v8,
                           {
                             "kind": "ScalarField",
                             "alias": null,
@@ -385,47 +391,25 @@ return {
                         "kind": "LinkedHandle",
                         "alias": null,
                         "name": "comments",
-                        "args": [
-                          {
-                            "kind": "Variable",
-                            "name": "after",
-                            "variableName": "cCursor",
-                            "type": "String"
-                          },
-                          v2
-                        ],
+                        "args": v5,
                         "handle": "connection",
                         "key": "ListComments_comments",
                         "filters": []
                       },
-                      v4
+                      v6
                     ]
                   },
-                  v5
+                  v7
                 ]
               },
-              v6
+              v8
             ]
           },
           {
             "kind": "LinkedHandle",
             "alias": null,
             "name": "allPosts",
-            "args": [
-              {
-                "kind": "Variable",
-                "name": "after",
-                "variableName": "pCursor",
-                "type": "String"
-              },
-              v2,
-              {
-                "kind": "Literal",
-                "name": "orderBy",
-                "value": "createdAt_DESC",
-                "type": "PostOrderBy"
-              }
-            ],
+            "args": v3,
             "handle": "connection",
             "key": "ListPage_allPosts",
             "filters": []

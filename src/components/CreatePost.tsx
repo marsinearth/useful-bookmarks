@@ -3,14 +3,14 @@ import React, {
   PureComponent,
   ChangeEvent,
   MouseEvent,
-  SyntheticEvent,
-  RefObject
+  SyntheticEvent
  } from 'react'
-import { Link } from 'react-static'
+import { Link } from 'react-router-dom'
+import graphql from 'babel-plugin-relay/macro'
+import { QueryRenderer, ReadyState } from 'react-relay'
 import CreatePostMutation from '../mutations/CreatePostMutation'
 import UpdatePostMutation from '../mutations/UpdatePostMutation'
-import { QueryRenderer, graphql, ReadyState } from 'react-relay'
-import Environment from '../utils/Environment'
+import environment from '../utils/Environment'
 import loadingGif from '../assets/images/loading.gif'
 import defaultJpg from '../assets/images/default.jpg'
 import { GC_USER_ID, ITEMS_PER_PAGE } from '../utils/constants'
@@ -19,31 +19,29 @@ import { validateURL } from '../utils/validateURL'
 import history from '../utils/history'
 import { IPost } from '../types'
 
-type State = {  
+type State = {
   editing: boolean,
   description: string,
   imageUrl: string,
   siteUrl: string,
   error: errorTypes,
-  [name: string]: string | boolean | errorTypes,
+  [name: string]: string | boolean | errorTypes
 }
 
-type errorTypes = {  
+type errorTypes = {
   description?: boolean,
   imageUrl?: boolean,
   siteUrl?: boolean,
-  [name: string]: boolean,
+  [name: string]: boolean | undefined,
 }
 
 type Props = {
   location: {
-    state: {
-      editPost: IPost
+    state?: {
+      editPost?: IPost
     }
   }
 }
-
-type RefInput = RefObject<HTMLInputElement>
 
 const CreatePostViewerQuery = graphql`
   query CreatePostViewerQuery($initCount: Int!) {
@@ -66,6 +64,99 @@ const CreatePostViewerQuery = graphql`
   }
 `
 
+const QueryRenderee = ({ 
+  queryState: {
+    error: queryErr, 
+    props, 
+  },
+  states: {
+    description,
+    editing,
+    imageUrl,
+    siteUrl,
+    error
+  },
+  internalFuncs: {
+    handleChange, 
+    onErrorImg,
+    handlePost
+  },
+  internalRefs: {
+    imageUrlNode,
+    siteUrlNode    
+  }
+}: { 
+  queryState: ReadyState, 
+  states: State, 
+  internalFuncs: any, 
+  internalRefs: any 
+}) => {
+  if (queryErr) {
+    return <div>{queryErr.message}</div>
+  } else if (props) {
+    return (
+      <Wrapper>
+        <div>
+          <Input
+            type='text'
+            value={description}
+            data-error={error.description}
+            placeholder='Description'
+            data-label='description'
+            onChange={handleChange}
+          />
+          <Input
+            type='url'
+            data-error={error.imageUrl}
+            value={imageUrl}
+            ref={imageUrlNode}
+            placeholder='Image Url'
+            data-label='imageUrl'
+            onChange={handleChange}
+          />
+          <Input
+            type='url'
+            data-error={error.siteUrl}
+            value={siteUrl}
+            ref={siteUrlNode}
+            placeholder='Site Url'
+            data-label='siteUrl'
+            onChange={handleChange}
+          />
+          {imageUrl &&
+            <img
+              src={imageUrl}
+              onError={onErrorImg}
+              alt={description}
+            />
+          }
+          {(description && imageUrl && siteUrl) && (
+            <PostBtn
+              data-viewer-id={props.viewer.id}
+              onClick={handlePost}
+            >
+              {editing ? 'Apply' : 'Post'}
+            </PostBtn>
+          )}
+          <LinkContainer>
+            <Link to="/" >
+              Cancel
+            </Link>
+         </LinkContainer>
+       </div>
+     </Wrapper>
+    )
+  }
+  return (
+    <Wrapper>
+      <img
+        src={loadingGif}
+        alt="Loading..."
+      />
+    </Wrapper>
+  )
+}
+
 class CreatePost extends PureComponent<Props, State> {
   state: State = {
     editing: false,
@@ -74,8 +165,8 @@ class CreatePost extends PureComponent<Props, State> {
     siteUrl: '',
     error: {}
   }
-  imageUrlNode: RefInput = createRef()
-  siteUrlNode: RefInput = createRef()
+  imageUrlNode = createRef<HTMLInputElement>()
+  siteUrlNode = createRef<HTMLInputElement>()
 
   componentDidMount() {
     const userId = localStorage.getItem(GC_USER_ID)
@@ -97,12 +188,14 @@ class CreatePost extends PureComponent<Props, State> {
     return null
   }
 
-  _handleChange = (e: ChangeEvent<HTMLInputElement>) =>  {    
+  _handleChange = (e: ChangeEvent<HTMLInputElement>) =>  {
     const { error } = this.state
-    const target = e.target
-    const label: string = target && target.dataset && target.dataset.label
-    const value: string = target && target.value
-    let valid = true    
+    const { target } = e
+    
+    const { dataset: { label }, value } = target
+    console.log('label: ', label);
+    console.log('value: ', value);
+    let valid = true
     if(label) {
       if(label !== 'description') {
         valid = validateURL(value)
@@ -117,30 +210,29 @@ class CreatePost extends PureComponent<Props, State> {
 
   _handlePost = (e: MouseEvent<HTMLButtonElement>) => {
     const { imageUrl, siteUrl, error } = this.state
-    const target = e.target
-    const viewerId: string | undefined = (target instanceof HTMLButtonElement && target.dataset)
-      ? target.dataset.viewerid : ''
+    const { target } = e
+    const { dataset: { viewerId } } = target as HTMLButtonElement
 
     if (error.siteUrl || error.imageUrl) {
       if (error.siteUrl && this.siteUrlNode.current) this.siteUrlNode.current.focus()
       if (error.imageUrl && this.imageUrlNode.current) this.imageUrlNode.current.focus()
     } else {
-      const { location } = this.props
-      const editPost = location.state && location.state.editPost
+      const { location: { state: { editPost } = {}} } = this.props
       const { editing, description } = this.state
       const userId = localStorage.getItem(GC_USER_ID)
 
       if (userId && viewerId) {
-        if (editing) {
+        if (editing && editPost) {
           UpdatePostMutation(
             description,
             imageUrl,
             siteUrl,
             editPost,
-            viewerId,
-            () => this.setState({ editing: false }, () => {
-              history.replace('/')
-            })
+            () => {
+              this.setState({ editing: false }, () => {
+                history.replace('/')
+              })
+            }
           )
         } else {
           CreatePostMutation(
@@ -157,95 +249,35 @@ class CreatePost extends PureComponent<Props, State> {
   }
 
   onErrorImg = (e: SyntheticEvent<HTMLImageElement>) => {
-    const target = e.target
+    const { target } = e
     if (target && target instanceof HTMLImageElement) {
       target.src = defaultJpg
     }
   }
 
-  queryRender = ({ error, props }: ReadyState) => {
-    if (error) {
-      return <div>{error.message}</div>
-    }
-    if (props) {
-      const {
-        description,
-        editing,
-        imageUrl,
-        siteUrl,
-        error
-      } = this.state
-
-      return (
-        <Wrapper>
-          <div>
-            <Input
-              type='text'
-              value={description}
-              data-error={error.description}
-              placeholder='Description'
-              data-label='description'
-              onChange={this._handleChange}
-            />
-            <Input
-              type='url'
-              data-error={error.imageUrl}
-              value={imageUrl}
-              innerRef={this.imageUrlNode}
-              placeholder='Image Url'
-              data-label='imageUrl'
-              onChange={this._handleChange}
-            />
-            <Input
-              type='url'
-              data-error={error.siteUrl}
-              value={siteUrl}
-              innerRef={this.siteUrlNode}
-              placeholder='Site Url'
-              data-label='siteUrl'
-              onChange={this._handleChange}
-            />
-            {imageUrl &&
-              <img
-                src={imageUrl}
-                onError={this.onErrorImg}
-                alt={description}
-              />
-            }
-            {description && imageUrl && siteUrl &&
-              <PostBtn
-                data-viewerid={props.viewer.id}
-                onClick={this._handlePost}
-              >
-                {editing ? 'Apply' : 'Post'}
-              </PostBtn>
-            }
-            <LinkContainer>
-              <Link to="/" >
-                Cancel
-              </Link>
-           </LinkContainer>
-         </div>
-       </Wrapper>
-      )
-    }
-    return (
-      <Wrapper>
-        <img
-          src={loadingGif}
-          alt="Loading..."
-        />
-      </Wrapper>
-    )
-  }
-
   render() {
+    const internalFuncs = {
+      handleChange: this._handleChange,
+      handlePost: this._handlePost,
+      onErrorImg: this.onErrorImg
+    }
+    const internalRefs = {
+      imageUrlNode: this.imageUrlNode,
+      siteUrlNode: this.siteUrlNode
+    }
     return (
       <QueryRenderer
         variables={{ initCount: ITEMS_PER_PAGE }}
-        environment={Environment}
+        environment={environment}
         query={CreatePostViewerQuery}
-        render={(queryState: ReadyState) => this.queryRender(queryState)}
+        render={(queryState: ReadyState) => (
+          <QueryRenderee
+            queryState={queryState}
+            internalFuncs={internalFuncs}
+            internalRefs={internalRefs}
+            states={this.state}
+          />
+        )}
       />
     )
   }
@@ -285,7 +317,7 @@ const Input = styled.input`
   margin-bottom: .5rem;
   box-sizing: border-box;
   border-width: 1px;
-  border-color: ${(props: { 'data-error': boolean }) => props['data-error'] ? 'red' : 'lightgray'}
+  border-color: ${(props: { 'data-error'?: boolean }) => props['data-error'] ? 'red' : 'lightgray'}
 `
 const LinkContainer = styled.div`
   text-align: center;

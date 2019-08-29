@@ -50,7 +50,7 @@ class Login extends PureComponent<any, State> {
           )
         } else {
           if (name.trim() !== '') {
-            SignupUserMutation(             
+            SignupUserMutation(
               email,
               password,
               this._saveUserData,
@@ -135,7 +135,7 @@ class Login extends PureComponent<any, State> {
               <Link to="/" >
                 Cancel
               </Link>
-            </LinkContainer>            
+            </LinkContainer>
           </InnerWrapper>
         }
       </Wrapper>

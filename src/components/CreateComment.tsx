@@ -2,8 +2,7 @@ import React, {
   createRef,
   ChangeEvent,
   FormEvent,
-  PureComponent,
-  RefObject
+  PureComponent
  } from 'react'
 import CreateCommentMutation from '../mutations/CreateCommentMutation'
 import AnimateHeight from 'react-animate-height'
@@ -20,7 +19,7 @@ type State = {
 interface Props {
   editComment: IComment | null
   handleBlur: (e: BlurEvent) => void
-  mode: boolean
+  mode?: boolean
   commentedPostId: string
   viewerId: string
   user: contextProps
@@ -31,7 +30,7 @@ export default class CreateComment extends PureComponent<Props, State> {
     editing: false,
     content: ''
   }
-  commentNode: RefObject<HTMLInputElement> = createRef()
+  commentNode = createRef<HTMLInputElement>()
 
   static getDerivedStateFromProps(nextProps: Props, prevState: State) {
     const { editComment } = nextProps
@@ -46,9 +45,11 @@ export default class CreateComment extends PureComponent<Props, State> {
   }
 
   componentDidUpdate() {
-    if (this.props.mode) this.commentNode.current.focus()
+    if (this.props.mode && this.commentNode.current) {
+      this.commentNode.current.focus()
+    }
   }
-  
+
   _onBlur = (e: BlurEvent) => {
     e.persist()
     this.setState({
@@ -60,9 +61,8 @@ export default class CreateComment extends PureComponent<Props, State> {
   }
 
   _handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const target = e.target as HTMLInputElement
-    const content = target && target.value
-    this.setState({ content })
+    const { target: { value } } = e
+    this.setState({ content: value })  
   }
 
   _handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -105,7 +105,7 @@ export default class CreateComment extends PureComponent<Props, State> {
         <form onSubmit={this._handleSubmit}>
           <Input
             type='text'
-            innerRef={this.commentNode}
+            ref={this.commentNode}
             placeholder={`${editing ? 'Edit' : 'Add'} Comment`}
             onChange={this._handleChange}
             onBlur={this._onBlur}
@@ -123,5 +123,5 @@ const Input = styled.input`
   margin-top: 1rem;
   box-sizing: border-box;
   position: relative;
-  z-index: 3;  
+  z-index: 3;
 `

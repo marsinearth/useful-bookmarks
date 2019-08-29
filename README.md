@@ -5,19 +5,19 @@
 > A follow-up from Nikolas Burk's [Getting started with Relay Modern](https://blog.graph.cool/getting-started-with-relay-modern-46f8de6bd6ec),
 > [github source](https://github.com/graphcool-examples/react-graphql/tree/master/quickstart-with-relay-modern)
 
-used fixed version of relay-compiler: [Explanation](https://github.com/facebook/relay/pull/2142#issuecomment-369053139)
-
 - will be personally modified to be a bookmarks page for the technical tricks on the Internet, with a log-in system.
-- it's going to be somewhat similar to hackernews + instagram
+- it's going to be somewhat similar to instagram
   - &#9745; added src and anchor
   - &#9745; login system (using [GraphCool's Email Auth System](https://github.com/graphcool/templates/tree/master/auth/email-password))
   - &#9745; added comments system
   - &#9745; will complete comments system by adding mutations for CUD, relay's pagination func for browsing a many of them
   - &#9745; will Edit funcs for Posts and Comments
   - &#9745; deploy to netlify pages
-  - &#9745; apply TypeScript on the project (using [React Static with TypeScript Template](https://github.com/nozzle/react-static#examples-and-templates))
+  - &#9745; apply TypeScript on the project. Finally succeed installing typescript with relay without using unnecessary settings! (thanks for [CRA2 with react-app-rewired & react-app-rewire-typescript-babel-preset](https://react-app-rewire-typescript-babel-preset.netlify.com/#/docs/installation))
+  - &#9745; will show Creator's name (each for Post and Comment)
   - &#9999; will add likes(exactly same as hackernews' votes)
-  
+
+  - &#9744; will add report system (email to the system admin)
   - &#9744; will add small chatting system using relay's subscription func
   - &#9744; will transform Graphcool to Prisma
   - &#9744; will add some kind of console page for stats and browsing users-posts-comments-likes relationships

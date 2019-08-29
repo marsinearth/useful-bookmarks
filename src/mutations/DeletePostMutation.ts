@@ -1,7 +1,7 @@
 import {
   commitMutation,
-  graphql,
 } from 'react-relay'
+import graphql from 'babel-plugin-relay/macro'
 import { ConnectionHandler } from 'relay-runtime'
 import environment from '../utils/Environment'
 import { DVars } from '../types'

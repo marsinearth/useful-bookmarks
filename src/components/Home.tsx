@@ -1,9 +1,9 @@
-import React, { PureComponent } from 'react'
+import React, { PureComponent, ErrorInfo } from 'react'
 import {
   QueryRenderer,
-  graphql,
   ReadyState
 } from 'react-relay'
+import graphql from 'babel-plugin-relay/macro'
 import environment from '../utils/Environment'
 import { UserProvider } from '../utils/userContext'
 import ListPage from './ListPage'
@@ -12,7 +12,8 @@ import { GC_USER_ID, ITEMS_PER_PAGE } from '../utils/constants'
 import styled from 'styled-components'
 
 type State = {
-  userId: string
+  userId: string,
+  hasError: boolean
 }
 
 const HomeAllPostQuery = graphql`
@@ -31,12 +32,36 @@ const HomeAllPostQuery = graphql`
     }
   }
 `
+const queryRenderee = ({ error, props }: ReadyState) => {
+  if (error) {
+    return <div>{error.message}</div>
+  }
+  if (props) {
+    const { User } = props.viewer
+    const userVal = User ? User : { id: null, name: null }
+    return (
+      <UserProvider value={userVal}>
+        <ListPage viewer={props.viewer} />
+      </UserProvider>
+    )
+  }
+  return (
+    <Wrapper>
+      <img
+        src={Loading}
+        alt="Loading..."
+      />
+    </Wrapper>
+  )
+}
 
 export default class Home extends PureComponent<any, State> {
   state = {
-    userId: ''
+    userId: '',
+    hasError: false
   }
-  static getDerivedStateFromProps(nextProps: any, prevState: State) {
+
+  static getDerivedStateFromProps(_prevProps: unknown, prevState: State) {
     try {
       if (localStorage.getItem(GC_USER_ID) && prevState.userId === '') {
         return { userId: localStorage.getItem(GC_USER_ID) }
@@ -45,32 +70,23 @@ export default class Home extends PureComponent<any, State> {
     } catch(e) {
       console.log('error in Home getDerivedStateFromProps: ', e.message)
       return null
-    }    
+    }
   }
-  queryRender = ({ error, props }: ReadyState) => {
+
+  componentDidCatch(error: Error, info: ErrorInfo) {
     if (error) {
-      return <div>{error.message}</div>
+      this.setState({
+        hasError: true
+      }, () => {
+        console.log('error ocurred!! info: ', info)
+      })
     }
-    if (props) {
-      const { User } = props.viewer
-      const userVal = User ? User : { id: null, name: null }
-      return (
-        <UserProvider value={userVal}>
-          <ListPage viewer={props.viewer} />
-        </UserProvider>
-      )
-    }
-    return (
-      <Wrapper>
-        <img
-          src={Loading}
-          alt="Loading..."
-        />
-      </Wrapper>
-    )
   }
 
   render() {
+    if (this.state.hasError) {
+      return <h1>OMG!! ERRRORRRRR</h1>
+    }
     return (
       <QueryRenderer
         environment={environment}
@@ -79,9 +95,9 @@ export default class Home extends PureComponent<any, State> {
           id: this.state.userId,
           count: ITEMS_PER_PAGE
         }}
-        render={this.queryRender}
+        render={queryRenderee}
       />
-    );
+    )
   }
 }
 

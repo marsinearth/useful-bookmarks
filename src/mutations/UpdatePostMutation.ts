@@ -1,7 +1,7 @@
 import {
   commitMutation,
-  graphql,
 } from 'react-relay'
+import graphql from 'babel-plugin-relay/macro'
 import environment from '../utils/Environment'
 import { IPost } from '../types'
 
@@ -11,7 +11,6 @@ type UPMutArgs = {
     imageUrl: string,
     siteUrl: string,
     post: IPost,
-    viewerId: string,
     callback: () => void
   ): void
 }
@@ -58,7 +57,6 @@ const UpdatePostMutation: UPMutArgs = function (
   imageUrl,
   siteUrl,
   post,
-  viewerId,
   callback
 ) {
   const variables: UPVars = {

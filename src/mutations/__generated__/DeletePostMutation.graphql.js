@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 824f3324a9073fd5e2693bc796517517
+ * @relayHash 270f1206a2104c515f4c529ee92ec638
  */
 
 /* eslint-disable */
@@ -20,6 +20,10 @@ export type DeletePostMutationResponse = {|
   +deletePost: ?{|
     +deletedId: ?string
   |}
+|};
+export type DeletePostMutation = {|
+  variables: DeletePostMutationVariables,
+  response: DeletePostMutationResponse,
 |};
 */
 

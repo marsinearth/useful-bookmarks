@@ -1,7 +1,7 @@
 import {
   commitMutation,
-  graphql,
 } from 'react-relay'
+import graphql from 'babel-plugin-relay/macro'
 import {
   ConnectionHandler,
  } from 'relay-runtime'
@@ -69,7 +69,7 @@ const CreatePostMutation: CPMutArgs = function (
     },
   }
 
-  commitMutation (
+  commitMutation(
     environment,
     {
       mutation,
@@ -82,7 +82,7 @@ const CreatePostMutation: CPMutArgs = function (
       optimisticUpdater: proxyStore => {
         // 1 - create the `newPost` as a mock that can be added to the store
         tempID += 1
-        const id = 'client:newPost:' + tempID
+        const id = `client:newPost:${tempID}`
         const newPost = proxyStore.create(id, 'Post')
 
         newPost.setValue(id, 'id')

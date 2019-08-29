@@ -25,11 +25,14 @@ export interface IComment {
 
 export type TooltipMenuProps = {
   comment?: boolean,
-  edit?: boolean
+  edit?: boolean,
+  isPost?: boolean
 }
 
 export type Menu = {
-  menu: boolean
+  menu: boolean,
+  isPost?: boolean,
+  writerAuth: boolean
 }
 
 export type handleEdit = (comment: IComment) => void
@@ -61,16 +64,16 @@ export type compRes = {
 }
 
 export type AuthMutArgs = {
-  (      
+  (
     email: string,
-    password: string,    
+    password: string,
     successCb: (id: string, token: string) => void,
-    failCb: () => void,    
+    failCb: () => void,
     name?: string
   ): void
 }
 
-export type AuthVars = {  
+export type AuthVars = {
   email: string,
   password: string,
   clientMutationId: string,
@@ -92,6 +95,14 @@ export type SHU = {
   ): void
 }
 
-export type BlurEvent = FocusEvent<HTMLDivElement> | FocusEvent<HTMLInputElement> | FormEvent<HTMLFormElement>
+export type BlurEvent =
+  FocusEvent<HTMLDivElement> |
+  FocusEvent<HTMLInputElement> |
+  FormEvent<HTMLFormElement>
 
-export type toggleOverlay = (e:  TouchEvent<HTMLDivElement> | MouseEvent<HTMLDivElement> | TouchEvent<HTMLInputElement> | TouchEvent<HTMLFormElement>) => void
+export type toggleOverlay = (e:
+  TouchEvent<HTMLDivElement> |
+  MouseEvent<HTMLDivElement> |
+  TouchEvent<HTMLInputElement> |
+  TouchEvent<HTMLFormElement>
+) => void

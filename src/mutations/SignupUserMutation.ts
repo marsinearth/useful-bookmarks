@@ -1,4 +1,5 @@
-import { commitMutation, graphql } from 'react-relay';
+import { commitMutation } from 'react-relay';
+import graphql from 'babel-plugin-relay/macro'
 import environment from '../utils/Environment';
 import { AuthMutArgs, AuthVars, compRes } from '../types'
 
@@ -15,14 +16,14 @@ const mutation = graphql`
   }
 `
 
-const SignupUserMutation: AuthMutArgs = function (  
+const SignupUserMutation: AuthMutArgs = function (
   email,
   password,
   successCb,
   failCb,
   name
 ) {
-  const variables: AuthVars = {    
+  const variables: AuthVars = {
     email,
     password,
     clientMutationId: '',

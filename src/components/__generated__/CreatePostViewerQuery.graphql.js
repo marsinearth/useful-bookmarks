@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 084c6cc065ef05a45894924ea800fe04
+ * @relayHash 26fcf247c64d9e3358c3a3a875336fdc
  */
 
 /* eslint-disable */
@@ -23,6 +23,10 @@ export type CreatePostViewerQueryResponse = {|
       |}>
     |},
   |}
+|};
+export type CreatePostViewerQuery = {|
+  variables: CreatePostViewerQueryVariables,
+  response: CreatePostViewerQueryResponse,
 |};
 */
 
@@ -129,6 +133,20 @@ v2 = [
       }
     ]
   }
+],
+v3 = [
+  {
+    "kind": "Variable",
+    "name": "last",
+    "variableName": "initCount",
+    "type": "Int"
+  },
+  {
+    "kind": "Literal",
+    "name": "orderBy",
+    "value": "createdAt_DESC",
+    "type": "PostOrderBy"
+  }
 ];
 return {
   "kind": "Request",
@@ -200,20 +218,7 @@ return {
             "alias": null,
             "name": "allPosts",
             "storageKey": null,
-            "args": [
-              {
-                "kind": "Variable",
-                "name": "last",
-                "variableName": "initCount",
-                "type": "Int"
-              },
-              {
-                "kind": "Literal",
-                "name": "orderBy",
-                "value": "createdAt_DESC",
-                "type": "PostOrderBy"
-              }
-            ],
+            "args": v3,
             "concreteType": "PostConnection",
             "plural": false,
             "selections": v2
@@ -222,20 +227,7 @@ return {
             "kind": "LinkedHandle",
             "alias": null,
             "name": "allPosts",
-            "args": [
-              {
-                "kind": "Variable",
-                "name": "last",
-                "variableName": "initCount",
-                "type": "Int"
-              },
-              {
-                "kind": "Literal",
-                "name": "orderBy",
-                "value": "createdAt_DESC",
-                "type": "PostOrderBy"
-              }
-            ],
+            "args": v3,
             "handle": "connection",
             "key": "ListPage_allPosts",
             "filters": []

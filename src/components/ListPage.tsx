@@ -1,15 +1,15 @@
 import React, { PureComponent } from 'react'
 import {
   createPaginationContainer,
-  graphql,
   RelayPaginationProp,
   PageInfo
 } from 'react-relay'
-import { Link } from 'react-static'
+import graphql from 'babel-plugin-relay/macro'
+import InfiniteScroll from 'react-infinite-scroller'
+import { Link } from 'react-router-dom'
 import { isMobile } from 'react-device-detect'
 import styled, { css } from 'styled-components'
-import InfiniteScroll from 'react-infinite-scroller'
-import Post from './Post'
+import Post, { Dim } from './Post'
 import Loading from '../assets/images/loading.gif'
 import { UserConsumer } from '../utils/userContext'
 import { ITEMS_PER_PAGE } from '../utils/constants'
@@ -36,9 +36,9 @@ type State = {
 }
 
 class ListPage extends PureComponent<Props, State> {
-  _toggleOverlay: toggleOverlay = e => {    
-    const target = e.target as HTMLDivElement
-    const overlayVal: string | undefined = (target && target.dataset) && target.dataset.overlay 
+  _toggleOverlay: toggleOverlay = e => {
+    const { target } = e
+    const { dataset: { overlay: overlayVal } } = target as HTMLDivElement
     let overlay: boolean = false
     if (!overlayVal) {
       overlay = true
@@ -59,7 +59,7 @@ class ListPage extends PureComponent<Props, State> {
 
   render() {
     const { viewer, relay } = this.props
-    const edges = viewer.allPosts && viewer.allPosts.edges
+    const { allPosts: { edges } } = viewer
 
     return (
       <OverlayProvider value={this.state}>
@@ -71,14 +71,14 @@ class ListPage extends PureComponent<Props, State> {
           </OverlayConsumer>
           <UserConsumer>
             {user => (
-              <TopPart width={window.innerWidth}>
+              <TopPart>
                 {user.name &&
                   <WelcomeUser>
                     Hello {user.name}!
                   </WelcomeUser>
                 }
                 <StyledLink
-                  mobile={isMobile ? 'true' : 'false'}
+                  mobile={isMobile || undefined}
                   to={user.name ? '/create' : '/login'}
                 >
                   + {user.name ? 'New Post' : 'Sign In'}
@@ -94,19 +94,21 @@ class ListPage extends PureComponent<Props, State> {
               <PostsLoading key={0}>
                 <img src={Loading} alt="Loading..."/>
               </PostsLoading>}
-          >    
-            <OverlayConsumer>
-              {({ isOverlay, toggleOverlay }) => (      
-                edges && edges.map(({ node }) =>
-                  <Post
-                    key={node.__id}
-                    post={node}
-                    viewerId={viewer.id}
-                    isOverlay={isOverlay}
-                    toggleOverlay={toggleOverlay}
-                  />
-              ))}    
-            </OverlayConsumer>   
+          >
+            <ScrollContainer>
+              <OverlayConsumer>
+                {({ isOverlay, toggleOverlay }) => (
+                  edges && edges.map(({ node }) =>
+                    <Post
+                      key={node.__id}
+                      post={node}
+                      viewerId={viewer.id}
+                      isOverlay={isOverlay}
+                      toggleOverlay={toggleOverlay}
+                    />
+                ))}
+              </OverlayConsumer>
+            </ScrollContainer>
           </InfiniteScroll>
         </Wrapper>
       </OverlayProvider>
@@ -148,7 +150,7 @@ export default createPaginationContainer(ListPage, graphql`
     getConnectionFromProps(props) {
       return props.viewer && props.viewer.allPosts
     },
-    getVariables(props, { count, cursor }) {
+    getVariables(_, { count, cursor }) {
       return {
         count,
         pCursor: cursor
@@ -163,34 +165,27 @@ const Decorated = css`
   padding: 2rem;
   text-transform: uppercase;
 `
-const Dim = css`
-  cursor: pointer;
-  transition: opacity .15s ease-in;
-  &:hover,
-  &:focus {
-    opacity: .5;
-    transition: opacity .15s ease-in;
-  }
-`
+
 const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
   margin-top: 5.2rem;
   position: relative;
   div {
     max-width: 100%;
   }
 `
+const ScrollContainer = styled.div`
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(250px,1fr));
+  grid-template-rows: repeat(auto-fill, minmax(40px,1fr));
+  grid-auto-flow: row;
+  justify-items: center;
+`
 const TopPart = styled.div`
   position: fixed;
   top: 0;
   width: 100%;
-  background-color: ${(props: { width: number }) => props.width > 700
-    ? 'transparent'
-    : 'rgba(255, 255, 255, .5)'
-  };
+  background-color: rgba(255, 255, 255, .6);
   height: 5.2rem;
 `
 const WelcomeUser = styled.div`
@@ -201,7 +196,7 @@ const WelcomeUser = styled.div`
 const StyledLink = styled(Link)`
   right: 0;
   color: black;
-  ${(props: { mobile: string }) => props.mobile === 'false' ? Dim : ''}
+  ${(props: { mobile: Boolean }) => props.mobile ? '' : Dim}
   ${Decorated}
 `
 const PostsLoading = styled.div`

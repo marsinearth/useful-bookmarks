@@ -34,7 +34,7 @@ export default async (event: FunctionEvent<{}>) => {
   }
 }
 
-async function getUser(api: GraphQLClient, id: string): Promise<{ User }> {
+async function getUser(api: GraphQLClient, id: string): Promise<{ User: User }> {
   const query = `
     query getUser($id: ID!) {
       User(id: $id) {
@@ -47,5 +47,5 @@ async function getUser(api: GraphQLClient, id: string): Promise<{ User }> {
     id,
   }
 
-  return api.request<{ User }>(query, variables)
+  return api.request<{ User: User }>(query, variables)
 }

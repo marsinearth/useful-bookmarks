@@ -1,4 +1,5 @@
-import { commitMutation, graphql } from 'react-relay'
+import { commitMutation } from 'react-relay'
+import graphql from 'babel-plugin-relay/macro'
 import environment from '../utils/Environment'
 import { AuthMutArgs, AuthVars, compRes } from '../types'
 

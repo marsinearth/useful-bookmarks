@@ -19,6 +19,7 @@
       "statements"
     ],
     "jsx-no-multiline-js": false,
+    "jsx-boolean-value": false,
     "no-console": {
       "severity": "warning",
       "options": [
@@ -30,6 +31,7 @@
         "trace"
       ]
     },
+    "object-shorthand-properties-first": [{ "severity": "warning" }],
     "ter-arrow-parens": [true, "as-needed"],
     "trailing-comma": false,
     "variable-name": [
@@ -37,10 +39,10 @@
       "check-format",
       "allow-leading-underscore",
       "allow-pascal-case",
-      "allow-snake-case",
       "ban-keywords"
     ],
     "semicolon": false,
+    "space-before-function-paren": [true, {"anonymous": "always", "named": "never", "asyncArrow": "always"}],
     "import-name": false,
     "quotemark": false,
     "whitespace": [

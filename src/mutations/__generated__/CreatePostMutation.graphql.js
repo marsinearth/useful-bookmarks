@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash d3a2e1133280723619c9ae719fa94ee3
+ * @relayHash dd4b01d4f2e6290010de31499eb4f6c4
  */
 
 /* eslint-disable */
@@ -75,6 +75,10 @@ export type CreatePostMutationResponse = {|
       +siteUrl: string,
     |}
   |}
+|};
+export type CreatePostMutation = {|
+  variables: CreatePostMutationVariables,
+  response: CreatePostMutationResponse,
 |};
 */
 

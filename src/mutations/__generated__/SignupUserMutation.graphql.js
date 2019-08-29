@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 25a0b0f3fdfb38ee36e9ee283c0d0b8b
+ * @relayHash 427f59843623dedf04defa0f95e88a53
  */
 
 /* eslint-disable */
@@ -19,6 +19,10 @@ export type SignupUserMutationResponse = {|
     +id: string,
     +token: string,
   |}
+|};
+export type SignupUserMutation = {|
+  variables: SignupUserMutationVariables,
+  response: SignupUserMutationResponse,
 |};
 */
 

@@ -1,10 +1,28 @@
-import React, { PureComponent, Fragment } from 'react'
-import { Router } from 'react-static'
-import { hot } from 'react-hot-loader'
+import React, { PureComponent } from 'react'
+import { Router, Route, Switch } from 'react-router-dom'
 import GitHubForkRibbon from 'react-github-fork-ribbon'
-import Routes from 'react-static-routes'
+import { createGlobalStyle } from 'styled-components'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faEllipsisV, faPencilAlt, faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons'
+
 import history from './utils/history'
 import { GC_USER_ID, GC_AUTH_TOKEN } from './utils/constants'
+
+import Home from './components/Home'
+import CreatePost from './components/CreatePost'
+import Login from './components/Login'
+
+library.add(faEllipsisV, faPencilAlt, faCaretUp, faCaretDown)
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: transparent;
+  }
+`
 
 const ForkRibbon = () => (
   <GitHubForkRibbon
@@ -18,7 +36,7 @@ const ForkRibbon = () => (
   </GitHubForkRibbon>
 )
 
-class App extends PureComponent {
+export default class App extends PureComponent {
   componentDidMount() {
     window.onunload = function () {
       localStorage.removeItem(GC_USER_ID)
@@ -28,14 +46,17 @@ class App extends PureComponent {
   }
   render() {
     return (
-      <Fragment>
+      <>
+        <GlobalStyle />
         <Router history={history}>
-          <Routes />
+          <Switch>
+            <Route exact path='/' component={Home} />
+            <Route exact path='/create' component={CreatePost} />
+            <Route exact path='/login' component={Login} />
+          </Switch>
         </Router>
         <ForkRibbon />
-      </Fragment>
+      </>
     )
   }
 }
-
-export default hot(module)(App)

@@ -1,32 +1,31 @@
 import React, {
   createRef,
-  Fragment,
   PureComponent,
   FocusEvent,
   MouseEvent,
-  RefObject
+  TouchEvent
 } from 'react'
 import {
   createFragmentContainer,
-  graphql
 } from 'react-relay'
+import graphql from 'babel-plugin-relay/macro'
 import { isMobile } from 'react-device-detect'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import faEllipsisV from '@fortawesome/fontawesome-free-solid/faEllipsisV'
-import faPencilAlt from '@fortawesome/fontawesome-free-solid/faPencilAlt'
-import styled, { css } from 'styled-components'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import styled from 'styled-components'
 import Linkify from 'react-linkify'
 import DeleteCommentMutation from '../mutations/DeleteCommentMutation'
-import { IComment, TooltipMenuProps, Menu, handleEdit } from '../types'
+import { IComment, Menu, handleEdit } from '../types'
 import { contextProps } from '../utils/overlayContext'
+import { VertOptionContainer, TooltipComp } from './Post'
 
 type Hover = {
   hover: boolean
 }
 
 type State = {
-  commentMode?: boolean
-} & Menu & Hover
+  commentMode?: boolean,
+  boom: boolean
+} & Omit<Menu, 'writerAuth'> & Hover
 
 type Props = {
   userId: string | null,
@@ -35,21 +34,28 @@ type Props = {
   handleEdit: handleEdit
 } & contextProps
 
+export const linkifyProps = {
+  target: "_blank",
+  rel: "noopener noreferrer"
+}
+
 class Comment extends PureComponent<Props, State> {
   state = {
     menu: false,
     hover: false,
-    commentMode: false
+    commentMode: false,
+    boom: false
   }
-  optionTooltip: RefObject<HTMLDivElement> = createRef()
+  optionTooltip = createRef<any>()
 
-  componentDidUpdate(prevProps: Props, prevState: State) {
+  componentDidUpdate(prevProps: Props) {
     if (prevProps.isOverlay && !this.props.isOverlay) {
       this.setState({ menu: false, hover: false, commentMode: false })
     }
   }
 
-  _openMenuPanel = (e: MouseEvent<HTMLDivElement>) => {
+  _openMenuPanel = (e: MouseEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>) => {
+    e.persist()
     this.setState({ menu: true }, () => {
       if (isMobile) {
         this.props.toggleOverlay(e)
@@ -83,9 +89,9 @@ class Comment extends PureComponent<Props, State> {
   }
 
   _handleDelete = () => {
-    const { comment, postId } = this.props
-    if (window.confirm(`Are you sure to delete: ${comment.content}?`)) {
-      DeleteCommentMutation(comment.id, postId)
+    const { comment: { id, content }, postId } = this.props
+    if (window.confirm(`Are you sure to delete: ${content}?`)) {
+      DeleteCommentMutation(id, postId)
     }
     this.setState({ menu: false })
   }
@@ -93,12 +99,8 @@ class Comment extends PureComponent<Props, State> {
   render() {
     const { comment, userId, toggleOverlay } = this.props
     const { menu, hover } = this.state
-    const content = comment && comment.content
-    const commentedBy = comment && comment.commentedBy
-    const commentedId = commentedBy && commentedBy.id
-    const commentedName = commentedBy && commentedBy.name
+    const { content, commentedBy: { id: commentedId, name: commentedName } } = comment
     const commentAuth = commentedId === userId
-
     return (
       <Container
         onClick={this._handleMouseEnter}
@@ -108,47 +110,29 @@ class Comment extends PureComponent<Props, State> {
         <Writer>
           {commentedName}:
         </Writer>
-        <Content>
-          <Linkify
-            properties={{
-              target: "_blank",
-              rel: "noopener noreferrer"
-            }}
-          >
-            {content}
-          </Linkify>
-        </Content>
-        <VertOptionContainer
+        <Linkify properties={linkifyProps}>
+          <Content>            
+            {content}         
+          </Content>
+        </Linkify>
+        <VertOptionContainerComment
           hover={hover}
           onClick={this._openMenuPanel}
         >
           <FontAwesomeIcon
-            size='sm'
-            icon={faEllipsisV}
+            size="sm"
+            icon="ellipsis-v"
           />
-        </VertOptionContainer>
-        <Tooltip
-          innerRef={this.optionTooltip}
-          onBlur={this._handleBlur}
+        </VertOptionContainerComment>
+        <TooltipComp
+          ref={this.optionTooltip}
+          handleBlur={this._handleBlur}
+          handleEdit={this._handleEdit}
+          handleDelete={this._handleDelete}
           menu={menu}
-          tabIndex={-1}
-        >
-          {commentAuth &&
-            <Fragment>
-              <TooltipMenu 
-                edit={true} 
-                onClick={this._handleEdit}
-                onTouchEnd={toggleOverlay}
-              >
-                <FontAwesomeIcon icon={faPencilAlt} size='xs'/>
-                &nbsp;Edit
-              </TooltipMenu>
-              <TooltipMenu onClick={this._handleDelete}>
-                Delete
-              </TooltipMenu>
-            </Fragment>
-          }
-        </Tooltip>
+          writerAuth={commentAuth}
+          toggleOverlay={toggleOverlay}
+        />
       </Container>
     )
   }
@@ -168,59 +152,25 @@ export default createFragmentContainer(Comment, graphql`
   }
 `)
 
-const Dim = css`
-  opacity: 1;
-  transition: opacity .15s ease-in;
-  cursor: pointer;
-  &:hover,
-  &:focus {
-    opacity: .5;
-    transition: opacity .15s ease-in;
-  }
-`
 const Container = styled.div`
   font-size: .75rem;
   padding: .25rem .5rem;
   position: relative;
 `
 const Content = styled.span`
+  width: 100%;
   color: #aaa;
 `
-const Writer = Content.extend`
+const Writer = styled(Content)`
   color: #999;
   font-weight: bold;
   margin-right: .5rem;
 `
-const VertOptionContainer = styled.div`
-  position: relative;
+const VertOptionContainerComment = styled<
+  Hover & { 
+    onClick: (e: MouseEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>) => void 
+  }
+>(({ hover, ...rest }) => <VertOptionContainer {...rest} />)`
   float: right;
-  cursor: pointer;
-  color: #aaa;
-  width: 1rem;
-  text-align: center;
-  z-index: 3;
-  display: ${(props: Hover) => props.hover ? 'block' : 'none'};
-`
-const Tooltip = styled.div`
-  position: absolute;
-  bottom: .5rem;
-  right: .75rem;
-  height: auto;
-  padding: .075rem;
-  background-color: white;
-  outline: 0;
-  display: ${(props: Menu) => props.menu ? 'flex' : 'none'};
-  flex-flow: column;
-  align-items: flex-end;
-  justify-content: center;
-  margin-bottom: -7px;
-  margin-right: -10px;
-  z-index: 4;
-`
-const TooltipMenu = styled.div`
-  color: ${(props: TooltipMenuProps) => (props.comment || props.edit) ? '#aaa' : 'red'};
-  font-size: .5rem;
-  padding: .25rem .5rem;
-  vertical-align: middle;
-  ${Dim}
+  display: ${({ hover }) => hover ? 'block' : 'none'};
 `
