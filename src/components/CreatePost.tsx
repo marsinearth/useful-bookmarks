@@ -220,7 +220,7 @@ class CreatePost extends PureComponent<Props, State> {
       const { location: { state } } = this.props
       const { editing, description } = this.state
       const userId = localStorage.getItem(GC_USER_ID)
-      const { editPost } = state as { editPost?: IPost }
+      const { editPost } = state || {} as { editPost?: IPost }
 
       if (userId && viewerId) {
         if (editing && editPost) {
