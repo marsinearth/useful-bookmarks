@@ -1,6 +1,6 @@
 import React, {
   PureComponent,
-  createRef
+  createRef,
 } from 'react'
 import {
   createPaginationContainer,
@@ -27,7 +27,7 @@ type Props = {
   post: IPost,
   relay: RelayPaginationProp,
   handleEdit: handleEdit,
-  userId: string | null
+  userId: string | null,
 }
 
 class ListComments extends PureComponent<Props, State> {

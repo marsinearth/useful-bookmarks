@@ -15,6 +15,7 @@
   - &#9745; deploy to netlify pages
   - &#9745; apply TypeScript on the project. Finally succeed installing typescript with relay without using unnecessary settings (thanks for CRA2!)
   - &#9745; will show Creator's name (each for Post and Comment)
+  - &#9745; apply [Masonry for react](https://github.com/eiriklv/react-masonry-component)
   - &#9999; will add likes(exactly same as hackernews' votes)
 
   - &#9744; will add report system (email to the system admin)

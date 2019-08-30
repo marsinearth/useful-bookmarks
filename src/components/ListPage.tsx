@@ -9,6 +9,7 @@ import InfiniteScroll from 'react-infinite-scroller'
 import { Link } from 'react-router-dom'
 import { isMobile } from 'react-device-detect'
 import styled, { css } from 'styled-components'
+import Masonry from 'react-masonry-component';
 import Post, { Dim } from './Post'
 import Loading from '../assets/images/loading.gif'
 import { UserConsumer } from '../utils/userContext'
@@ -33,6 +34,18 @@ type Props = {
 
 type State = {
   isOverlay: boolean
+}
+
+const masonryOptions = {
+  transitionDuration: 0,
+  gutter: 15,
+  fitWidth: true,
+  stagger: 30
+}
+
+const masonryStyle = {
+  margin: '0 auto',
+  width: 'auto'
 }
 
 class ListPage extends PureComponent<Props, State> {
@@ -95,7 +108,11 @@ class ListPage extends PureComponent<Props, State> {
                 <img src={Loading} alt="Loading..."/>
               </PostsLoading>}
           >
-            <ScrollContainer>
+            <Masonry
+              enableResizableChildren
+              options={masonryOptions}
+              style={masonryStyle}
+            >
               <OverlayConsumer>
                 {({ isOverlay, toggleOverlay }) => (
                   edges && edges.map(({ node }) =>
@@ -108,7 +125,7 @@ class ListPage extends PureComponent<Props, State> {
                     />
                 ))}
               </OverlayConsumer>
-            </ScrollContainer>
+            </Masonry>
           </InfiniteScroll>
         </Wrapper>
       </OverlayProvider>
@@ -173,17 +190,6 @@ const Decorated = css`
 const Wrapper = styled.div`
   margin-top: 5.2rem;
   position: relative;
-  div {
-    max-width: 100%;
-  }
-`
-const ScrollContainer = styled.div`
-  display: grid;
-  grid-gap: 10px;
-  grid-template-columns: repeat(auto-fill, minmax(250px,1fr));
-  grid-template-rows: repeat(auto-fill, minmax(40px,1fr));
-  grid-auto-flow: row;
-  justify-items: center;
 `
 const TopPart = styled.div`
   position: fixed;
@@ -191,6 +197,7 @@ const TopPart = styled.div`
   width: 100%;
   background-color: rgba(255, 255, 255, .6);
   height: 5.2rem;
+  z-index: 1;
 `
 const WelcomeUser = styled.div`
   left: 0;

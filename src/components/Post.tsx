@@ -33,7 +33,7 @@ type State = {
 
 type Props = {
   post: IPost,
-  viewerId: string
+  viewerId: string,
 } & contextProps
 
 type TooltipProps = {
@@ -183,7 +183,7 @@ class Post extends PureComponent<Props, State> {
         }
       },
       viewerId,
-      toggleOverlay
+      toggleOverlay,
     } = this.props
     const {
       menu,
@@ -284,6 +284,7 @@ export const Dim = css`
 const Container = styled.div`
   width: 365px;
   padding: 1rem;
+  margin-bottom: 15px;
   background-color: rgba(0, 0, 0, .05);
   box-sizing: border-box;
   border-radius: 0.5rem;
