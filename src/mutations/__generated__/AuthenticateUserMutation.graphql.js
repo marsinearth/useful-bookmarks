@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 7276992d566fb053ba1945bdf507d5e1
+ * @relayHash c205d09f531a0ae2aec131d690b9b707
  */
 
 /* eslint-disable */
@@ -63,14 +63,12 @@ v1 = [
       {
         "kind": "Variable",
         "name": "email",
-        "variableName": "email",
-        "type": "String!"
+        "variableName": "email"
       },
       {
         "kind": "Variable",
         "name": "password",
-        "variableName": "password",
-        "type": "String!"
+        "variableName": "password"
       }
     ],
     "concreteType": "AuthenticateUserPayload",
@@ -95,24 +93,26 @@ v1 = [
 ];
 return {
   "kind": "Request",
-  "operationKind": "mutation",
-  "name": "AuthenticateUserMutation",
-  "id": null,
-  "text": "mutation AuthenticateUserMutation(\n  $email: String!\n  $password: String!\n) {\n  authenticateUser(email: $email, password: $password) {\n    id\n    token\n  }\n}\n",
-  "metadata": {},
   "fragment": {
     "kind": "Fragment",
     "name": "AuthenticateUserMutation",
     "type": "Mutation",
     "metadata": null,
-    "argumentDefinitions": v0,
-    "selections": v1
+    "argumentDefinitions": (v0/*: any*/),
+    "selections": (v1/*: any*/)
   },
   "operation": {
     "kind": "Operation",
     "name": "AuthenticateUserMutation",
-    "argumentDefinitions": v0,
-    "selections": v1
+    "argumentDefinitions": (v0/*: any*/),
+    "selections": (v1/*: any*/)
+  },
+  "params": {
+    "operationKind": "mutation",
+    "name": "AuthenticateUserMutation",
+    "id": null,
+    "text": "mutation AuthenticateUserMutation(\n  $email: String!\n  $password: String!\n) {\n  authenticateUser(email: $email, password: $password) {\n    id\n    token\n  }\n}\n",
+    "metadata": {}
   }
 };
 })();

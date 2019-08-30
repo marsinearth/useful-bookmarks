@@ -36,11 +36,14 @@ const DeleteCommentMutation: DCMutArgs = function (commentId, postId) {
       onError: err => console.error(err),
       updater: proxyStore => {
         const deletePostField = proxyStore.getRootField('deleteComment')
-        const deletedId = deletePostField && deletePostField.getValue('deletedId')
-        const postProxy = proxyStore.get(postId)
-        const connection = ConnectionHandler.getConnection(postProxy, 'ListComments_comments')
-
-        if (connection) ConnectionHandler.deleteNode(connection, deletedId)
+        if (deletePostField) {
+          const deletedId: any = deletePostField.getValue('deletedId')
+          const postProxy = proxyStore.get(postId)
+          if (postProxy) {
+            const connection = ConnectionHandler.getConnection(postProxy, 'ListComments_comments')
+            if (connection && deletedId) ConnectionHandler.deleteNode(connection, deletedId)
+          }
+        }
       },
     },
   )

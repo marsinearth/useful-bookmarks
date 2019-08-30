@@ -20,7 +20,7 @@ type State = {
   commentLoading: boolean,
   endCursor: string,
   closable: boolean,
-  contHeight: number | string
+  contHeight?: number | string
 }
 
 type Props = {
@@ -37,7 +37,7 @@ class ListComments extends PureComponent<Props, State> {
     closable: false,
     contHeight: 'auto'
   }
-  listContainer = createRef<HTMLDivElement>()
+  listContainer = createRef<any>()
 
   static getDerivedStateFromProps(nextProps: Props) {
     const { post: { comments } } = nextProps
@@ -56,7 +56,7 @@ class ListComments extends PureComponent<Props, State> {
     const comments = post && post.comments
 
     if (comments && comments.edges.length > 0) {
-      const contHeight = this.listContainer.current.clientHeight
+      const { clientHeight: contHeight = undefined } = this.listContainer.current
       this.setState({ contHeight })
     }
   }
@@ -163,28 +163,32 @@ class ListComments extends PureComponent<Props, State> {
   }
 }
 
-export default createPaginationContainer(ListComments, graphql`
-  fragment ListComments_post on Post {
-    id
-    comments(
-      first: $count,
-      after: $cCursor
-    ) @connection(
-      key: "ListComments_comments",
-      filters: []
-    ) {
-      edges {
-        node {
-          ...Comment_comment
+export default createPaginationContainer(ListComments,
+  {
+    post: graphql`
+      fragment ListComments_post on Post {
+        id
+        comments(
+          first: $count,
+          after: $cCursor
+        ) @connection(
+          key: "ListComments_comments",
+          filters: []
+        ) {
+          edges {
+            node {
+              ...Comment_comment
+            }
+          }
+          pageInfo {
+            hasNextPage,
+            endCursor
+          }
+          count
         }
       }
-      pageInfo {
-        hasNextPage,
-        endCursor
-      }
-      count
-    }
-  }`,
+    `
+  },
   {
     direction: 'forward',
     query: graphql`

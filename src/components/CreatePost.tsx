@@ -4,10 +4,10 @@ import React, {
   ChangeEvent,
   MouseEvent,
   SyntheticEvent
- } from 'react'
+} from 'react'
 import { Link } from 'react-router-dom'
 import graphql from 'babel-plugin-relay/macro'
-import { QueryRenderer, ReadyState } from 'react-relay'
+import { QueryRenderer } from 'react-relay'
 import CreatePostMutation from '../mutations/CreatePostMutation'
 import UpdatePostMutation from '../mutations/UpdatePostMutation'
 import environment from '../utils/Environment'
@@ -64,10 +64,10 @@ const CreatePostViewerQuery = graphql`
   }
 `
 
-const QueryRenderee = ({ 
+const QueryRenderee = ({
   queryState: {
-    error: queryErr, 
-    props, 
+    error: queryErr,
+    props,
   },
   states: {
     description,
@@ -77,23 +77,24 @@ const QueryRenderee = ({
     error
   },
   internalFuncs: {
-    handleChange, 
+    handleChange,
     onErrorImg,
     handlePost
   },
   internalRefs: {
     imageUrlNode,
-    siteUrlNode    
+    siteUrlNode
   }
-}: { 
-  queryState: ReadyState, 
-  states: State, 
-  internalFuncs: any, 
-  internalRefs: any 
+}: {
+  queryState: any,
+  states: State,
+  internalFuncs: any,
+  internalRefs: any
 }) => {
   if (queryErr) {
     return <div>{queryErr.message}</div>
-  } else if (props) {
+  }
+  if (props) {
     return (
       <Wrapper>
         <div>
@@ -142,9 +143,9 @@ const QueryRenderee = ({
             <Link to="/" >
               Cancel
             </Link>
-         </LinkContainer>
-       </div>
-     </Wrapper>
+          </LinkContainer>
+        </div>
+      </Wrapper>
     )
   }
   return (
@@ -173,7 +174,7 @@ class CreatePost extends PureComponent<Props, State> {
     if (!userId) history.replace('/')
   }
 
-  static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+  static getDerivedStateFromProps(nextProps: any, prevState: any) {
     const { location } = nextProps
     const editPost = location.state && location.state.editPost
     if (editPost && !prevState.editing) {
@@ -191,7 +192,6 @@ class CreatePost extends PureComponent<Props, State> {
   _handleChange = (e: ChangeEvent<HTMLInputElement>) =>  {
     const { error } = this.state
     const { target } = e
-    
     const { dataset: { label }, value } = target
     console.log('label: ', label);
     console.log('value: ', value);
@@ -217,9 +217,10 @@ class CreatePost extends PureComponent<Props, State> {
       if (error.siteUrl && this.siteUrlNode.current) this.siteUrlNode.current.focus()
       if (error.imageUrl && this.imageUrlNode.current) this.imageUrlNode.current.focus()
     } else {
-      const { location: { state: { editPost } = {}} } = this.props
+      const { location: { state } } = this.props
       const { editing, description } = this.state
       const userId = localStorage.getItem(GC_USER_ID)
+      const { editPost } = state as { editPost?: IPost }
 
       if (userId && viewerId) {
         if (editing && editPost) {
@@ -270,7 +271,7 @@ class CreatePost extends PureComponent<Props, State> {
         variables={{ initCount: ITEMS_PER_PAGE }}
         environment={environment}
         query={CreatePostViewerQuery}
-        render={(queryState: ReadyState) => (
+        render={queryState => (
           <QueryRenderee
             queryState={queryState}
             internalFuncs={internalFuncs}

@@ -1,6 +1,6 @@
 # Relay Modern & GraphCool Personal Project
 
-### [Demo Page on Netlify](https://useful-bookmarks.netlify.com/)
+## [Demo Page on Netlify](https://useful-bookmarks.netlify.com/)
 
 > A follow-up from Nikolas Burk's [Getting started with Relay Modern](https://blog.graph.cool/getting-started-with-relay-modern-46f8de6bd6ec),
 > [github source](https://github.com/graphcool-examples/react-graphql/tree/master/quickstart-with-relay-modern)
@@ -13,7 +13,7 @@
   - &#9745; will complete comments system by adding mutations for CUD, relay's pagination func for browsing a many of them
   - &#9745; will Edit funcs for Posts and Comments
   - &#9745; deploy to netlify pages
-  - &#9745; apply TypeScript on the project. Finally succeed installing typescript with relay without using unnecessary settings! (thanks for [CRA2 with react-app-rewired & react-app-rewire-typescript-babel-preset](https://react-app-rewire-typescript-babel-preset.netlify.com/#/docs/installation))
+  - &#9745; apply TypeScript on the project. Finally succeed installing typescript with relay without using unnecessary settings (thanks for CRA2!)
   - &#9745; will show Creator's name (each for Post and Comment)
   - &#9999; will add likes(exactly same as hackernews' votes)
 

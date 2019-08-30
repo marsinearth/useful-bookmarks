@@ -4,7 +4,7 @@ import {
 import graphql from 'babel-plugin-relay/macro'
 import {
   ConnectionHandler,
- } from 'relay-runtime'
+} from 'relay-runtime'
 import environment from '../utils/Environment'
 import { SHU } from '../types'
 
@@ -44,9 +44,13 @@ const mutation = graphql`
 
 const sharedUpdater: SHU = function (store, viewerId, newPost) {
   const viewerProxy = store.get(viewerId)
-  const connection = ConnectionHandler.getConnection(viewerProxy, "ListPage_allPosts")
-  const newEdge = ConnectionHandler.createEdge(store, connection, newPost, 'PostEdge')
-  if (connection) ConnectionHandler.insertEdgeAfter(connection, newEdge)
+  if (viewerProxy) {
+    const connection = ConnectionHandler.getConnection(viewerProxy, "ListPage_allPosts")
+    if (connection) {
+      const newEdge = ConnectionHandler.createEdge(store, connection, newPost, 'PostEdge')
+      ConnectionHandler.insertEdgeAfter(connection, newEdge)
+    }
+  }
 }
 
 let tempID = 0

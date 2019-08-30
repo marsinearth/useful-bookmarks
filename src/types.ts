@@ -4,11 +4,11 @@ import {
   TouchEvent,
   MouseEvent
 } from 'react'
-import { PageInfo } from 'react-relay'
 import {
+  PageInfo,
   RecordSourceSelectorProxy,
   RecordProxy
- } from 'relay-runtime'
+} from 'relay-runtime'
 
 export interface IComment {
   id: string,
@@ -30,7 +30,7 @@ export type TooltipMenuProps = {
 }
 
 export type Menu = {
-  menu: boolean,
+  menu?: boolean,
   isPost?: boolean,
   writerAuth: boolean
 }

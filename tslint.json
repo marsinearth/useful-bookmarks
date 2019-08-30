@@ -18,19 +18,10 @@
       "parameters",
       "statements"
     ],
+    "jsx-no-lambda" : false,
     "jsx-no-multiline-js": false,
     "jsx-boolean-value": false,
-    "no-console": {
-      "severity": "warning",
-      "options": [
-        "debug",
-        "info",
-        "log",
-        "time",
-        "timeEnd",
-        "trace"
-      ]
-    },
+    "no-console": false,
     "object-shorthand-properties-first": [{ "severity": "warning" }],
     "ter-arrow-parens": [true, "as-needed"],
     "trailing-comma": false,

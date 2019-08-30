@@ -34,6 +34,10 @@ type Props = {
   handleEdit: handleEdit
 } & contextProps
 
+type TOptionMouseProps = Hover & {
+  onClick: (e: MouseEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>) => void
+}
+
 export const linkifyProps = {
   target: "_blank",
   rel: "noopener noreferrer"
@@ -46,7 +50,7 @@ class Comment extends PureComponent<Props, State> {
     commentMode: false,
     boom: false
   }
-  optionTooltip = createRef<any>()
+  optionTooltip: any = createRef()
 
   componentDidUpdate(prevProps: Props) {
     if (prevProps.isOverlay && !this.props.isOverlay) {
@@ -111,8 +115,8 @@ class Comment extends PureComponent<Props, State> {
           {commentedName}:
         </Writer>
         <Linkify properties={linkifyProps}>
-          <Content>            
-            {content}         
+          <Content>
+            {content}
           </Content>
         </Linkify>
         <VertOptionContainerComment
@@ -138,19 +142,23 @@ class Comment extends PureComponent<Props, State> {
   }
 }
 
-export default createFragmentContainer(Comment, graphql`
-  fragment Comment_comment on Comment {
-    id
-    content
-    commentedBy {
-      id
-      name
-    }
-    commentedPost {
-      id
-    }
+export default createFragmentContainer(Comment,
+  {
+    comment: graphql`
+      fragment Comment_comment on Comment {
+        id
+        content
+        commentedBy {
+          id
+          name
+        }
+        commentedPost {
+          id
+        }
+      }
+    `
   }
-`)
+)
 
 const Container = styled.div`
   font-size: .75rem;
@@ -166,11 +174,9 @@ const Writer = styled(Content)`
   font-weight: bold;
   margin-right: .5rem;
 `
-const VertOptionContainerComment = styled<
-  Hover & { 
-    onClick: (e: MouseEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>) => void 
-  }
->(({ hover, ...rest }) => <VertOptionContainer {...rest} />)`
+const VertOptionContainerComment = styled(
+  ({ hover, ...rest }) => <VertOptionContainer {...rest} />
+)<TOptionMouseProps>`
   float: right;
   display: ${({ hover }) => hover ? 'block' : 'none'};
 `

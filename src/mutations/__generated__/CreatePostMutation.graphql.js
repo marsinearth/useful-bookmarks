@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash dd4b01d4f2e6290010de31499eb4f6c4
+ * @relayHash a62f9198b7e2f0587090ab8045ca99bc
  */
 
 /* eslint-disable */
@@ -9,7 +9,7 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-export type CreatePostInput = {
+export type CreatePostInput = {|
   description: string,
   imageUrl: string,
   siteUrl: string,
@@ -18,8 +18,8 @@ export type CreatePostInput = {
   commentsIds?: ?$ReadOnlyArray<string>,
   comments?: ?$ReadOnlyArray<PostcommentsComment>,
   clientMutationId: string,
-};
-export type PostpostedByUser = {
+|};
+export type PostpostedByUser = {|
   email: string,
   name: string,
   password: string,
@@ -27,13 +27,13 @@ export type PostpostedByUser = {
   comments?: ?$ReadOnlyArray<UsercommentsComment>,
   postsIds?: ?$ReadOnlyArray<string>,
   posts?: ?$ReadOnlyArray<UserpostsPost>,
-};
-export type UsercommentsComment = {
+|};
+export type UsercommentsComment = {|
   content: string,
   commentedPostId?: ?string,
   commentedPost?: ?CommentcommentedPostPost,
-};
-export type CommentcommentedPostPost = {
+|};
+export type CommentcommentedPostPost = {|
   description: string,
   imageUrl: string,
   siteUrl: string,
@@ -41,13 +41,13 @@ export type CommentcommentedPostPost = {
   postedBy?: ?PostpostedByUser,
   commentsIds?: ?$ReadOnlyArray<string>,
   comments?: ?$ReadOnlyArray<PostcommentsComment>,
-};
-export type PostcommentsComment = {
+|};
+export type PostcommentsComment = {|
   content: string,
   commentedById?: ?string,
   commentedBy?: ?CommentcommentedByUser,
-};
-export type CommentcommentedByUser = {
+|};
+export type CommentcommentedByUser = {|
   email: string,
   name: string,
   password: string,
@@ -55,14 +55,14 @@ export type CommentcommentedByUser = {
   comments?: ?$ReadOnlyArray<UsercommentsComment>,
   postsIds?: ?$ReadOnlyArray<string>,
   posts?: ?$ReadOnlyArray<UserpostsPost>,
-};
-export type UserpostsPost = {
+|};
+export type UserpostsPost = {|
   description: string,
   imageUrl: string,
   siteUrl: string,
   commentsIds?: ?$ReadOnlyArray<string>,
   comments?: ?$ReadOnlyArray<PostcommentsComment>,
-};
+|};
 export type CreatePostMutationVariables = {|
   input: CreatePostInput
 |};
@@ -117,8 +117,7 @@ v1 = [
       {
         "kind": "Variable",
         "name": "input",
-        "variableName": "input",
-        "type": "CreatePostInput!"
+        "variableName": "input"
       }
     ],
     "concreteType": "CreatePostPayload",
@@ -168,24 +167,26 @@ v1 = [
 ];
 return {
   "kind": "Request",
-  "operationKind": "mutation",
-  "name": "CreatePostMutation",
-  "id": null,
-  "text": "mutation CreatePostMutation(\n  $input: CreatePostInput!\n) {\n  createPost(input: $input) {\n    post {\n      id\n      description\n      imageUrl\n      siteUrl\n    }\n  }\n}\n",
-  "metadata": {},
   "fragment": {
     "kind": "Fragment",
     "name": "CreatePostMutation",
     "type": "Mutation",
     "metadata": null,
-    "argumentDefinitions": v0,
-    "selections": v1
+    "argumentDefinitions": (v0/*: any*/),
+    "selections": (v1/*: any*/)
   },
   "operation": {
     "kind": "Operation",
     "name": "CreatePostMutation",
-    "argumentDefinitions": v0,
-    "selections": v1
+    "argumentDefinitions": (v0/*: any*/),
+    "selections": (v1/*: any*/)
+  },
+  "params": {
+    "operationKind": "mutation",
+    "name": "CreatePostMutation",
+    "id": null,
+    "text": "mutation CreatePostMutation(\n  $input: CreatePostInput!\n) {\n  createPost(input: $input) {\n    post {\n      id\n      description\n      imageUrl\n      siteUrl\n    }\n  }\n}\n",
+    "metadata": {}
   }
 };
 })();

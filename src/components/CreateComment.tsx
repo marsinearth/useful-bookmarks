@@ -3,7 +3,7 @@ import React, {
   ChangeEvent,
   FormEvent,
   PureComponent
- } from 'react'
+} from 'react'
 import CreateCommentMutation from '../mutations/CreateCommentMutation'
 import AnimateHeight from 'react-animate-height'
 import styled from 'styled-components'
@@ -62,7 +62,7 @@ export default class CreateComment extends PureComponent<Props, State> {
 
   _handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { target: { value } } = e
-    this.setState({ content: value })  
+    this.setState({ content: value })
   }
 
   _handleSubmit = (e: FormEvent<HTMLFormElement>) => {

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 427f59843623dedf04defa0f95e88a53
+ * @relayHash f5d9764d0b3f06a62efc0ef3f39b4225
  */
 
 /* eslint-disable */
@@ -71,20 +71,17 @@ v1 = [
       {
         "kind": "Variable",
         "name": "email",
-        "variableName": "email",
-        "type": "String!"
+        "variableName": "email"
       },
       {
         "kind": "Variable",
         "name": "name",
-        "variableName": "name",
-        "type": "String!"
+        "variableName": "name"
       },
       {
         "kind": "Variable",
         "name": "password",
-        "variableName": "password",
-        "type": "String!"
+        "variableName": "password"
       }
     ],
     "concreteType": "SignupUserPayload",
@@ -109,24 +106,26 @@ v1 = [
 ];
 return {
   "kind": "Request",
-  "operationKind": "mutation",
-  "name": "SignupUserMutation",
-  "id": null,
-  "text": "mutation SignupUserMutation(\n  $name: String!\n  $email: String!\n  $password: String!\n) {\n  signupUser(name: $name, email: $email, password: $password) {\n    id\n    token\n  }\n}\n",
-  "metadata": {},
   "fragment": {
     "kind": "Fragment",
     "name": "SignupUserMutation",
     "type": "Mutation",
     "metadata": null,
-    "argumentDefinitions": v0,
-    "selections": v1
+    "argumentDefinitions": (v0/*: any*/),
+    "selections": (v1/*: any*/)
   },
   "operation": {
     "kind": "Operation",
     "name": "SignupUserMutation",
-    "argumentDefinitions": v0,
-    "selections": v1
+    "argumentDefinitions": (v0/*: any*/),
+    "selections": (v1/*: any*/)
+  },
+  "params": {
+    "operationKind": "mutation",
+    "name": "SignupUserMutation",
+    "id": null,
+    "text": "mutation SignupUserMutation(\n  $name: String!\n  $email: String!\n  $password: String!\n) {\n  signupUser(name: $name, email: $email, password: $password) {\n    id\n    token\n  }\n}\n",
+    "metadata": {}
   }
 };
 })();

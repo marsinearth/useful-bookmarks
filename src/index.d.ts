@@ -1,12 +1,10 @@
-declare type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
-
 declare module 'react-infinite-scroller' {
   const x: any
   export = x
 }
 
 declare module 'react-device-detect' {
-  export type isMobile = any
+  export type isMobile = boolean
 }
 
 declare module '@fortawesome/react-fontawesome' {

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 26fcf247c64d9e3358c3a3a875336fdc
+ * @relayHash 15292d1cbc7d0a78a20d644b8888df7a
  */
 
 /* eslint-disable */
@@ -89,7 +89,7 @@ v2 = [
         "concreteType": "Post",
         "plural": false,
         "selections": [
-          v1,
+          (v1/*: any*/),
           {
             "kind": "ScalarField",
             "alias": null,
@@ -138,41 +138,22 @@ v3 = [
   {
     "kind": "Variable",
     "name": "last",
-    "variableName": "initCount",
-    "type": "Int"
+    "variableName": "initCount"
   },
   {
     "kind": "Literal",
     "name": "orderBy",
-    "value": "createdAt_DESC",
-    "type": "PostOrderBy"
+    "value": "createdAt_DESC"
   }
 ];
 return {
   "kind": "Request",
-  "operationKind": "query",
-  "name": "CreatePostViewerQuery",
-  "id": null,
-  "text": "query CreatePostViewerQuery(\n  $initCount: Int!\n) {\n  viewer {\n    id\n    allPosts(last: $initCount, orderBy: createdAt_DESC) {\n      edges {\n        node {\n          id\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        hasPreviousPage\n        startCursor\n      }\n    }\n  }\n}\n",
-  "metadata": {
-    "connection": [
-      {
-        "count": "initCount",
-        "cursor": null,
-        "direction": "backward",
-        "path": [
-          "viewer",
-          "allPosts"
-        ]
-      }
-    ]
-  },
   "fragment": {
     "kind": "Fragment",
     "name": "CreatePostViewerQuery",
     "type": "Query",
     "metadata": null,
-    "argumentDefinitions": v0,
+    "argumentDefinitions": (v0/*: any*/),
     "selections": [
       {
         "kind": "LinkedField",
@@ -183,7 +164,7 @@ return {
         "concreteType": "Viewer",
         "plural": false,
         "selections": [
-          v1,
+          (v1/*: any*/),
           {
             "kind": "LinkedField",
             "alias": "allPosts",
@@ -192,7 +173,7 @@ return {
             "args": null,
             "concreteType": "PostConnection",
             "plural": false,
-            "selections": v2
+            "selections": (v2/*: any*/)
           }
         ]
       }
@@ -201,7 +182,7 @@ return {
   "operation": {
     "kind": "Operation",
     "name": "CreatePostViewerQuery",
-    "argumentDefinitions": v0,
+    "argumentDefinitions": (v0/*: any*/),
     "selections": [
       {
         "kind": "LinkedField",
@@ -212,22 +193,22 @@ return {
         "concreteType": "Viewer",
         "plural": false,
         "selections": [
-          v1,
+          (v1/*: any*/),
           {
             "kind": "LinkedField",
             "alias": null,
             "name": "allPosts",
             "storageKey": null,
-            "args": v3,
+            "args": (v3/*: any*/),
             "concreteType": "PostConnection",
             "plural": false,
-            "selections": v2
+            "selections": (v2/*: any*/)
           },
           {
             "kind": "LinkedHandle",
             "alias": null,
             "name": "allPosts",
-            "args": v3,
+            "args": (v3/*: any*/),
             "handle": "connection",
             "key": "ListPage_allPosts",
             "filters": []
@@ -235,6 +216,25 @@ return {
         ]
       }
     ]
+  },
+  "params": {
+    "operationKind": "query",
+    "name": "CreatePostViewerQuery",
+    "id": null,
+    "text": "query CreatePostViewerQuery(\n  $initCount: Int!\n) {\n  viewer {\n    id\n    allPosts(last: $initCount, orderBy: createdAt_DESC) {\n      edges {\n        node {\n          id\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        hasPreviousPage\n        startCursor\n      }\n    }\n  }\n}\n",
+    "metadata": {
+      "connection": [
+        {
+          "count": "initCount",
+          "cursor": null,
+          "direction": "backward",
+          "path": [
+            "viewer",
+            "allPosts"
+          ]
+        }
+      ]
+    }
   }
 };
 })();

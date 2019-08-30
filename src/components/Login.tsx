@@ -27,7 +27,7 @@ class Login extends PureComponent<any, State> {
 
   _onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement
-    const label: string = target && target.dataset.label
+    const label: string = target.dataset.label || ''
     const value: string = target && target.value
     if (label) this.setState({ [label]: value })
   }

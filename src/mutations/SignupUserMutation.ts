@@ -33,8 +33,8 @@ const SignupUserMutation: AuthMutArgs = function (
   commitMutation(environment, {
     mutation,
     variables,
-    onCompleted: (res: { signupUser: compRes }) => {
-      const signup = res.signupUser
+    onCompleted: (res: any) => {
+      const signup = res.signupUser as compRes
       if (signup) {
         const { id, token } = signup
         successCb(id, token)

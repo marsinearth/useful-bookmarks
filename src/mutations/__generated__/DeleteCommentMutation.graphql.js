@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 5182826199fbfafa12f4c46bdd2c60b6
+ * @relayHash 66abded69398ddba1e5296f95ebbe2dc
  */
 
 /* eslint-disable */
@@ -9,10 +9,10 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-export type DeleteCommentInput = {
+export type DeleteCommentInput = {|
   id: string,
   clientMutationId: string,
-};
+|};
 export type DeleteCommentMutationVariables = {|
   input: DeleteCommentInput
 |};
@@ -57,8 +57,7 @@ v1 = [
       {
         "kind": "Variable",
         "name": "input",
-        "variableName": "input",
-        "type": "DeleteCommentInput!"
+        "variableName": "input"
       }
     ],
     "concreteType": "DeleteCommentPayload",
@@ -76,24 +75,26 @@ v1 = [
 ];
 return {
   "kind": "Request",
-  "operationKind": "mutation",
-  "name": "DeleteCommentMutation",
-  "id": null,
-  "text": "mutation DeleteCommentMutation(\n  $input: DeleteCommentInput!\n) {\n  deleteComment(input: $input) {\n    deletedId\n  }\n}\n",
-  "metadata": {},
   "fragment": {
     "kind": "Fragment",
     "name": "DeleteCommentMutation",
     "type": "Mutation",
     "metadata": null,
-    "argumentDefinitions": v0,
-    "selections": v1
+    "argumentDefinitions": (v0/*: any*/),
+    "selections": (v1/*: any*/)
   },
   "operation": {
     "kind": "Operation",
     "name": "DeleteCommentMutation",
-    "argumentDefinitions": v0,
-    "selections": v1
+    "argumentDefinitions": (v0/*: any*/),
+    "selections": (v1/*: any*/)
+  },
+  "params": {
+    "operationKind": "mutation",
+    "name": "DeleteCommentMutation",
+    "id": null,
+    "text": "mutation DeleteCommentMutation(\n  $input: DeleteCommentInput!\n) {\n  deleteComment(input: $input) {\n    deletedId\n  }\n}\n",
+    "metadata": {}
   }
 };
 })();

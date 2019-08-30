@@ -40,23 +40,26 @@ type TooltipProps = {
   handleBlur: (e: BlurEvent) => void,
   handleEdit: () => void,
   handleDelete: () => void,
-  menu?: boolean, 
+  menu?: boolean,
   writerAuth: boolean,
   toggleOverlay: toggleOverlay,
   isPost?: boolean,
   addComment?: () => void
 }
 
-export const TooltipComp = forwardRef<any, TooltipProps>(({
-  handleBlur, 
-  handleEdit,
-  handleDelete,
-  menu,
-  writerAuth,
-  toggleOverlay,
-  isPost,
-  addComment
-}, ref) => (
+export const TooltipComp = forwardRef<any, TooltipProps>((
+  {
+    handleBlur,
+    handleEdit,
+    handleDelete,
+    menu,
+    writerAuth,
+    toggleOverlay,
+    isPost,
+    addComment
+  },
+  ref
+) => (
   <Tooltip
     ref={ref}
     onBlur={handleBlur}
@@ -174,9 +177,9 @@ class Post extends PureComponent<Props, State> {
         description,
         imageUrl,
         siteUrl,
-        postedBy: { 
+        postedBy: {
           id: posterId,
-          name: posterName 
+          name: posterName
         }
       },
       viewerId,
@@ -218,9 +221,9 @@ class Post extends PureComponent<Props, State> {
                   </VertOptionContainer>
                 }
               </TitleContainer>
-              <TooltipComp 
+              <TooltipComp
                 ref={this.optionTooltip}
-                handleBlur={this._handleBlur} 
+                handleBlur={this._handleBlur}
                 handleEdit={this._editPost}
                 handleDelete={this._deletePost}
                 menu={menu}
@@ -250,19 +253,23 @@ class Post extends PureComponent<Props, State> {
   }
 }
 
-export default createFragmentContainer(Post, graphql`
-  fragment Post_post on Post {
-    id
-    description
-    imageUrl
-    siteUrl
-    postedBy {
-      id
-      name
-    }
-    ...ListComments_post
+export default createFragmentContainer(Post,
+  {
+    post: graphql`
+      fragment Post_post on Post {
+        id
+        description
+        imageUrl
+        siteUrl
+        postedBy {
+          id
+          name
+        }
+        ...ListComments_post
+      }
+    `
   }
-`)
+)
 
 export const Dim = css`
   opacity: 1;
@@ -310,8 +317,8 @@ const TitleContainer = styled.div`
       font-size: .8rem;
       color: #999;
       font-weight: bold;
-      padding: 0 .5rem 0 0;  
-      text-transform: capitalize;    
+      padding: 0 .5rem 0 0;
+      text-transform: capitalize;
     }
   }
 `
@@ -325,8 +332,8 @@ export const VertOptionContainer = styled.div`
 `
 const Tooltip = styled("div")<Menu>`
   position: absolute;
-  ${({ isPost, writerAuth }) => isPost 
-    ? (writerAuth ? 'top: 0' : 'top: 1rem') 
+  ${({ isPost, writerAuth }) => isPost
+    ? (writerAuth ? 'top: 0' : 'top: 1rem')
     : 'bottom: .5rem'
   };
   right: ${({ isPost }) => isPost ? '0' : '.75rem'};

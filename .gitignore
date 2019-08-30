@@ -35,3 +35,4 @@ languagepacks.json
 machineid
 self-signed.cert
 self-signed.key
+.history/

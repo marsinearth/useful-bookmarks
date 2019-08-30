@@ -27,8 +27,8 @@ const AuthenticateUserMutation: AuthMutArgs = function (
   commitMutation(environment, {
     mutation,
     variables,
-    onCompleted: (res: { authenticateUser: compRes }) => {
-      const auth = res.authenticateUser
+    onCompleted: (res: any) => {
+      const auth = res.authenticateUser as compRes
       if (auth) {
         const { id, token } = auth
         successCb(id, token);

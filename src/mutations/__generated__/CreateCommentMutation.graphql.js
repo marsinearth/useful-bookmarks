@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 45e97e8a329a0c3b2c27e580598a702d
+ * @relayHash fa5eb90007b07d5f2f491597eb220dfd
  */
 
 /* eslint-disable */
@@ -9,15 +9,15 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-export type CreateCommentInput = {
+export type CreateCommentInput = {|
   content: string,
   commentedById?: ?string,
   commentedBy?: ?CommentcommentedByUser,
   commentedPostId?: ?string,
   commentedPost?: ?CommentcommentedPostPost,
   clientMutationId: string,
-};
-export type CommentcommentedByUser = {
+|};
+export type CommentcommentedByUser = {|
   email: string,
   name: string,
   password: string,
@@ -25,13 +25,13 @@ export type CommentcommentedByUser = {
   comments?: ?$ReadOnlyArray<UsercommentsComment>,
   postsIds?: ?$ReadOnlyArray<string>,
   posts?: ?$ReadOnlyArray<UserpostsPost>,
-};
-export type UsercommentsComment = {
+|};
+export type UsercommentsComment = {|
   content: string,
   commentedPostId?: ?string,
   commentedPost?: ?CommentcommentedPostPost,
-};
-export type CommentcommentedPostPost = {
+|};
+export type CommentcommentedPostPost = {|
   description: string,
   imageUrl: string,
   siteUrl: string,
@@ -39,8 +39,8 @@ export type CommentcommentedPostPost = {
   postedBy?: ?PostpostedByUser,
   commentsIds?: ?$ReadOnlyArray<string>,
   comments?: ?$ReadOnlyArray<PostcommentsComment>,
-};
-export type PostpostedByUser = {
+|};
+export type PostpostedByUser = {|
   email: string,
   name: string,
   password: string,
@@ -48,19 +48,19 @@ export type PostpostedByUser = {
   comments?: ?$ReadOnlyArray<UsercommentsComment>,
   postsIds?: ?$ReadOnlyArray<string>,
   posts?: ?$ReadOnlyArray<UserpostsPost>,
-};
-export type UserpostsPost = {
+|};
+export type UserpostsPost = {|
   description: string,
   imageUrl: string,
   siteUrl: string,
   commentsIds?: ?$ReadOnlyArray<string>,
   comments?: ?$ReadOnlyArray<PostcommentsComment>,
-};
-export type PostcommentsComment = {
+|};
+export type PostcommentsComment = {|
   content: string,
   commentedById?: ?string,
   commentedBy?: ?CommentcommentedByUser,
-};
+|};
 export type CreateCommentMutationVariables = {|
   input: CreateCommentInput
 |};
@@ -112,8 +112,7 @@ v1 = [
   {
     "kind": "Variable",
     "name": "input",
-    "variableName": "input",
-    "type": "CreateCommentInput!"
+    "variableName": "input"
   }
 ],
 v2 = {
@@ -139,24 +138,19 @@ v4 = {
 };
 return {
   "kind": "Request",
-  "operationKind": "mutation",
-  "name": "CreateCommentMutation",
-  "id": null,
-  "text": "mutation CreateCommentMutation(\n  $input: CreateCommentInput!\n) {\n  createComment(input: $input) {\n    comment {\n      id\n      content\n      commentedBy {\n        name\n        id\n      }\n    }\n  }\n}\n",
-  "metadata": {},
   "fragment": {
     "kind": "Fragment",
     "name": "CreateCommentMutation",
     "type": "Mutation",
     "metadata": null,
-    "argumentDefinitions": v0,
+    "argumentDefinitions": (v0/*: any*/),
     "selections": [
       {
         "kind": "LinkedField",
         "alias": null,
         "name": "createComment",
         "storageKey": null,
-        "args": v1,
+        "args": (v1/*: any*/),
         "concreteType": "CreateCommentPayload",
         "plural": false,
         "selections": [
@@ -169,8 +163,8 @@ return {
             "concreteType": "Comment",
             "plural": false,
             "selections": [
-              v2,
-              v3,
+              (v2/*: any*/),
+              (v3/*: any*/),
               {
                 "kind": "LinkedField",
                 "alias": null,
@@ -180,7 +174,7 @@ return {
                 "concreteType": "User",
                 "plural": false,
                 "selections": [
-                  v4
+                  (v4/*: any*/)
                 ]
               }
             ]
@@ -192,14 +186,14 @@ return {
   "operation": {
     "kind": "Operation",
     "name": "CreateCommentMutation",
-    "argumentDefinitions": v0,
+    "argumentDefinitions": (v0/*: any*/),
     "selections": [
       {
         "kind": "LinkedField",
         "alias": null,
         "name": "createComment",
         "storageKey": null,
-        "args": v1,
+        "args": (v1/*: any*/),
         "concreteType": "CreateCommentPayload",
         "plural": false,
         "selections": [
@@ -212,8 +206,8 @@ return {
             "concreteType": "Comment",
             "plural": false,
             "selections": [
-              v2,
-              v3,
+              (v2/*: any*/),
+              (v3/*: any*/),
               {
                 "kind": "LinkedField",
                 "alias": null,
@@ -223,8 +217,8 @@ return {
                 "concreteType": "User",
                 "plural": false,
                 "selections": [
-                  v4,
-                  v2
+                  (v4/*: any*/),
+                  (v2/*: any*/)
                 ]
               }
             ]
@@ -232,6 +226,13 @@ return {
         ]
       }
     ]
+  },
+  "params": {
+    "operationKind": "mutation",
+    "name": "CreateCommentMutation",
+    "id": null,
+    "text": "mutation CreateCommentMutation(\n  $input: CreateCommentInput!\n) {\n  createComment(input: $input) {\n    comment {\n      id\n      content\n      commentedBy {\n        name\n        id\n      }\n    }\n  }\n}\n",
+    "metadata": {}
   }
 };
 })();

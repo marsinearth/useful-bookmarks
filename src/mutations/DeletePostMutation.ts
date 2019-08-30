@@ -36,10 +36,14 @@ const DeletePostMutation: DPMutArgs = function (postId, viewerId) {
       onError: err => console.error(err),
       updater: proxyStore => {
         const deletePostField = proxyStore.getRootField('deletePost')
-        const deletedId = deletePostField && deletePostField.getValue('deletedId')
-        const viewerProxy = proxyStore.get(viewerId)
-        const connection = ConnectionHandler.getConnection(viewerProxy, 'ListPage_allPosts')
-        if (connection) ConnectionHandler.deleteNode(connection, deletedId)
+        if (deletePostField) {
+          const deletedId: any = deletePostField.getValue('deletedId')
+          const viewerProxy = proxyStore.get(viewerId)
+          if (viewerProxy) {
+            const connection = ConnectionHandler.getConnection(viewerProxy, 'ListPage_allPosts')
+            if (connection) ConnectionHandler.deleteNode(connection, deletedId)
+          }
+        }
       },
     },
   )

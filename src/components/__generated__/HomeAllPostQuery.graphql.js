@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash ee1e35845c5332e48fac64fc6d0d85b8
+ * @relayHash b34b5796ab2edc63ce43c6f8c1961893
  */
 
 /* eslint-disable */
@@ -146,7 +146,7 @@ v1 = {
   "storageKey": null
 },
 v2 = [
-  v1,
+  (v1/*: any*/),
   {
     "kind": "ScalarField",
     "alias": null,
@@ -164,43 +164,38 @@ v3 = {
     {
       "kind": "Variable",
       "name": "id",
-      "variableName": "id",
-      "type": "ID"
+      "variableName": "id"
     }
   ],
   "concreteType": "User",
   "plural": false,
-  "selections": v2
+  "selections": (v2/*: any*/)
 },
 v4 = {
   "kind": "Variable",
   "name": "first",
-  "variableName": "count",
-  "type": "Int"
+  "variableName": "count"
 },
 v5 = [
   {
     "kind": "Variable",
     "name": "after",
-    "variableName": "pCursor",
-    "type": "String"
+    "variableName": "pCursor"
   },
-  v4,
+  (v4/*: any*/),
   {
     "kind": "Literal",
     "name": "orderBy",
-    "value": "createdAt_DESC",
-    "type": "PostOrderBy"
+    "value": "createdAt_DESC"
   }
 ],
 v6 = [
   {
     "kind": "Variable",
     "name": "after",
-    "variableName": "cCursor",
-    "type": "String"
+    "variableName": "cCursor"
   },
-  v4
+  (v4/*: any*/)
 ],
 v7 = {
   "kind": "ScalarField",
@@ -243,17 +238,12 @@ v9 = {
 };
 return {
   "kind": "Request",
-  "operationKind": "query",
-  "name": "HomeAllPostQuery",
-  "id": null,
-  "text": "query HomeAllPostQuery(\n  $count: Int!\n  $id: ID\n  $pCursor: String\n  $cCursor: String\n) {\n  viewer {\n    User(id: $id) {\n      id\n      name\n    }\n    ...ListPage_viewer\n    id\n  }\n}\n\nfragment ListPage_viewer on Viewer {\n  id\n  allPosts(first: $count, after: $pCursor, orderBy: createdAt_DESC) {\n    edges {\n      node {\n        ...Post_post\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n\nfragment Post_post on Post {\n  id\n  description\n  imageUrl\n  siteUrl\n  postedBy {\n    id\n    name\n  }\n  ...ListComments_post\n}\n\nfragment ListComments_post on Post {\n  id\n  comments(first: $count, after: $cCursor) {\n    edges {\n      node {\n        ...Comment_comment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n    count\n  }\n}\n\nfragment Comment_comment on Comment {\n  id\n  content\n  commentedBy {\n    id\n    name\n  }\n  commentedPost {\n    id\n  }\n}\n",
-  "metadata": {},
   "fragment": {
     "kind": "Fragment",
     "name": "HomeAllPostQuery",
     "type": "Query",
     "metadata": null,
-    "argumentDefinitions": v0,
+    "argumentDefinitions": (v0/*: any*/),
     "selections": [
       {
         "kind": "LinkedField",
@@ -264,7 +254,7 @@ return {
         "concreteType": "Viewer",
         "plural": false,
         "selections": [
-          v3,
+          (v3/*: any*/),
           {
             "kind": "FragmentSpread",
             "name": "ListPage_viewer",
@@ -277,7 +267,7 @@ return {
   "operation": {
     "kind": "Operation",
     "name": "HomeAllPostQuery",
-    "argumentDefinitions": v0,
+    "argumentDefinitions": (v0/*: any*/),
     "selections": [
       {
         "kind": "LinkedField",
@@ -288,14 +278,14 @@ return {
         "concreteType": "Viewer",
         "plural": false,
         "selections": [
-          v3,
-          v1,
+          (v3/*: any*/),
+          (v1/*: any*/),
           {
             "kind": "LinkedField",
             "alias": null,
             "name": "allPosts",
             "storageKey": null,
-            "args": v5,
+            "args": (v5/*: any*/),
             "concreteType": "PostConnection",
             "plural": false,
             "selections": [
@@ -317,7 +307,7 @@ return {
                     "concreteType": "Post",
                     "plural": false,
                     "selections": [
-                      v1,
+                      (v1/*: any*/),
                       {
                         "kind": "ScalarField",
                         "alias": null,
@@ -347,14 +337,14 @@ return {
                         "args": null,
                         "concreteType": "User",
                         "plural": false,
-                        "selections": v2
+                        "selections": (v2/*: any*/)
                       },
                       {
                         "kind": "LinkedField",
                         "alias": null,
                         "name": "comments",
                         "storageKey": null,
-                        "args": v6,
+                        "args": (v6/*: any*/),
                         "concreteType": "CommentConnection",
                         "plural": false,
                         "selections": [
@@ -376,7 +366,7 @@ return {
                                 "concreteType": "Comment",
                                 "plural": false,
                                 "selections": [
-                                  v1,
+                                  (v1/*: any*/),
                                   {
                                     "kind": "ScalarField",
                                     "alias": null,
@@ -392,7 +382,7 @@ return {
                                     "args": null,
                                     "concreteType": "User",
                                     "plural": false,
-                                    "selections": v2
+                                    "selections": (v2/*: any*/)
                                   },
                                   {
                                     "kind": "LinkedField",
@@ -403,16 +393,16 @@ return {
                                     "concreteType": "Post",
                                     "plural": false,
                                     "selections": [
-                                      v1
+                                      (v1/*: any*/)
                                     ]
                                   },
-                                  v7
+                                  (v7/*: any*/)
                                 ]
                               },
-                              v8
+                              (v8/*: any*/)
                             ]
                           },
-                          v9,
+                          (v9/*: any*/),
                           {
                             "kind": "ScalarField",
                             "alias": null,
@@ -426,25 +416,25 @@ return {
                         "kind": "LinkedHandle",
                         "alias": null,
                         "name": "comments",
-                        "args": v6,
+                        "args": (v6/*: any*/),
                         "handle": "connection",
                         "key": "ListComments_comments",
                         "filters": []
                       },
-                      v7
+                      (v7/*: any*/)
                     ]
                   },
-                  v8
+                  (v8/*: any*/)
                 ]
               },
-              v9
+              (v9/*: any*/)
             ]
           },
           {
             "kind": "LinkedHandle",
             "alias": null,
             "name": "allPosts",
-            "args": v5,
+            "args": (v5/*: any*/),
             "handle": "connection",
             "key": "ListPage_allPosts",
             "filters": []
@@ -452,6 +442,13 @@ return {
         ]
       }
     ]
+  },
+  "params": {
+    "operationKind": "query",
+    "name": "HomeAllPostQuery",
+    "id": null,
+    "text": "query HomeAllPostQuery(\n  $count: Int!\n  $id: ID\n  $pCursor: String\n  $cCursor: String\n) {\n  viewer {\n    User(id: $id) {\n      id\n      name\n    }\n    ...ListPage_viewer\n    id\n  }\n}\n\nfragment ListPage_viewer on Viewer {\n  id\n  allPosts(first: $count, after: $pCursor, orderBy: createdAt_DESC) {\n    edges {\n      node {\n        ...Post_post\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n\nfragment Post_post on Post {\n  id\n  description\n  imageUrl\n  siteUrl\n  postedBy {\n    id\n    name\n  }\n  ...ListComments_post\n}\n\nfragment ListComments_post on Post {\n  id\n  comments(first: $count, after: $cCursor) {\n    edges {\n      node {\n        ...Comment_comment\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n    count\n  }\n}\n\nfragment Comment_comment on Comment {\n  id\n  content\n  commentedBy {\n    id\n    name\n  }\n  commentedPost {\n    id\n  }\n}\n",
+    "metadata": {}
   }
 };
 })();

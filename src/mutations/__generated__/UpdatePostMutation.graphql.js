@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 6b3e707d5213fb6827627575a4b85610
+ * @relayHash 7256f685fae5148dc4b518d8e8c43208
  */
 
 /* eslint-disable */
@@ -9,7 +9,7 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-export type UpdatePostInput = {
+export type UpdatePostInput = {|
   description?: ?string,
   id: string,
   imageUrl?: ?string,
@@ -19,8 +19,8 @@ export type UpdatePostInput = {
   commentsIds?: ?$ReadOnlyArray<string>,
   comments?: ?$ReadOnlyArray<PostcommentsComment>,
   clientMutationId: string,
-};
-export type PostpostedByUser = {
+|};
+export type PostpostedByUser = {|
   email: string,
   name: string,
   password: string,
@@ -28,13 +28,13 @@ export type PostpostedByUser = {
   comments?: ?$ReadOnlyArray<UsercommentsComment>,
   postsIds?: ?$ReadOnlyArray<string>,
   posts?: ?$ReadOnlyArray<UserpostsPost>,
-};
-export type UsercommentsComment = {
+|};
+export type UsercommentsComment = {|
   content: string,
   commentedPostId?: ?string,
   commentedPost?: ?CommentcommentedPostPost,
-};
-export type CommentcommentedPostPost = {
+|};
+export type CommentcommentedPostPost = {|
   description: string,
   imageUrl: string,
   siteUrl: string,
@@ -42,13 +42,13 @@ export type CommentcommentedPostPost = {
   postedBy?: ?PostpostedByUser,
   commentsIds?: ?$ReadOnlyArray<string>,
   comments?: ?$ReadOnlyArray<PostcommentsComment>,
-};
-export type PostcommentsComment = {
+|};
+export type PostcommentsComment = {|
   content: string,
   commentedById?: ?string,
   commentedBy?: ?CommentcommentedByUser,
-};
-export type CommentcommentedByUser = {
+|};
+export type CommentcommentedByUser = {|
   email: string,
   name: string,
   password: string,
@@ -56,14 +56,14 @@ export type CommentcommentedByUser = {
   comments?: ?$ReadOnlyArray<UsercommentsComment>,
   postsIds?: ?$ReadOnlyArray<string>,
   posts?: ?$ReadOnlyArray<UserpostsPost>,
-};
-export type UserpostsPost = {
+|};
+export type UserpostsPost = {|
   description: string,
   imageUrl: string,
   siteUrl: string,
   commentsIds?: ?$ReadOnlyArray<string>,
   comments?: ?$ReadOnlyArray<PostcommentsComment>,
-};
+|};
 export type UpdatePostMutationVariables = {|
   input: UpdatePostInput
 |};
@@ -118,8 +118,7 @@ v1 = [
       {
         "kind": "Variable",
         "name": "input",
-        "variableName": "input",
-        "type": "UpdatePostInput!"
+        "variableName": "input"
       }
     ],
     "concreteType": "UpdatePostPayload",
@@ -169,24 +168,26 @@ v1 = [
 ];
 return {
   "kind": "Request",
-  "operationKind": "mutation",
-  "name": "UpdatePostMutation",
-  "id": null,
-  "text": "mutation UpdatePostMutation(\n  $input: UpdatePostInput!\n) {\n  updatePost(input: $input) {\n    post {\n      id\n      description\n      imageUrl\n      siteUrl\n    }\n  }\n}\n",
-  "metadata": {},
   "fragment": {
     "kind": "Fragment",
     "name": "UpdatePostMutation",
     "type": "Mutation",
     "metadata": null,
-    "argumentDefinitions": v0,
-    "selections": v1
+    "argumentDefinitions": (v0/*: any*/),
+    "selections": (v1/*: any*/)
   },
   "operation": {
     "kind": "Operation",
     "name": "UpdatePostMutation",
-    "argumentDefinitions": v0,
-    "selections": v1
+    "argumentDefinitions": (v0/*: any*/),
+    "selections": (v1/*: any*/)
+  },
+  "params": {
+    "operationKind": "mutation",
+    "name": "UpdatePostMutation",
+    "id": null,
+    "text": "mutation UpdatePostMutation(\n  $input: UpdatePostInput!\n) {\n  updatePost(input: $input) {\n    post {\n      id\n      description\n      imageUrl\n      siteUrl\n    }\n  }\n}\n",
+    "metadata": {}
   }
 };
 })();

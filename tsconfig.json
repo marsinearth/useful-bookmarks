@@ -1,7 +1,7 @@
 {
   "defaultSeverity": "warning",
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "src",
     "target": "es6",
     "module": "esnext",
     "jsx": "preserve",

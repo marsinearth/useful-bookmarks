@@ -1,7 +1,6 @@
 import React, { PureComponent, ErrorInfo } from 'react'
 import {
   QueryRenderer,
-  ReadyState
 } from 'react-relay'
 import graphql from 'babel-plugin-relay/macro'
 import environment from '../utils/Environment'
@@ -32,7 +31,7 @@ const HomeAllPostQuery = graphql`
     }
   }
 `
-const queryRenderee = ({ error, props }: ReadyState) => {
+const queryRenderee = ({ error, props }) => {
   if (error) {
     return <div>{error.message}</div>
   }

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 270f1206a2104c515f4c529ee92ec638
+ * @relayHash 561e0d821d4b7cc8c92ecd744924ce0b
  */
 
 /* eslint-disable */
@@ -9,10 +9,10 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-export type DeletePostInput = {
+export type DeletePostInput = {|
   id: string,
   clientMutationId: string,
-};
+|};
 export type DeletePostMutationVariables = {|
   input: DeletePostInput
 |};
@@ -57,8 +57,7 @@ v1 = [
       {
         "kind": "Variable",
         "name": "input",
-        "variableName": "input",
-        "type": "DeletePostInput!"
+        "variableName": "input"
       }
     ],
     "concreteType": "DeletePostPayload",
@@ -76,24 +75,26 @@ v1 = [
 ];
 return {
   "kind": "Request",
-  "operationKind": "mutation",
-  "name": "DeletePostMutation",
-  "id": null,
-  "text": "mutation DeletePostMutation(\n  $input: DeletePostInput!\n) {\n  deletePost(input: $input) {\n    deletedId\n  }\n}\n",
-  "metadata": {},
   "fragment": {
     "kind": "Fragment",
     "name": "DeletePostMutation",
     "type": "Mutation",
     "metadata": null,
-    "argumentDefinitions": v0,
-    "selections": v1
+    "argumentDefinitions": (v0/*: any*/),
+    "selections": (v1/*: any*/)
   },
   "operation": {
     "kind": "Operation",
     "name": "DeletePostMutation",
-    "argumentDefinitions": v0,
-    "selections": v1
+    "argumentDefinitions": (v0/*: any*/),
+    "selections": (v1/*: any*/)
+  },
+  "params": {
+    "operationKind": "mutation",
+    "name": "DeletePostMutation",
+    "id": null,
+    "text": "mutation DeletePostMutation(\n  $input: DeletePostInput!\n) {\n  deletePost(input: $input) {\n    deletedId\n  }\n}\n",
+    "metadata": {}
   }
 };
 })();

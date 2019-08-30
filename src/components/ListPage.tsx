@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react'
 import {
   createPaginationContainer,
   RelayPaginationProp,
-  PageInfo
 } from 'react-relay'
+import { PageInfo } from 'relay-runtime'
 import graphql from 'babel-plugin-relay/macro'
 import InfiniteScroll from 'react-infinite-scroller'
 import { Link } from 'react-router-dom'
@@ -78,7 +78,7 @@ class ListPage extends PureComponent<Props, State> {
                   </WelcomeUser>
                 }
                 <StyledLink
-                  mobile={isMobile || undefined}
+                  mobile={isMobile.toString()}
                   to={user.name ? '/create' : '/login'}
                 >
                   + {user.name ? 'New Post' : 'Sign In'}
@@ -116,28 +116,32 @@ class ListPage extends PureComponent<Props, State> {
   }
 }
 
-export default createPaginationContainer(ListPage, graphql`
-  fragment ListPage_viewer on Viewer {
-    id
-    allPosts(
-      first: $count,
-      after: $pCursor,
-      orderBy: createdAt_DESC
-    ) @connection(
-      key: "ListPage_allPosts",
-      filters: []
-    ) {
-      edges {
-        node {
-          ...Post_post
+export default createPaginationContainer(ListPage,
+  {
+    viewer: graphql`
+      fragment ListPage_viewer on Viewer {
+        id
+        allPosts(
+          first: $count,
+          after: $pCursor,
+          orderBy: createdAt_DESC
+        ) @connection(
+          key: "ListPage_allPosts",
+          filters: []
+        ) {
+          edges {
+            node {
+              ...Post_post
+            }
+          }
+          pageInfo {
+            hasNextPage,
+            endCursor
+          }
         }
       }
-      pageInfo {
-        hasNextPage,
-        endCursor
-      }
-    }
-  }`,
+    `
+  },
   {
     direction: 'forward',
     query: graphql`
@@ -196,7 +200,7 @@ const WelcomeUser = styled.div`
 const StyledLink = styled(Link)`
   right: 0;
   color: black;
-  ${(props: { mobile: Boolean }) => props.mobile ? '' : Dim}
+  ${({ mobile }: { mobile: string }) => mobile === 'true' ? '' : Dim}
   ${Decorated}
 `
 const PostsLoading = styled.div`

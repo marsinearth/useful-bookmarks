@@ -43,10 +43,14 @@ const mutation = graphql`
 
 const sharedUpdater: SHU = function (store, postId, newComment) {
   const postProxy = store.get(postId)
-  const connection = ConnectionHandler.getConnection(postProxy, 'ListComments_comments')
-  const newEdge = ConnectionHandler.createEdge(store, connection, newComment, 'CommentEdge')
-
-  if (connection) ConnectionHandler.insertEdgeAfter(connection, newEdge)
+  if (postProxy) {
+    const connection = ConnectionHandler.getConnection(postProxy, 'ListComments_comments')
+    
+    if (connection) {
+      const newEdge = ConnectionHandler.createEdge(store, connection, newComment, 'CommentEdge')
+      ConnectionHandler.insertEdgeAfter(connection, newEdge)
+    }
+  }
 }
 
 let tempID = 0
