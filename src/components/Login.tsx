@@ -1,8 +1,8 @@
 import React, { ChangeEvent, PureComponent } from 'react'
-import { withRouter, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { GC_USER_ID, GC_AUTH_TOKEN } from '../utils/constants'
 import AuthenticateUserMutation from '../mutations/AuthenticateUserMutation'
-import SignupUserMutation from '../mutations/SignupUserMutation'
+import SignUpUserMutation from '../mutations/SignUpUserMutation'
 import Loading from '../assets/images/loading.gif'
 import styled, { css } from 'styled-components'
 import history from '../utils/history'
@@ -50,7 +50,7 @@ class Login extends PureComponent<any, State> {
           )
         } else {
           if (name.trim() !== '') {
-            SignupUserMutation(
+            SignUpUserMutation(
               email,
               password,
               this._saveUserData,
@@ -123,14 +123,14 @@ class Login extends PureComponent<any, State> {
                 autoComplete='current-password'
               />
             </form>
-            <ButtonConatiner>
+            <ButtonContainer>
               <Button pos='left' onClick={this._confirm}>
                 {login ? 'Sign In' : 'Sign Up'}
               </Button>
               <Button pos='right' onClick={this._onToggleLogin}>
                 {login ? 'Sign Up' : 'Sign In'}
               </Button>
-            </ButtonConatiner>
+            </ButtonContainer>
             <LinkContainer>
               <Link to="/" >
                 Cancel
@@ -143,7 +143,7 @@ class Login extends PureComponent<any, State> {
   }
 }
 
-export default withRouter(Login)
+export default Login
 
 const Dim = css`
   opacity: 1;
@@ -184,7 +184,7 @@ const LinkContainer = styled.div`
   }
   ${Dim}
 `
-const ButtonConatiner = styled.div`
+const ButtonContainer = styled.div`
   width: 100%;
   margin-top: 1rem;
   margin-bottom: 1rem;

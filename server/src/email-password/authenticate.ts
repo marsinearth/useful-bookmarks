@@ -44,7 +44,7 @@ export default async (event: FunctionEvent<EventData>) => {
     return { data: { token, id: user.id } }
   } catch (e) {
     console.log(e)
-    return { error: 'An unexpected error occured during authentication.' }
+    return { error: 'An unexpected error occurred during authentication.' }
   }
 }
 
@@ -62,5 +62,5 @@ async function getUserByEmail(api: GraphQLClient, email: string): Promise<{ User
     email,
   }
 
-  return api.request<{ User: User}>(query, variables)
+  return api.request<{ User: User }>(query, variables)
 }

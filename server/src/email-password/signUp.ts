@@ -48,7 +48,7 @@ export default async (event: FunctionEvent<EventData>) => {
     return { data: { token, id: userId } }
   } catch (e) {
     console.log(e)
-    return { error: 'An unexpected error occured during signup.' }
+    return { error: 'An unexpected error occurred during signUp.' }
   }
 }
 

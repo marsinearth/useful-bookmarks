@@ -45,7 +45,6 @@ const sharedUpdater: SHU = function (store, postId, newComment) {
   const postProxy = store.get(postId)
   if (postProxy) {
     const connection = ConnectionHandler.getConnection(postProxy, 'ListComments_comments')
-    
     if (connection) {
       const newEdge = ConnectionHandler.createEdge(store, connection, newComment, 'CommentEdge')
       ConnectionHandler.insertEdgeAfter(connection, newEdge)

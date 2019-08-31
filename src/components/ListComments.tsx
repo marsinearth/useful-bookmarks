@@ -37,7 +37,7 @@ class ListComments extends PureComponent<Props, State> {
     closable: false,
     contHeight: 'auto'
   }
-  listContainer = createRef<any>()
+  listContainer = createRef<any>() 
 
   static getDerivedStateFromProps(nextProps: Props) {
     const { post: { comments } } = nextProps

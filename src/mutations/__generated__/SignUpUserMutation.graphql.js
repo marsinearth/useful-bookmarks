@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash f5d9764d0b3f06a62efc0ef3f39b4225
+ * @relayHash 1b02f28d79f50ed21ebf39ec6f27c731
  */
 
 /* eslint-disable */
@@ -9,26 +9,26 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-export type SignupUserMutationVariables = {|
+export type SignUpUserMutationVariables = {|
   name: string,
   email: string,
   password: string,
 |};
-export type SignupUserMutationResponse = {|
+export type SignUpUserMutationResponse = {|
   +signupUser: ?{|
     +id: string,
     +token: string,
   |}
 |};
-export type SignupUserMutation = {|
-  variables: SignupUserMutationVariables,
-  response: SignupUserMutationResponse,
+export type SignUpUserMutation = {|
+  variables: SignUpUserMutationVariables,
+  response: SignUpUserMutationResponse,
 |};
 */
 
 
 /*
-mutation SignupUserMutation(
+mutation SignUpUserMutation(
   $name: String!
   $email: String!
   $password: String!
@@ -108,7 +108,7 @@ return {
   "kind": "Request",
   "fragment": {
     "kind": "Fragment",
-    "name": "SignupUserMutation",
+    "name": "SignUpUserMutation",
     "type": "Mutation",
     "metadata": null,
     "argumentDefinitions": (v0/*: any*/),
@@ -116,19 +116,19 @@ return {
   },
   "operation": {
     "kind": "Operation",
-    "name": "SignupUserMutation",
+    "name": "SignUpUserMutation",
     "argumentDefinitions": (v0/*: any*/),
     "selections": (v1/*: any*/)
   },
   "params": {
     "operationKind": "mutation",
-    "name": "SignupUserMutation",
+    "name": "SignUpUserMutation",
     "id": null,
-    "text": "mutation SignupUserMutation(\n  $name: String!\n  $email: String!\n  $password: String!\n) {\n  signupUser(name: $name, email: $email, password: $password) {\n    id\n    token\n  }\n}\n",
+    "text": "mutation SignUpUserMutation(\n  $name: String!\n  $email: String!\n  $password: String!\n) {\n  signupUser(name: $name, email: $email, password: $password) {\n    id\n    token\n  }\n}\n",
     "metadata": {}
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '52459796041239bb08ff9a4980ac1f0d';
+(node/*: any*/).hash = 'b4c2501b1db5a7ef35de2d491a1fd68a';
 module.exports = node;

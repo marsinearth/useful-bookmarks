@@ -4,7 +4,7 @@ import environment from '../utils/Environment';
 import { AuthMutArgs, AuthVars, compRes } from '../types'
 
 const mutation = graphql`
-  mutation SignupUserMutation(
+  mutation SignUpUserMutation(
     $name: String!
     $email: String!
     $password: String!
@@ -16,7 +16,7 @@ const mutation = graphql`
   }
 `
 
-const SignupUserMutation: AuthMutArgs = function (
+const SignUpUserMutation: AuthMutArgs = function (
   email,
   password,
   successCb,
@@ -34,9 +34,9 @@ const SignupUserMutation: AuthMutArgs = function (
     mutation,
     variables,
     onCompleted: (res: any) => {
-      const signup = res.signupUser as compRes
-      if (signup) {
-        const { id, token } = signup
+      const signUp = res.signupUser as compRes
+      if (signUp) {
+        const { id, token } = signUp
         successCb(id, token)
       } else {
         alert('email is malformed.')
@@ -47,4 +47,4 @@ const SignupUserMutation: AuthMutArgs = function (
   })
 }
 
-export default SignupUserMutation;
+export default SignUpUserMutation;
