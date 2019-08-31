@@ -1,30 +1,22 @@
-/**
- * @flow
- * @relayHash 1b02f28d79f50ed21ebf39ec6f27c731
- */
+/* tslint:disable */
 
-/* eslint-disable */
+import { ConcreteRequest } from "relay-runtime";
+export type SignUpUserMutationVariables = {
+    readonly name: string;
+    readonly email: string;
+    readonly password: string;
+};
+export type SignUpUserMutationResponse = {
+    readonly signUpUser: {
+        readonly key: string;
+        readonly token: string;
+    } | null;
+};
+export type SignUpUserMutation = {
+    readonly response: SignUpUserMutationResponse;
+    readonly variables: SignUpUserMutationVariables;
+};
 
-'use strict';
-
-/*::
-import type { ConcreteRequest } from 'relay-runtime';
-export type SignUpUserMutationVariables = {|
-  name: string,
-  email: string,
-  password: string,
-|};
-export type SignUpUserMutationResponse = {|
-  +signupUser: ?{|
-    +id: string,
-    +token: string,
-  |}
-|};
-export type SignUpUserMutation = {|
-  variables: SignUpUserMutationVariables,
-  response: SignUpUserMutationResponse,
-|};
-*/
 
 
 /*
@@ -33,14 +25,14 @@ mutation SignUpUserMutation(
   $email: String!
   $password: String!
 ) {
-  signupUser(name: $name, email: $email, password: $password) {
-    id
+  signUpUser(name: $name, email: $email, password: $password) {
+    key
     token
   }
 }
 */
 
-const node/*: ConcreteRequest*/ = (function(){
+const node: ConcreteRequest = (function(){
 var v0 = [
   {
     "kind": "LocalArgument",
@@ -65,7 +57,7 @@ v1 = [
   {
     "kind": "LinkedField",
     "alias": null,
-    "name": "signupUser",
+    "name": "signUpUser",
     "storageKey": null,
     "args": [
       {
@@ -84,13 +76,13 @@ v1 = [
         "variableName": "password"
       }
     ],
-    "concreteType": "SignupUserPayload",
+    "concreteType": "SignUpUserPayload",
     "plural": false,
     "selections": [
       {
         "kind": "ScalarField",
         "alias": null,
-        "name": "id",
+        "name": "key",
         "args": null,
         "storageKey": null
       },
@@ -124,11 +116,10 @@ return {
     "operationKind": "mutation",
     "name": "SignUpUserMutation",
     "id": null,
-    "text": "mutation SignUpUserMutation(\n  $name: String!\n  $email: String!\n  $password: String!\n) {\n  signupUser(name: $name, email: $email, password: $password) {\n    id\n    token\n  }\n}\n",
+    "text": "mutation SignUpUserMutation(\n  $name: String!\n  $email: String!\n  $password: String!\n) {\n  signUpUser(name: $name, email: $email, password: $password) {\n    key\n    token\n  }\n}\n",
     "metadata": {}
   }
 };
 })();
-// prettier-ignore
-(node/*: any*/).hash = 'b4c2501b1db5a7ef35de2d491a1fd68a';
-module.exports = node;
+(node as any).hash = '0bb3ad4ef626713ed5712d1c73ff341e';
+export default node;

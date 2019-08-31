@@ -35,6 +35,7 @@
     "semicolon": false,
     "space-before-function-paren": [true, {"anonymous": "always", "named": "never", "asyncArrow": "always"}],
     "import-name": false,
+    "increment-decrement": true,
     "quotemark": false,
     "whitespace": [
       true,

@@ -1,85 +1,77 @@
-/**
- * @flow
- * @relayHash fa5eb90007b07d5f2f491597eb220dfd
- */
+/* tslint:disable */
 
-/* eslint-disable */
+import { ConcreteRequest } from "relay-runtime";
+export type CreateCommentInput = {
+    readonly content: string;
+    readonly commentedById?: string | null;
+    readonly commentedBy?: CommentcommentedByUser | null;
+    readonly commentedPostId?: string | null;
+    readonly commentedPost?: CommentcommentedPostPost | null;
+    readonly clientMutationId: string;
+};
+export type CommentcommentedByUser = {
+    readonly email: string;
+    readonly name: string;
+    readonly password: string;
+    readonly commentsIds?: ReadonlyArray<string> | null;
+    readonly comments?: ReadonlyArray<UsercommentsComment> | null;
+    readonly postsIds?: ReadonlyArray<string> | null;
+    readonly posts?: ReadonlyArray<UserpostsPost> | null;
+};
+export type UsercommentsComment = {
+    readonly content: string;
+    readonly commentedPostId?: string | null;
+    readonly commentedPost?: CommentcommentedPostPost | null;
+};
+export type CommentcommentedPostPost = {
+    readonly description: string;
+    readonly imageUrl: string;
+    readonly siteUrl: string;
+    readonly postedById?: string | null;
+    readonly postedBy?: PostpostedByUser | null;
+    readonly commentsIds?: ReadonlyArray<string> | null;
+    readonly comments?: ReadonlyArray<PostcommentsComment> | null;
+};
+export type PostpostedByUser = {
+    readonly email: string;
+    readonly name: string;
+    readonly password: string;
+    readonly commentsIds?: ReadonlyArray<string> | null;
+    readonly comments?: ReadonlyArray<UsercommentsComment> | null;
+    readonly postsIds?: ReadonlyArray<string> | null;
+    readonly posts?: ReadonlyArray<UserpostsPost> | null;
+};
+export type UserpostsPost = {
+    readonly description: string;
+    readonly imageUrl: string;
+    readonly siteUrl: string;
+    readonly commentsIds?: ReadonlyArray<string> | null;
+    readonly comments?: ReadonlyArray<PostcommentsComment> | null;
+};
+export type PostcommentsComment = {
+    readonly content: string;
+    readonly commentedById?: string | null;
+    readonly commentedBy?: CommentcommentedByUser | null;
+};
+export type CreateCommentMutationVariables = {
+    readonly input: CreateCommentInput;
+};
+export type CreateCommentMutationResponse = {
+    readonly createComment: {
+        readonly comment: {
+            readonly id: string;
+            readonly content: string;
+            readonly commentedBy: {
+                readonly name: string;
+            } | null;
+        } | null;
+    } | null;
+};
+export type CreateCommentMutation = {
+    readonly response: CreateCommentMutationResponse;
+    readonly variables: CreateCommentMutationVariables;
+};
 
-'use strict';
-
-/*::
-import type { ConcreteRequest } from 'relay-runtime';
-export type CreateCommentInput = {|
-  content: string,
-  commentedById?: ?string,
-  commentedBy?: ?CommentcommentedByUser,
-  commentedPostId?: ?string,
-  commentedPost?: ?CommentcommentedPostPost,
-  clientMutationId: string,
-|};
-export type CommentcommentedByUser = {|
-  email: string,
-  name: string,
-  password: string,
-  commentsIds?: ?$ReadOnlyArray<string>,
-  comments?: ?$ReadOnlyArray<UsercommentsComment>,
-  postsIds?: ?$ReadOnlyArray<string>,
-  posts?: ?$ReadOnlyArray<UserpostsPost>,
-|};
-export type UsercommentsComment = {|
-  content: string,
-  commentedPostId?: ?string,
-  commentedPost?: ?CommentcommentedPostPost,
-|};
-export type CommentcommentedPostPost = {|
-  description: string,
-  imageUrl: string,
-  siteUrl: string,
-  postedById?: ?string,
-  postedBy?: ?PostpostedByUser,
-  commentsIds?: ?$ReadOnlyArray<string>,
-  comments?: ?$ReadOnlyArray<PostcommentsComment>,
-|};
-export type PostpostedByUser = {|
-  email: string,
-  name: string,
-  password: string,
-  commentsIds?: ?$ReadOnlyArray<string>,
-  comments?: ?$ReadOnlyArray<UsercommentsComment>,
-  postsIds?: ?$ReadOnlyArray<string>,
-  posts?: ?$ReadOnlyArray<UserpostsPost>,
-|};
-export type UserpostsPost = {|
-  description: string,
-  imageUrl: string,
-  siteUrl: string,
-  commentsIds?: ?$ReadOnlyArray<string>,
-  comments?: ?$ReadOnlyArray<PostcommentsComment>,
-|};
-export type PostcommentsComment = {|
-  content: string,
-  commentedById?: ?string,
-  commentedBy?: ?CommentcommentedByUser,
-|};
-export type CreateCommentMutationVariables = {|
-  input: CreateCommentInput
-|};
-export type CreateCommentMutationResponse = {|
-  +createComment: ?{|
-    +comment: ?{|
-      +id: string,
-      +content: string,
-      +commentedBy: ?{|
-        +name: string
-      |},
-    |}
-  |}
-|};
-export type CreateCommentMutation = {|
-  variables: CreateCommentMutationVariables,
-  response: CreateCommentMutationResponse,
-|};
-*/
 
 
 /*
@@ -99,7 +91,7 @@ mutation CreateCommentMutation(
 }
 */
 
-const node/*: ConcreteRequest*/ = (function(){
+const node: ConcreteRequest = (function(){
 var v0 = [
   {
     "kind": "LocalArgument",
@@ -236,6 +228,5 @@ return {
   }
 };
 })();
-// prettier-ignore
-(node/*: any*/).hash = '7eab78305f9b5ab686c8fdcbc5bb3caa';
-module.exports = node;
+(node as any).hash = '7eab78305f9b5ab686c8fdcbc5bb3caa';
+export default node;

@@ -2,9 +2,7 @@ import {
   commitMutation,
 } from 'react-relay'
 import graphql from 'babel-plugin-relay/macro'
-import {
-  ConnectionHandler
-} from 'relay-runtime'
+import { ConnectionHandler } from 'relay-runtime'
 import environment from '../utils/Environment'
 import { SHU } from '../types'
 
@@ -22,7 +20,7 @@ type CCVars = {
   input: {
     content: string,
     commentedById: string,
-    commentedPostId: string,
+    commentedPostId: string
     clientMutationId: string
   }
 }
@@ -46,8 +44,18 @@ const sharedUpdater: SHU = function (store, postId, newComment) {
   if (postProxy) {
     const connection = ConnectionHandler.getConnection(postProxy, 'ListComments_comments')
     if (connection) {
+      const pageInfo = connection.getLinkedRecord('pageInfo')
       const newEdge = ConnectionHandler.createEdge(store, connection, newComment, 'CommentEdge')
-      ConnectionHandler.insertEdgeAfter(connection, newEdge)
+      if (pageInfo) {
+        const count = connection.getValue('count')
+        if (typeof count === 'number') {
+          connection.setValue(count + 1, 'count')
+          const hasNextPage = pageInfo.getValue('hasNextPage')
+          if (!hasNextPage) {
+            ConnectionHandler.insertEdgeAfter(connection, newEdge)
+          }
+        }
+      }
     }
   }
 }
@@ -66,12 +74,11 @@ const CreateCommentMutation: CCMutArgs = function (
       content,
       commentedById,
       commentedPostId,
-      clientMutationId: ""
+      clientMutationId: `${tempID += 1}`
     },
   }
 
-  commitMutation(
-    environment,
+  return commitMutation(environment,
     {
       mutation,
       variables,
@@ -109,7 +116,6 @@ const CreateCommentMutation: CCMutArgs = function (
 
         if (newComment) sharedUpdater(proxyStore, commentedPostId, newComment)
       },
-
     },
   )
 }

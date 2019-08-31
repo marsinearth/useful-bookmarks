@@ -1,29 +1,21 @@
-/**
- * @flow
- * @relayHash c205d09f531a0ae2aec131d690b9b707
- */
+/* tslint:disable */
 
-/* eslint-disable */
+import { ConcreteRequest } from "relay-runtime";
+export type AuthenticateUserMutationVariables = {
+    readonly email: string;
+    readonly password: string;
+};
+export type AuthenticateUserMutationResponse = {
+    readonly authenticateUser: {
+        readonly key: string;
+        readonly token: string;
+    } | null;
+};
+export type AuthenticateUserMutation = {
+    readonly response: AuthenticateUserMutationResponse;
+    readonly variables: AuthenticateUserMutationVariables;
+};
 
-'use strict';
-
-/*::
-import type { ConcreteRequest } from 'relay-runtime';
-export type AuthenticateUserMutationVariables = {|
-  email: string,
-  password: string,
-|};
-export type AuthenticateUserMutationResponse = {|
-  +authenticateUser: ?{|
-    +id: string,
-    +token: string,
-  |}
-|};
-export type AuthenticateUserMutation = {|
-  variables: AuthenticateUserMutationVariables,
-  response: AuthenticateUserMutationResponse,
-|};
-*/
 
 
 /*
@@ -32,13 +24,13 @@ mutation AuthenticateUserMutation(
   $password: String!
 ) {
   authenticateUser(email: $email, password: $password) {
-    id
+    key
     token
   }
 }
 */
 
-const node/*: ConcreteRequest*/ = (function(){
+const node: ConcreteRequest = (function(){
 var v0 = [
   {
     "kind": "LocalArgument",
@@ -77,7 +69,7 @@ v1 = [
       {
         "kind": "ScalarField",
         "alias": null,
-        "name": "id",
+        "name": "key",
         "args": null,
         "storageKey": null
       },
@@ -111,11 +103,10 @@ return {
     "operationKind": "mutation",
     "name": "AuthenticateUserMutation",
     "id": null,
-    "text": "mutation AuthenticateUserMutation(\n  $email: String!\n  $password: String!\n) {\n  authenticateUser(email: $email, password: $password) {\n    id\n    token\n  }\n}\n",
+    "text": "mutation AuthenticateUserMutation(\n  $email: String!\n  $password: String!\n) {\n  authenticateUser(email: $email, password: $password) {\n    key\n    token\n  }\n}\n",
     "metadata": {}
   }
 };
 })();
-// prettier-ignore
-(node/*: any*/).hash = 'ed84b2d0611603bb09bbc310cc065908';
-module.exports = node;
+(node as any).hash = '7e537fc496cab271ea241aaf131be44f';
+export default node;

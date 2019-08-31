@@ -9,8 +9,8 @@ const mutation = graphql`
     $email: String!
     $password: String!
   ) {
-    signupUser(name: $name, email: $email, password: $password) {
-      id
+    signUpUser(name: $name, email: $email, password: $password) {
+      key
       token
     }
   }
@@ -34,10 +34,10 @@ const SignUpUserMutation: AuthMutArgs = function (
     mutation,
     variables,
     onCompleted: (res: any) => {
-      const signUp = res.signupUser as compRes
+      const signUp = res.signUpUser as compRes
       if (signUp) {
-        const { id, token } = signUp
-        successCb(id, token)
+        const { key, token } = signUp
+        successCb(key, token)
       } else {
         alert('email is malformed.')
         failCb();

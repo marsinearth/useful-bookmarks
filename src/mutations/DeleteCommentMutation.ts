@@ -28,8 +28,7 @@ const DeleteCommentMutation: DCMutArgs = function (commentId, postId) {
       clientMutationId: ""
     },
   }
-  commitMutation(
-    environment,
+  return commitMutation(environment,
     {
       mutation,
       variables,
@@ -41,7 +40,13 @@ const DeleteCommentMutation: DCMutArgs = function (commentId, postId) {
           const postProxy = proxyStore.get(postId)
           if (postProxy) {
             const connection = ConnectionHandler.getConnection(postProxy, 'ListComments_comments')
-            if (connection && deletedId) ConnectionHandler.deleteNode(connection, deletedId)
+            if (connection && deletedId) {
+              const count = connection.getValue('count')
+              if (typeof count === 'number' && count > 0) {
+                connection.setValue(count - 1, 'count')
+              }
+              ConnectionHandler.deleteNode(connection, deletedId)
+            }
           }
         }
       },

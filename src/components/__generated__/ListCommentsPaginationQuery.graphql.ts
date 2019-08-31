@@ -1,32 +1,24 @@
-/**
- * @flow
- * @relayHash 4b5438ba29e93057f40c38e5191e85a0
- */
+/* tslint:disable */
 
-/* eslint-disable */
-
-'use strict';
-
-/*::
-import type { ConcreteRequest } from 'relay-runtime';
+import { ConcreteRequest } from "relay-runtime";
 type ListComments_post$ref = any;
-export type ListCommentsPaginationQueryVariables = {|
-  count: number,
-  cCursor?: ?string,
-  id?: ?string,
-|};
-export type ListCommentsPaginationQueryResponse = {|
-  +viewer: {|
-    +Post: ?{|
-      +$fragmentRefs: ListComments_post$ref
-    |}
-  |}
-|};
-export type ListCommentsPaginationQuery = {|
-  variables: ListCommentsPaginationQueryVariables,
-  response: ListCommentsPaginationQueryResponse,
-|};
-*/
+export type ListCommentsPaginationQueryVariables = {
+    readonly count: number;
+    readonly cCursor?: string | null;
+    readonly id?: string | null;
+};
+export type ListCommentsPaginationQueryResponse = {
+    readonly viewer: {
+        readonly Post: {
+            readonly " $fragmentRefs": ListComments_post$ref;
+        } | null;
+    };
+};
+export type ListCommentsPaginationQuery = {
+    readonly response: ListCommentsPaginationQueryResponse;
+    readonly variables: ListCommentsPaginationQueryVariables;
+};
+
 
 
 /*
@@ -76,7 +68,7 @@ fragment Comment_comment on Comment {
 }
 */
 
-const node/*: ConcreteRequest*/ = (function(){
+const node: ConcreteRequest = (function(){
 var v0 = [
   {
     "kind": "LocalArgument",
@@ -328,6 +320,5 @@ return {
   }
 };
 })();
-// prettier-ignore
-(node/*: any*/).hash = 'b0938554bfc5325b4b477def4746b3bd';
-module.exports = node;
+(node as any).hash = 'b0938554bfc5325b4b477def4746b3bd';
+export default node;

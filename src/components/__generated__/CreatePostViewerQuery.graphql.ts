@@ -1,34 +1,26 @@
-/**
- * @flow
- * @relayHash 15292d1cbc7d0a78a20d644b8888df7a
- */
+/* tslint:disable */
 
-/* eslint-disable */
+import { ConcreteRequest } from "relay-runtime";
+export type CreatePostViewerQueryVariables = {
+    readonly initCount: number;
+};
+export type CreatePostViewerQueryResponse = {
+    readonly viewer: {
+        readonly id: string;
+        readonly allPosts: {
+            readonly edges: ReadonlyArray<{
+                readonly node: {
+                    readonly id: string;
+                };
+            } | null> | null;
+        };
+    };
+};
+export type CreatePostViewerQuery = {
+    readonly response: CreatePostViewerQueryResponse;
+    readonly variables: CreatePostViewerQueryVariables;
+};
 
-'use strict';
-
-/*::
-import type { ConcreteRequest } from 'relay-runtime';
-export type CreatePostViewerQueryVariables = {|
-  initCount: number
-|};
-export type CreatePostViewerQueryResponse = {|
-  +viewer: {|
-    +id: string,
-    +allPosts: {|
-      +edges: ?$ReadOnlyArray<?{|
-        +node: {|
-          +id: string
-        |}
-      |}>
-    |},
-  |}
-|};
-export type CreatePostViewerQuery = {|
-  variables: CreatePostViewerQueryVariables,
-  response: CreatePostViewerQueryResponse,
-|};
-*/
 
 
 /*
@@ -54,7 +46,7 @@ query CreatePostViewerQuery(
 }
 */
 
-const node/*: ConcreteRequest*/ = (function(){
+const node: ConcreteRequest = (function(){
 var v0 = [
   {
     "kind": "LocalArgument",
@@ -238,6 +230,5 @@ return {
   }
 };
 })();
-// prettier-ignore
-(node/*: any*/).hash = 'a63dfa49d78b7882b2f09115974cc769';
-module.exports = node;
+(node as any).hash = 'a63dfa49d78b7882b2f09115974cc769';
+export default node;

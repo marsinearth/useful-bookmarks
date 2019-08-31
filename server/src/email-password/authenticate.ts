@@ -41,7 +41,7 @@ export default async (event: FunctionEvent<EventData>) => {
     // generate node token for existing User node
     const token = await graphcool.generateNodeToken(user.id, 'User')
 
-    return { data: { token, id: user.id } }
+    return { data: { token, key: user.id } }
   } catch (e) {
     console.log(e)
     return { error: 'An unexpected error occurred during authentication.' }

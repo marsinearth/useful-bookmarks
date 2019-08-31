@@ -16,7 +16,7 @@ type State = {
   loading: boolean
 }
 
-class Login extends PureComponent<any, State> {
+export default class Login extends PureComponent<any, State> {
   state = {
     login: true,
     email: '',
@@ -142,8 +142,6 @@ class Login extends PureComponent<any, State> {
     );
   }
 }
-
-export default Login
 
 const Dim = css`
   opacity: 1;

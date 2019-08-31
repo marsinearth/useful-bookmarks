@@ -1,53 +1,38 @@
-/**
- * @flow
- */
+/* tslint:disable */
 
-/* eslint-disable */
-
-'use strict';
-
-/*::
-import type { ReaderFragment } from 'relay-runtime';
-type Comment_comment$ref = any;
-import type { FragmentReference } from "relay-runtime";
-declare export opaque type ListComments_post$ref: FragmentReference;
-declare export opaque type ListComments_post$fragmentType: ListComments_post$ref;
-export type ListComments_post = {|
-  +id: string,
-  +comments: ?{|
-    +edges: ?$ReadOnlyArray<?{|
-      +node: {|
-        +$fragmentRefs: Comment_comment$ref
-      |}
-    |}>,
-    +pageInfo: {|
-      +hasNextPage: boolean,
-      +endCursor: ?string,
-    |},
-    +count: number,
-  |},
-  +$refType: ListComments_post$ref,
-|};
-export type ListComments_post$data = ListComments_post;
-export type ListComments_post$key = {
-  +$data?: ListComments_post$data,
-  +$fragmentRefs: ListComments_post$ref,
+import { ReaderFragment } from "relay-runtime";
+type Post_post$ref = any;
+export type ListPage_viewer$ref = any;
+export type ListPage_viewer = {
+    readonly id: string;
+    readonly allPosts: {
+        readonly edges: ReadonlyArray<{
+            readonly node: {
+                readonly " $fragmentRefs": Post_post$ref;
+            };
+        } | null> | null;
+        readonly pageInfo: {
+            readonly hasNextPage: boolean;
+            readonly endCursor: string | null;
+        };
+    };
+    readonly " $refType": ListPage_viewer$ref;
 };
-*/
 
 
-const node/*: ReaderFragment*/ = {
+
+const node: ReaderFragment = {
   "kind": "Fragment",
-  "name": "ListComments_post",
-  "type": "Post",
+  "name": "ListPage_viewer",
+  "type": "Viewer",
   "metadata": {
     "connection": [
       {
         "count": "count",
-        "cursor": "cCursor",
+        "cursor": "pCursor",
         "direction": "forward",
         "path": [
-          "comments"
+          "allPosts"
         ]
       }
     ]
@@ -60,7 +45,7 @@ const node/*: ReaderFragment*/ = {
     },
     {
       "kind": "RootArgument",
-      "name": "cCursor",
+      "name": "pCursor",
       "type": "String"
     }
   ],
@@ -74,11 +59,11 @@ const node/*: ReaderFragment*/ = {
     },
     {
       "kind": "LinkedField",
-      "alias": "comments",
-      "name": "__ListComments_comments_connection",
+      "alias": "allPosts",
+      "name": "__ListPage_allPosts_connection",
       "storageKey": null,
       "args": null,
-      "concreteType": "CommentConnection",
+      "concreteType": "PostConnection",
       "plural": false,
       "selections": [
         {
@@ -87,7 +72,7 @@ const node/*: ReaderFragment*/ = {
           "name": "edges",
           "storageKey": null,
           "args": null,
-          "concreteType": "CommentEdge",
+          "concreteType": "PostEdge",
           "plural": true,
           "selections": [
             {
@@ -96,7 +81,7 @@ const node/*: ReaderFragment*/ = {
               "name": "node",
               "storageKey": null,
               "args": null,
-              "concreteType": "Comment",
+              "concreteType": "Post",
               "plural": false,
               "selections": [
                 {
@@ -108,7 +93,7 @@ const node/*: ReaderFragment*/ = {
                 },
                 {
                   "kind": "FragmentSpread",
-                  "name": "Comment_comment",
+                  "name": "Post_post",
                   "args": null
                 }
               ]
@@ -146,18 +131,10 @@ const node/*: ReaderFragment*/ = {
               "storageKey": null
             }
           ]
-        },
-        {
-          "kind": "ScalarField",
-          "alias": null,
-          "name": "count",
-          "args": null,
-          "storageKey": null
         }
       ]
     }
   ]
 };
-// prettier-ignore
-(node/*: any*/).hash = 'bc9c84583205e9e1f74ba2c8cdb979cc';
-module.exports = node;
+(node as any).hash = 'd1915e86c17f8e3791867dbb9129c080';
+export default node;

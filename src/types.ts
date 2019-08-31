@@ -59,7 +59,7 @@ export interface IPost {
 }
 
 export type compRes = {
-  id: string,
+  key: string,
   token: string
 }
 
@@ -91,7 +91,7 @@ export type SHU = {
   (
     store: RecordSourceSelectorProxy,
     postId: string,
-    newObj: RecordProxy
+    newObj: RecordProxy,
   ): void
 }
 

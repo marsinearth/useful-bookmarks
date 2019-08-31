@@ -6,7 +6,7 @@ import { AuthMutArgs, AuthVars, compRes } from '../types'
 const mutation = graphql`
   mutation AuthenticateUserMutation($email: String!, $password: String!) {
     authenticateUser(email: $email, password: $password) {
-      id
+      key
       token
     }
   }
@@ -30,8 +30,8 @@ const AuthenticateUserMutation: AuthMutArgs = function (
     onCompleted: (res: any) => {
       const auth = res.authenticateUser as compRes
       if (auth) {
-        const { id, token } = auth
-        successCb(id, token);
+        const { key, token } = auth
+        successCb(key, token);
       } else {
         alert("email and password doesn't match.")
         failCb();

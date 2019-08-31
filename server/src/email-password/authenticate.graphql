@@ -1,5 +1,5 @@
 type AuthenticateUserPayload {
-  id: ID!
+  key: ID!
   token: String!
 }
 

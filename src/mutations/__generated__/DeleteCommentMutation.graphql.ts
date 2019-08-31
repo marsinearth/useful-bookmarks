@@ -1,31 +1,23 @@
-/**
- * @flow
- * @relayHash 66abded69398ddba1e5296f95ebbe2dc
- */
+/* tslint:disable */
 
-/* eslint-disable */
+import { ConcreteRequest } from "relay-runtime";
+export type DeleteCommentInput = {
+    readonly id: string;
+    readonly clientMutationId: string;
+};
+export type DeleteCommentMutationVariables = {
+    readonly input: DeleteCommentInput;
+};
+export type DeleteCommentMutationResponse = {
+    readonly deleteComment: {
+        readonly deletedId: string | null;
+    } | null;
+};
+export type DeleteCommentMutation = {
+    readonly response: DeleteCommentMutationResponse;
+    readonly variables: DeleteCommentMutationVariables;
+};
 
-'use strict';
-
-/*::
-import type { ConcreteRequest } from 'relay-runtime';
-export type DeleteCommentInput = {|
-  id: string,
-  clientMutationId: string,
-|};
-export type DeleteCommentMutationVariables = {|
-  input: DeleteCommentInput
-|};
-export type DeleteCommentMutationResponse = {|
-  +deleteComment: ?{|
-    +deletedId: ?string
-  |}
-|};
-export type DeleteCommentMutation = {|
-  variables: DeleteCommentMutationVariables,
-  response: DeleteCommentMutationResponse,
-|};
-*/
 
 
 /*
@@ -38,7 +30,7 @@ mutation DeleteCommentMutation(
 }
 */
 
-const node/*: ConcreteRequest*/ = (function(){
+const node: ConcreteRequest = (function(){
 var v0 = [
   {
     "kind": "LocalArgument",
@@ -98,6 +90,5 @@ return {
   }
 };
 })();
-// prettier-ignore
-(node/*: any*/).hash = 'c445f0a568fbe1dc8729526979f6cc40';
-module.exports = node;
+(node as any).hash = 'c445f0a568fbe1dc8729526979f6cc40';
+export default node;

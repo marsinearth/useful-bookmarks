@@ -45,7 +45,7 @@ export default async (event: FunctionEvent<EventData>) => {
     // generate node token for new User node
     const token = await graphcool.generateNodeToken(userId, 'User')
 
-    return { data: { token, id: userId } }
+    return { data: { token, key: userId } }
   } catch (e) {
     console.log(e)
     return { error: 'An unexpected error occurred during signUp.' }

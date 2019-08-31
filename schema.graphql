@@ -45,7 +45,7 @@ input AddToUsersPostsPostInput {
 
 # AuthenticateUserPayload
 type AuthenticateUserPayload {
-  id: ID!
+  key: ID!
   token: String!
 }
 
@@ -383,13 +383,13 @@ type Mutation {
   removeFromCommentsPost(input: RemoveFromCommentsPostPostInput!): RemoveFromCommentsPostPayload
   removeFromUsersComments(input: RemoveFromUsersCommentsUserInput!): RemoveFromUsersCommentsPayload
   removeFromUsersPosts(input: RemoveFromUsersPostsPostInput!): RemoveFromUsersPostsPayload
-  createUser(input: SignupUserInput!): CreateUserPayload!
+  createUser(input: SignUpUserInput!): CreateUserPayload!
 
   # authenticate
   authenticateUser(email: String!, password: String!): AuthenticateUserPayload
 
-  # signup
-  signupUser(name: String!, email: String!, password: String!): SignupUserPayload
+  # signUp
+  signUpUser(name: String!, email: String!, password: String!): SignUpUserPayload
 }
 
 # An object with an ID
@@ -747,7 +747,7 @@ input RemoveFromUsersPostsPostInput {
   clientMutationId: String!
 }
 
-input SignupUserInput {
+input SignUpUserInput {
   email: String!
   name: String!
   password: String!
@@ -758,9 +758,9 @@ input SignupUserInput {
   clientMutationId: String!
 }
 
-# SignupUserPayload
-type SignupUserPayload {
-  id: ID!
+# SignUpUserPayload
+type SignUpUserPayload {
+  key: ID!
   token: String!
 }
 

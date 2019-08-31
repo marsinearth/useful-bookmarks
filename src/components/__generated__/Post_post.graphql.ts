@@ -1,38 +1,24 @@
-/**
- * @flow
- */
+/* tslint:disable */
 
-/* eslint-disable */
-
-'use strict';
-
-/*::
-import type { ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from "relay-runtime";
 type ListComments_post$ref = any;
-import type { FragmentReference } from "relay-runtime";
-declare export opaque type Post_post$ref: FragmentReference;
-declare export opaque type Post_post$fragmentType: Post_post$ref;
-export type Post_post = {|
-  +id: string,
-  +description: string,
-  +imageUrl: string,
-  +siteUrl: string,
-  +postedBy: ?{|
-    +id: string,
-    +name: string,
-  |},
-  +$fragmentRefs: ListComments_post$ref,
-  +$refType: Post_post$ref,
-|};
-export type Post_post$data = Post_post;
-export type Post_post$key = {
-  +$data?: Post_post$data,
-  +$fragmentRefs: Post_post$ref,
+export type Post_post$ref = any;
+export type Post_post = {
+    readonly id: string;
+    readonly description: string;
+    readonly imageUrl: string;
+    readonly siteUrl: string;
+    readonly postedBy: {
+        readonly id: string;
+        readonly name: string;
+    } | null;
+    readonly " $fragmentRefs": ListComments_post$ref;
+    readonly " $refType": Post_post$ref;
 };
-*/
 
 
-const node/*: ReaderFragment*/ = (function(){
+
+const node: ReaderFragment = (function(){
 var v0 = {
   "kind": "ScalarField",
   "alias": null,
@@ -96,6 +82,5 @@ return {
   ]
 };
 })();
-// prettier-ignore
-(node/*: any*/).hash = '51aec05c9c1cc80e60f5ceea3dfd0035';
-module.exports = node;
+(node as any).hash = '51aec05c9c1cc80e60f5ceea3dfd0035';
+export default node;

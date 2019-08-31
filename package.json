@@ -29,7 +29,7 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "type-check": "tsc",
-    "relay": "relay-compiler --src ./src --schema schema.graphql --extensions ts tsx js"
+    "relay": "relay-compiler --src ./src --schema schema.graphql --language typescript"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -52,6 +52,7 @@
     "@types/styled-components": "^4.1.18",
     "graphql": "^14.5.4",
     "relay-compiler": "^5.0.0",
+    "relay-compiler-language-typescript": "^4.7.0",
     "relay-devtools": "^1.4.0",
     "tslint": "^5.19.0",
     "tslint-config-airbnb": "^5.11.1",

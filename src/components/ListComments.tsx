@@ -37,15 +37,28 @@ class ListComments extends PureComponent<Props, State> {
     closable: false,
     contHeight: 'auto'
   }
-  listContainer = createRef<any>() 
+  listContainer = createRef<any>()
 
-  static getDerivedStateFromProps(nextProps: Props) {
+  static getDerivedStateFromProps(nextProps: Props, prevState: State) {
     const { post: { comments } } = nextProps
+    const { endCursor: stateEndCursor, closable: prevClosable } = prevState
     if (comments) {
-      const { pageInfo: { endCursor } } = comments
-      return {
-        endCursor,
-        commentLoading: false
+      const { edges, pageInfo: { endCursor } } = comments
+      if (endCursor !== stateEndCursor) {
+        return {
+          endCursor,
+          commentLoading: false
+        }
+      }
+      if (edges.length > ITEMS_PER_PAGE && !prevClosable) {
+        return {
+          closable: true
+        }
+      }
+      if (edges.length <= ITEMS_PER_PAGE && prevClosable) {
+        return {
+          closable: false
+        }
       }
     }
     return null
@@ -56,7 +69,7 @@ class ListComments extends PureComponent<Props, State> {
     const comments = post && post.comments
 
     if (comments && comments.edges.length > 0) {
-      const { clientHeight: contHeight = undefined } = this.listContainer.current
+      const { clientHeight: contHeight = 'auto' } = this.listContainer.current || {}
       this.setState({ contHeight })
     }
   }
@@ -78,8 +91,7 @@ class ListComments extends PureComponent<Props, State> {
     contDiff: boolean | null
   ) {
     if (contDiff) {
-      const container = this.listContainer.current
-      const contHeight = container && container.clientHeight
+      const { clientHeight: contHeight = 'auto' } = this.listContainer.current || {}
       this.setState({ contHeight })
     }
   }
@@ -102,8 +114,8 @@ class ListComments extends PureComponent<Props, State> {
   render() {
     const { post, handleEdit, userId } = this.props
     const { comments, id } = post
-    const { edges, pageInfo } = comments
-    const pageMore = pageInfo && pageInfo.hasNextPage
+    const { edges, count } = comments
+    const pageMore = edges && edges.length < count
     const { commentLoading, closable, contHeight } = this.state
 
     return (
