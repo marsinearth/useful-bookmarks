@@ -74,21 +74,19 @@ class ListComments extends PureComponent<Props, State> {
     }
   }
 
-  getSnapshotBeforeUpdate(prevProps: Props): boolean | null {
-    const { post: { comments: { edges: { length: prevCommentsLen } } } } = prevProps
-    const { post: { comments: { edges: { length: thisCommentsLen } } } } = this.props
-    if ((thisCommentsLen === 1 && prevCommentsLen === 1)
-      || (prevCommentsLen !== thisCommentsLen)
-    ) {
+  getSnapshotBeforeUpdate(_: Props, prevState: State) {
+    const { endCursor: prevCursor } = prevState
+    const { endCursor: thisCursor } = this.state
+    if (prevCursor !== thisCursor) {
       return true
     }
-    return null
+    return false
   }
 
   componentDidUpdate(
     _prevProps: Props,
     _prevState: State,
-    contDiff: boolean | null
+    contDiff: boolean
   ) {
     if (contDiff) {
       const { clientHeight: contHeight = 'auto' } = this.listContainer.current || {}
