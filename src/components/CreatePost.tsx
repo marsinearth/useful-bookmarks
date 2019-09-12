@@ -14,10 +14,11 @@ import environment from '../utils/Environment'
 import loadingGif from '../assets/images/loading.gif'
 import defaultJpg from '../assets/images/default.jpg'
 import { GC_USER_ID, ITEMS_PER_PAGE } from '../utils/constants'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { validateURL } from '../utils/validateURL'
 import history from '../utils/history'
 import { IPost } from '../types'
+import { Dim } from './Post'
 
 type State = {
   editing: boolean,
@@ -170,7 +171,7 @@ class CreatePost extends PureComponent<Props, State> {
   siteUrlNode = createRef<HTMLInputElement>()
 
   componentDidMount() {
-    const userId = localStorage.getItem(GC_USER_ID)
+    const userId = sessionStorage.getItem(GC_USER_ID)
     if (!userId) history.replace('/')
   }
 
@@ -219,7 +220,7 @@ class CreatePost extends PureComponent<Props, State> {
     } else {
       const { location: { state } } = this.props
       const { editing, description } = this.state
-      const userId = localStorage.getItem(GC_USER_ID)
+      const userId = sessionStorage.getItem(GC_USER_ID)
       const { editPost } = state || {} as { editPost?: IPost }
 
       if (userId && viewerId) {
@@ -286,16 +287,6 @@ class CreatePost extends PureComponent<Props, State> {
 
 export default CreatePost
 
-const Dim = css`
-  opacity: 1;
-  transition: opacity .15s ease-in;
-  cursor: pointer;
-  &:hover,
-  &:focus {
-    opacity: .5;
-    transition: opacity .15s ease-in;
-  }
-`
 const Wrapper = styled.div`
   padding: 2rem;
   justify-content: center;

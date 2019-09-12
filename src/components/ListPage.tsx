@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom'
 import { isMobile } from 'react-device-detect'
 import styled, { css } from 'styled-components'
 import Masonry from 'react-masonry-component';
+import history from '../utils/history'
 import Post, { Dim } from './Post'
 import Loading from '../assets/images/loading.gif'
 import { UserConsumer } from '../utils/userContext'
@@ -34,6 +35,11 @@ type Props = {
 
 type State = {
   isOverlay: boolean
+}
+
+type TStyledLink = {
+  mobile?: string,
+  isLogOut?: boolean
 }
 
 const masonryOptions = {
@@ -70,6 +76,11 @@ class ListPage extends PureComponent<Props, State> {
     relay.loadMore(ITEMS_PER_PAGE, () => null)
   }
 
+  _onLogOut = () => {
+    sessionStorage.clear()
+    history.push('/login')
+  }
+
   render() {
     const { viewer, relay } = this.props
     const { allPosts: { edges } } = viewer
@@ -83,19 +94,32 @@ class ListPage extends PureComponent<Props, State> {
             )}
           </OverlayConsumer>
           <UserConsumer>
-            {user => (
+            {({ name }) => (
               <TopPart>
-                {user.name &&
+                <StyledLinkContainer>
+                  <StyledLink
+                    mobile={isMobile.toString()}
+                    to={name ? '/create' : '/login'}
+                  >
+                    + {name ? 'New Post' : 'Sign In'}
+                  </StyledLink>
+                  {!!name && (
+                    <StyledLink
+                      as="div"
+                      mobile={isMobile.toString()}
+                      isLogOut
+                      to="/"
+                      onClick={this._onLogOut}
+                    >
+                      Log Out
+                    </StyledLink>
+                  )}
+                </StyledLinkContainer>
+                {name &&
                   <WelcomeUser>
-                    Hello {user.name}!
+                    Hello {name}!
                   </WelcomeUser>
                 }
-                <StyledLink
-                  mobile={isMobile.toString()}
-                  to={user.name ? '/create' : '/login'}
-                >
-                  + {user.name ? 'New Post' : 'Sign In'}
-                </StyledLink>
               </TopPart>
             )}
           </UserConsumer>
@@ -181,8 +205,6 @@ export default createPaginationContainer(ListPage,
 )
 
 const Decorated = css`
-  position: absolute;
-  top: 0;
   padding: 2rem;
   text-transform: uppercase;
 `
@@ -193,6 +215,10 @@ const Wrapper = styled.div`
 `
 const TopPart = styled.div`
   position: fixed;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: center;
   top: 0;
   width: 100%;
   background-color: rgba(255, 255, 255, .6);
@@ -200,16 +226,26 @@ const TopPart = styled.div`
   z-index: 1;
 `
 const WelcomeUser = styled.div`
-  left: 0;
+  display: flex;
   color: rgba( 0, 0, 0, .3 );
   ${Decorated}
 `
-const StyledLink = styled(Link)`
-  right: 0;
-  color: black;
-  ${({ mobile }: { mobile: string }) => mobile === 'true' ? '' : Dim}
+
+const StyledLinkContainer = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+`
+
+const StyledLink = styled(Link)<TStyledLink>`
+  display: flex;
+  align-self: stretch;
+  color: ${({ isLogOut }) => isLogOut ? 'lightcoral' : 'black'};
+  ${({ mobile }) => mobile === 'true' ? '' : Dim};
   ${Decorated}
 `
+
 const PostsLoading = styled.div`
   width: 100%;
   max-width: 100%;

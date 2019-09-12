@@ -54,7 +54,7 @@ const queryRenderee = ({ error, props }) => {
   )
 }
 
-export default class Home extends PureComponent<any, State> {
+export default class Home extends PureComponent<unknown, State> {
   state = {
     userId: '',
     hasError: false
@@ -62,8 +62,8 @@ export default class Home extends PureComponent<any, State> {
 
   static getDerivedStateFromProps(_prevProps: unknown, prevState: State) {
     try {
-      if (localStorage.getItem(GC_USER_ID) && prevState.userId === '') {
-        return { userId: localStorage.getItem(GC_USER_ID) }
+      if (sessionStorage.getItem(GC_USER_ID) && prevState.userId === '') {
+        return { userId: sessionStorage.getItem(GC_USER_ID) }
       }
       return null
     } catch(e) {

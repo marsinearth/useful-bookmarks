@@ -4,21 +4,26 @@ import { GC_USER_ID, GC_AUTH_TOKEN } from '../utils/constants'
 import AuthenticateUserMutation from '../mutations/AuthenticateUserMutation'
 import SignUpUserMutation from '../mutations/SignUpUserMutation'
 import Loading from '../assets/images/loading.gif'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import history from '../utils/history'
+import { Dim } from './Post'
 
 type State = {
   [name: string]: string | boolean
-  login: boolean,
+  isLogInPage: boolean,
   email: string,
   password: string,
   name: string,
   loading: boolean
 }
 
+type TButton = {
+  bgColor: string
+}
+
 export default class Login extends PureComponent<any, State> {
   state = {
-    login: true,
+    isLogInPage: true,
     email: '',
     password: '',
     name: '',
@@ -33,15 +38,14 @@ export default class Login extends PureComponent<any, State> {
   }
 
   _onToggleLogin = () => {
-    const { login } = this.state
-    this.setState({ login: !login })
+    this.setState(({ isLogInPage: prevIsLogInPage }) => ({ isLogInPage: !prevIsLogInPage }))
   }
 
   _confirm = () => {
-    const { login, name, email, password } = this.state
+    const { isLogInPage, name, email, password } = this.state
     if (email.trim() !== '' && password.trim() !== '') {
       this.setState({ loading: true }, () => {
-        if (login) {
+        if (isLogInPage) {
           AuthenticateUserMutation(
             email,
             password,
@@ -71,8 +75,8 @@ export default class Login extends PureComponent<any, State> {
 
   _saveUserData = (id: string, token: string) => {
     if (id && token) {
-      localStorage.setItem(GC_USER_ID, id)
-      localStorage.setItem(GC_AUTH_TOKEN, token)
+      sessionStorage.setItem(GC_USER_ID, id)
+      sessionStorage.setItem(GC_AUTH_TOKEN, token)
       history.push('/')
     }
   }
@@ -82,7 +86,7 @@ export default class Login extends PureComponent<any, State> {
   }
 
   render() {
-    const { login, name, email, password, loading } = this.state
+    const { isLogInPage, name, email, password, loading } = this.state
     return (
       <Wrapper>
         {loading
@@ -93,10 +97,10 @@ export default class Login extends PureComponent<any, State> {
           :
           <InnerWrapper>
             <Title>
-              {login ? 'Sign In' : 'Sign Up'}
+              {`Sign ${isLogInPage ? 'In' : 'Up'}`}
             </Title>
             <form>
-              {!login &&
+              {!isLogInPage &&
                 <Input
                   value={name}
                   data-label='name'
@@ -124,11 +128,17 @@ export default class Login extends PureComponent<any, State> {
               />
             </form>
             <ButtonContainer>
-              <Button pos='left' onClick={this._confirm}>
-                {login ? 'Sign In' : 'Sign Up'}
+              <Button
+                bgColor={isLogInPage ? 'rgba(0,0,255,.1)' : 'rgba(0,0,0,.2)'}
+                onClick={this._confirm}
+              >
+                {`Sign ${isLogInPage ? 'In' : 'Up'}`}
               </Button>
-              <Button pos='right' onClick={this._onToggleLogin}>
-                {login ? 'Sign Up' : 'Sign In'}
+              <Button
+                bgColor={isLogInPage ? 'rgba(0,0,0,.2)' : 'rgba(0,0,255,.1)'}
+                onClick={this._onToggleLogin}
+              >
+                {`Sign ${isLogInPage ? 'Up' : 'In'}`}
               </Button>
             </ButtonContainer>
             <LinkContainer>
@@ -143,16 +153,6 @@ export default class Login extends PureComponent<any, State> {
   }
 }
 
-const Dim = css`
-  opacity: 1;
-  transition: opacity .15s ease-in;
-  cursor: pointer;
-  &:hover,
-  &:focus {
-    opacity: .5;
-    transition: opacity .15s ease-in;
-  }
-`
 const Wrapper = styled.div`
   padding: 2rem;
   justify-content: center;
@@ -187,15 +187,12 @@ const ButtonContainer = styled.div`
   margin-top: 1rem;
   margin-bottom: 1rem;
 `
-const Button = styled.button`
+const Button = styled.button<TButton>`
   width: 50%;
   outline: 0;
   padding: 1rem;
   text-transform: uppercase;
-  background-color: ${(props: { pos: string }) => props.pos === 'right'
-    ? 'rgba( 0, 0, 0, .2 )'
-    : 'rgba( 0, 0, 0, .1 )'
-  };
+  background-color: ${({ bgColor }) => bgColor};
   border: none;
   ${Dim}
 `

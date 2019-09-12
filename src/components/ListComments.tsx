@@ -74,10 +74,12 @@ class ListComments extends PureComponent<Props, State> {
     }
   }
 
-  getSnapshotBeforeUpdate(_: Props, prevState: State) {
+  getSnapshotBeforeUpdate(prevProps: Props, prevState: State) {
+    const { post: { comments: { edges: { length: prevEdgesLen } } } } = prevProps
+    const { post: { comments: { edges: { length: thisEdgesLen } } } } = this.props
     const { endCursor: prevCursor } = prevState
     const { endCursor: thisCursor } = this.state
-    if (prevCursor !== thisCursor) {
+    if (prevCursor !== thisCursor || prevEdgesLen !== thisEdgesLen) {
       return true
     }
     return false
