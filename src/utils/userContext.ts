@@ -5,9 +5,8 @@ export type contextProps = {
   name: string | null
 }
 
-const UserContext = createContext<contextProps>({
+export const UserContext = createContext<contextProps>({
   id: null,
   name: null
 })
 export const UserProvider = UserContext.Provider
-export const UserConsumer = UserContext.Consumer

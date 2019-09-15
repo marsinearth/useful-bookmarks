@@ -6,6 +6,7 @@ import SignUpUserMutation from '../mutations/SignUpUserMutation'
 import Loading from '../assets/images/loading.gif'
 import styled from 'styled-components'
 import history from '../utils/history'
+import RSwal from '../utils/reactSwal';
 import { Dim } from './Post'
 
 type State = {
@@ -62,14 +63,14 @@ export default class Login extends PureComponent<any, State> {
               name
             )
           } else {
-            alert('name is required')
+            RSwal('error', 'name is required')
             this._failedAuth()
           }
         }
       })
     } else {
-      if (email.trim() === '') alert('email is required')
-      else if (password.trim() === '') alert('password is required')
+      if (email.trim() === '') RSwal('error', 'email is required')
+      else if (password.trim() === '') RSwal('error', 'password is required')
     }
   }
 

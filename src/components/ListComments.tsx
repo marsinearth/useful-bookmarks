@@ -14,7 +14,7 @@ import Loading from '../assets/images/loading.gif'
 import { ITEMS_PER_PAGE } from '../utils/constants'
 import Comment from './Comment'
 import { IPost, handleEdit } from '../types';
-import { OverlayConsumer } from '../utils/overlayContext';
+import { OverlayContext } from '../utils/overlayContext';
 
 type State = {
   commentLoading: boolean,
@@ -31,13 +31,7 @@ type Props = {
 }
 
 class ListComments extends PureComponent<Props, State> {
-  state = {
-    commentLoading: false,
-    endCursor: '',
-    closable: false,
-    contHeight: 'auto'
-  }
-  listContainer = createRef<any>()
+  static contextType = OverlayContext
 
   static getDerivedStateFromProps(nextProps: Props, prevState: State) {
     const { post: { comments } } = nextProps
@@ -63,6 +57,14 @@ class ListComments extends PureComponent<Props, State> {
     }
     return null
   }
+
+  state = {
+    commentLoading: false,
+    endCursor: '',
+    closable: false,
+    contHeight: 'auto'
+  }
+  listContainer = createRef<any>()
 
   componentDidMount() {
     const { post } = this.props
@@ -117,7 +119,7 @@ class ListComments extends PureComponent<Props, State> {
     const { edges, count } = comments
     const pageMore = edges && edges.length < count
     const { commentLoading, closable, contHeight } = this.state
-
+    const { isOverlay, toggleOverlay } = this.context
     return (
       <CommentsContainer>
         {edges.length > 0 &&
@@ -138,20 +140,17 @@ class ListComments extends PureComponent<Props, State> {
               style={{ paddingTop: '1.75rem' }}
             >
               <div ref={this.listContainer}>
-              <OverlayConsumer>
-                {({ isOverlay, toggleOverlay }) => (
-                  !commentLoading && edges.map(({ node }) => (
-                    <Comment
-                      key={node.__id}
-                      comment={node}
-                      postId={id}
-                      userId={userId}
-                      handleEdit={handleEdit}
-                      isOverlay={isOverlay}
-                      toggleOverlay={toggleOverlay}
-                    />
-                  )))}
-                </OverlayConsumer>
+                {!commentLoading && edges.map(({ node }) => (
+                  <Comment
+                    key={node.__id}
+                    comment={node}
+                    postId={id}
+                    userId={userId}
+                    handleEdit={handleEdit}
+                    isOverlay={isOverlay}
+                    toggleOverlay={toggleOverlay}
+                  />
+                ))}
               </div>
             </AnimateHeight>
             <CommentMoreContainer>

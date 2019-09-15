@@ -1,18 +1,23 @@
 /* tslint:disable */
 
 import { ConcreteRequest } from "relay-runtime";
-export type UpdatePostInput = {
-    readonly description?: string | null;
-    readonly id: string;
-    readonly imageUrl?: string | null;
-    readonly siteUrl?: string | null;
+export type CreateLikeInput = {
+    readonly postId?: string | null;
+    readonly post?: LikepostPost | null;
+    readonly userId?: string | null;
+    readonly user?: LikeuserUser | null;
+    readonly clientMutationId: string;
+};
+export type LikepostPost = {
+    readonly description: string;
+    readonly imageUrl: string;
+    readonly siteUrl: string;
     readonly postedById?: string | null;
     readonly postedBy?: PostpostedByUser | null;
     readonly commentsIds?: ReadonlyArray<string> | null;
     readonly comments?: ReadonlyArray<PostcommentsComment> | null;
     readonly likesIds?: ReadonlyArray<string> | null;
     readonly likes?: ReadonlyArray<PostlikesLike> | null;
-    readonly clientMutationId: string;
 };
 export type PostpostedByUser = {
     readonly email: string;
@@ -61,12 +66,10 @@ export type UserlikesLike = {
     readonly postId?: string | null;
     readonly post?: LikepostPost | null;
 };
-export type LikepostPost = {
+export type UserpostsPost = {
     readonly description: string;
     readonly imageUrl: string;
     readonly siteUrl: string;
-    readonly postedById?: string | null;
-    readonly postedBy?: PostpostedByUser | null;
     readonly commentsIds?: ReadonlyArray<string> | null;
     readonly comments?: ReadonlyArray<PostcommentsComment> | null;
     readonly likesIds?: ReadonlyArray<string> | null;
@@ -87,45 +90,42 @@ export type LikeuserUser = {
     readonly postsIds?: ReadonlyArray<string> | null;
     readonly posts?: ReadonlyArray<UserpostsPost> | null;
 };
-export type UserpostsPost = {
-    readonly description: string;
-    readonly imageUrl: string;
-    readonly siteUrl: string;
-    readonly commentsIds?: ReadonlyArray<string> | null;
-    readonly comments?: ReadonlyArray<PostcommentsComment> | null;
-    readonly likesIds?: ReadonlyArray<string> | null;
-    readonly likes?: ReadonlyArray<PostlikesLike> | null;
+export type CreateLikeMutationVariables = {
+    readonly input: CreateLikeInput;
 };
-export type UpdatePostMutationVariables = {
-    readonly input: UpdatePostInput;
-};
-export type UpdatePostMutationResponse = {
-    readonly updatePost: {
-        readonly post: {
+export type CreateLikeMutationResponse = {
+    readonly createLike: {
+        readonly like: {
             readonly id: string;
-            readonly description: string;
-            readonly imageUrl: string;
-            readonly siteUrl: string;
+            readonly user: {
+                readonly id: string;
+            };
+            readonly post: {
+                readonly id: string;
+            };
         } | null;
     } | null;
 };
-export type UpdatePostMutation = {
-    readonly response: UpdatePostMutationResponse;
-    readonly variables: UpdatePostMutationVariables;
+export type CreateLikeMutation = {
+    readonly response: CreateLikeMutationResponse;
+    readonly variables: CreateLikeMutationVariables;
 };
 
 
 
 /*
-mutation UpdatePostMutation(
-  $input: UpdatePostInput!
+mutation CreateLikeMutation(
+  $input: CreateLikeInput!
 ) {
-  updatePost(input: $input) {
-    post {
+  createLike(input: $input) {
+    like {
       id
-      description
-      imageUrl
-      siteUrl
+      user {
+        id
+      }
+      post {
+        id
+      }
     }
   }
 }
@@ -136,15 +136,25 @@ var v0 = [
   {
     "kind": "LocalArgument",
     "name": "input",
-    "type": "UpdatePostInput!",
+    "type": "CreateLikeInput!",
     "defaultValue": null
   }
 ],
-v1 = [
+v1 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "id",
+  "args": null,
+  "storageKey": null
+},
+v2 = [
+  (v1/*: any*/)
+],
+v3 = [
   {
     "kind": "LinkedField",
     "alias": null,
-    "name": "updatePost",
+    "name": "createLike",
     "storageKey": null,
     "args": [
       {
@@ -153,45 +163,38 @@ v1 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "UpdatePostPayload",
+    "concreteType": "CreateLikePayload",
     "plural": false,
     "selections": [
       {
         "kind": "LinkedField",
         "alias": null,
-        "name": "post",
+        "name": "like",
         "storageKey": null,
         "args": null,
-        "concreteType": "Post",
+        "concreteType": "Like",
         "plural": false,
         "selections": [
+          (v1/*: any*/),
           {
-            "kind": "ScalarField",
+            "kind": "LinkedField",
             "alias": null,
-            "name": "id",
+            "name": "user",
+            "storageKey": null,
             "args": null,
-            "storageKey": null
+            "concreteType": "User",
+            "plural": false,
+            "selections": (v2/*: any*/)
           },
           {
-            "kind": "ScalarField",
+            "kind": "LinkedField",
             "alias": null,
-            "name": "description",
+            "name": "post",
+            "storageKey": null,
             "args": null,
-            "storageKey": null
-          },
-          {
-            "kind": "ScalarField",
-            "alias": null,
-            "name": "imageUrl",
-            "args": null,
-            "storageKey": null
-          },
-          {
-            "kind": "ScalarField",
-            "alias": null,
-            "name": "siteUrl",
-            "args": null,
-            "storageKey": null
+            "concreteType": "Post",
+            "plural": false,
+            "selections": (v2/*: any*/)
           }
         ]
       }
@@ -202,26 +205,26 @@ return {
   "kind": "Request",
   "fragment": {
     "kind": "Fragment",
-    "name": "UpdatePostMutation",
+    "name": "CreateLikeMutation",
     "type": "Mutation",
     "metadata": null,
     "argumentDefinitions": (v0/*: any*/),
-    "selections": (v1/*: any*/)
+    "selections": (v3/*: any*/)
   },
   "operation": {
     "kind": "Operation",
-    "name": "UpdatePostMutation",
+    "name": "CreateLikeMutation",
     "argumentDefinitions": (v0/*: any*/),
-    "selections": (v1/*: any*/)
+    "selections": (v3/*: any*/)
   },
   "params": {
     "operationKind": "mutation",
-    "name": "UpdatePostMutation",
+    "name": "CreateLikeMutation",
     "id": null,
-    "text": "mutation UpdatePostMutation(\n  $input: UpdatePostInput!\n) {\n  updatePost(input: $input) {\n    post {\n      id\n      description\n      imageUrl\n      siteUrl\n    }\n  }\n}\n",
+    "text": "mutation CreateLikeMutation(\n  $input: CreateLikeInput!\n) {\n  createLike(input: $input) {\n    like {\n      id\n      user {\n        id\n      }\n      post {\n        id\n      }\n    }\n  }\n}\n",
     "metadata": {}
   }
 };
 })();
-(node as any).hash = '2f38220ade18903f99305d5cf681e540';
+(node as any).hash = '706949f5a5e9e6312687f938589892f3';
 export default node;

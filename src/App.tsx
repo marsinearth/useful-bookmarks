@@ -3,16 +3,14 @@ import { Router, Route, Switch } from 'react-router-dom'
 import GitHubForkRibbon from 'react-github-fork-ribbon'
 import { createGlobalStyle } from 'styled-components'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faEllipsisV, faPencilAlt, faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons'
+import { faEllipsisV, faPencilAlt, faCaretUp, faCaretDown, faHeart, faHeartBroken } from '@fortawesome/free-solid-svg-icons'
 
 import history from './utils/history'
-// import { GC_USER_ID, GC_AUTH_TOKEN } from './utils/constants'
-
 import Home from './components/Home'
 import CreatePost from './components/CreatePost'
 import Login from './components/Login'
 
-library.add(faEllipsisV, faPencilAlt, faCaretUp, faCaretDown)
+library.add(faEllipsisV, faPencilAlt, faCaretUp, faCaretDown, faHeart, faHeartBroken)
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -37,13 +35,6 @@ const ForkRibbon = () => (
 )
 
 export default class App extends PureComponent {
-  /* componentDidMount() {
-    window.onunload = function () {
-      sessionStorage.removeItem(GC_USER_ID)
-      sessionStorage.removeItem(GC_AUTH_TOKEN)
-      return
-    }
-  } */
   render() {
     return (
       <>

@@ -103,7 +103,6 @@ const CreatePostMutation: CPMutArgs = function (
       // 2 - add `newPost` to the store
         if (newPost) sharedUpdater(proxyStore, viewerId, newPost)
       },
-
     },
   )
 }

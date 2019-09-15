@@ -3,32 +3,38 @@ import React, {
   forwardRef,
   PureComponent,
   MouseEvent,
-  TouchEvent
+  TouchEvent,
+  HTMLAttributes,
+  FC
 } from 'react'
-import {
-  createFragmentContainer,
-} from 'react-relay'
+import { createFragmentContainer } from 'react-relay'
 import graphql from 'babel-plugin-relay/macro'
 import { isMobile } from 'react-device-detect'
 import styled, { css } from 'styled-components'
 import Img from 'react-image'
 import DeletePostMutation from '../mutations/DeletePostMutation'
+import CreateLikeMutation from '../mutations/CreateLikeMutation'
+import DeleteLikeMutation from '../mutations/DeleteLikeMutation'
 import CreateComment from './CreateComment'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon, Props as FAProps } from '@fortawesome/react-fontawesome'
 import Linkify from 'react-linkify'
-import { UserConsumer } from '../utils/userContext'
-import ListComments from './ListComments'
-import history from '../utils/history'
 import { IPost, IComment, TooltipMenuProps, Menu, toggleOverlay, BlurEvent } from '../types';
-import { contextProps } from '../utils/overlayContext'
+import ListComments from './ListComments'
 import { linkifyProps } from './Comment';
+import { UserContext } from '../utils/userContext'
+import { GC_USER_ID } from '../utils/constants'
+import history from '../utils/history'
+import RSwal from '../utils/reactSwal'
+import { contextProps } from '../utils/overlayContext'
+import checkOptimisticUpdate from '../utils/checkOptimisticUpdate'
 import loadingGif from '../assets/images/loading.gif'
 import brokenImg from '../assets/images/broken-img.png'
 
 type State = {
   menu?: boolean,
   commentMode?: boolean,
-  editComment: IComment | null
+  editComment: IComment | null,
+  likedViewerId?: string
 }
 
 type Props = {
@@ -46,6 +52,13 @@ type TooltipProps = {
   isPost?: boolean,
   addComment?: () => void
 }
+
+type THeartProps = {
+  isliked?: string,
+  count?: number
+}
+
+type THeart = FC<FAProps & THeartProps>
 
 export const TooltipComp = forwardRef<any, TooltipProps>((
   {
@@ -97,21 +110,49 @@ export const TooltipComp = forwardRef<any, TooltipProps>((
   </Tooltip>
 ))
 
-const LoadingComp = ({ className }) => (
+const LoadingComp: FC<HTMLAttributes<any>> = ({ className }) => (
   <div className={className}>
     <img src={loadingGif} alt="Loading..." />
   </div>
 )
 
 class Post extends PureComponent<Props, State> {
+  static contextType = UserContext
+
+  static getDerivedStateFromProps(prevProps: Props, prevState: State) {
+    const { post: { likes: { edges } } } = prevProps
+    const { likedViewerId: prevLikedViewerId } = prevState
+    const userId = sessionStorage.getItem(GC_USER_ID)
+    if (userId && edges) {
+      const likedViewerId = edges.reduce((acc, { node: { id: lid, user: { id } } }) => {
+        if (id === userId) {
+          acc.result = lid
+        }
+        return acc
+      }, { result: '' }).result
+      if (likedViewerId) {
+        if (
+          prevLikedViewerId &&
+          !checkOptimisticUpdate(prevLikedViewerId) &&
+          likedViewerId !== prevLikedViewerId
+        ) {
+          return { likedViewerId: undefined }
+        }
+        return { likedViewerId }
+      }
+    }
+    return null
+  }
+
   state: State = {
     menu: false,
     commentMode: false,
-    editComment: null
+    editComment: null,
+    likedViewerId: undefined
   }
   optionTooltip = createRef<any>()
 
-  componentDidUpdate(prevProps: Props, _: unknown) {
+  componentDidUpdate(prevProps: Props) {
     if (prevProps.isOverlay && !this.props.isOverlay) {
       this.setState({ menu: false, commentMode: false })
     }
@@ -148,11 +189,12 @@ class Post extends PureComponent<Props, State> {
   }
 
   _deletePost = () => {
-    const { post: { id, description }, viewerId } = this.props
-    if (window.confirm(`Are you sure to delete: ${description}?`)) {
-      DeletePostMutation(id, viewerId)
-    }
-    this.setState({ menu: false })
+    this.setState({ menu: false }, () => {
+      const { post: { id, description }, viewerId } = this.props
+      RSwal('warning', `Are you sure to delete: ${description}?`, () => {
+        DeletePostMutation(id, viewerId)
+      })
+    })
   }
 
   _addComment = () => {
@@ -169,6 +211,23 @@ class Post extends PureComponent<Props, State> {
     })
   }
 
+  _toggleLike = () => {
+    const userId = sessionStorage.getItem(GC_USER_ID)
+    if (userId) {
+      const { post: { id: postId } } = this.props
+      const { likedViewerId } = this.state
+      if (likedViewerId) {
+        DeleteLikeMutation(likedViewerId, postId, () => {
+          this.setState({ likedViewerId: undefined })
+        })
+      } else {
+        CreateLikeMutation(userId, postId)
+      }
+    } else {
+      RSwal('error', 'You need to SIGN IN to like a post.')
+    }
+  }
+
   render() {
     const {
       post,
@@ -177,6 +236,9 @@ class Post extends PureComponent<Props, State> {
         description,
         imageUrl,
         siteUrl,
+        likes: {
+          count
+        },
         postedBy: {
           id: posterId,
           name: posterName
@@ -188,66 +250,78 @@ class Post extends PureComponent<Props, State> {
     const {
       menu,
       commentMode,
-      editComment
+      editComment,
+      likedViewerId
     } = this.state
+    const user = this.context
     return (
       <Container>
-        <a
-          href={siteUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <ImgContainer
-            src={[imageUrl, brokenImg]}
-            mobile={isMobile.toString()}
-            loader={<LoadingWrapper />}
+        <ImageContainer>
+          <a
+            href={siteUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src={[imageUrl, brokenImg]}
+              mobile={isMobile.toString()}
+              loader={<LoadingWrapper />}
+            />
+          </a>
+          <HeartContainer
+            isliked={String(!!likedViewerId)}
+            onClick={this._toggleLike}
+          >
+            <HeartIcon
+              isliked={String(!!likedViewerId)}
+              count={count}
+            />
+            {!!count && (
+              <HeartCount>{count}</HeartCount>
+            )}
+          </HeartContainer>
+        </ImageContainer>
+        <InfoContainer>
+          <TitleContainer>
+            <div className="titleSection">
+              <span className="username">
+                {posterName}
+              </span>
+              <Linkify properties={linkifyProps}>
+                {description}
+              </Linkify>
+            </div>
+            {user.id &&
+              <VertOptionContainer onClick={this._openMenuPanel}>
+                <FontAwesomeIcon icon="ellipsis-v" />
+              </VertOptionContainer>
+            }
+          </TitleContainer>
+          <TooltipComp
+            ref={this.optionTooltip}
+            handleBlur={this._handleBlur}
+            handleEdit={this._editPost}
+            handleDelete={this._deletePost}
+            menu={menu}
+            writerAuth={posterId === user.id}
+            toggleOverlay={toggleOverlay}
+            addComment={this._addComment}
+            isPost
           />
-        </a>
-        <UserConsumer>
-          {user => (
-            <InfoContainer>
-              <TitleContainer>
-                <div className="titleSection">
-                  <span className="username">
-                    {posterName}
-                  </span>
-                  <Linkify properties={linkifyProps}>
-                    {description}
-                  </Linkify>
-                </div>
-                {user.id &&
-                  <VertOptionContainer onClick={this._openMenuPanel}>
-                    <FontAwesomeIcon icon="ellipsis-v" />
-                  </VertOptionContainer>
-                }
-              </TitleContainer>
-              <TooltipComp
-                ref={this.optionTooltip}
-                handleBlur={this._handleBlur}
-                handleEdit={this._editPost}
-                handleDelete={this._deletePost}
-                menu={menu}
-                writerAuth={posterId === user.id}
-                toggleOverlay={toggleOverlay}
-                addComment={this._addComment}
-                isPost
-              />
-              <ListComments
-                post={post}
-                handleEdit={this._editComment}
-                userId={user.id}
-              />
-              <CreateComment
-                mode={commentMode}
-                editComment={editComment}
-                commentedPostId={id}
-                viewerId={viewerId}
-                user={user}
-                handleBlur={this._handleBlur}
-              />
-            </InfoContainer>
-          )}
-        </UserConsumer>
+          <ListComments
+            post={post}
+            handleEdit={this._editComment}
+            userId={user.id}
+          />
+          <CreateComment
+            mode={commentMode}
+            editComment={editComment}
+            commentedPostId={id}
+            viewerId={viewerId}
+            user={user}
+            handleBlur={this._handleBlur}
+          />
+        </InfoContainer>
       </Container>
     )
   }
@@ -264,6 +338,22 @@ export default createFragmentContainer(Post,
         postedBy {
           id
           name
+        }
+        likes(
+          first: $maxLikes
+        ) @connection(
+          key: "Post_likes",
+          filters: []
+        ) {
+          edges {
+            node {
+              id
+              user {
+                id
+              }
+            }
+          }
+          count
         }
         ...ListComments_post
       }
@@ -289,13 +379,51 @@ const Container = styled.div`
   box-sizing: border-box;
   border-radius: 0.5rem;
 `
-const ImgContainer = styled(Img)`
+const ImageContainer = styled.div`
+  position: relative;
+`
+const Image = styled(Img)`
   width: 100%;
   max-height: 270px;
   object-fit: cover;
-  ${({ mobile }) => mobile === 'true' ? '' : Dim}
+  ${({ mobile }) => mobile === 'true' ? '' : Dim};
 `
-const LoadingWrapper = styled<any>(LoadingComp)`
+const HeartContainer = styled.div<THeartProps>`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 3rem;
+  height: 3rem;
+  div.heartCount {
+    font-weight: ${({ isliked }) => isliked ? 'bold' : 'normal'};
+  }
+`
+const HeartCount = styled.div.attrs(() => ({
+  className: 'heartCount' // placeholder
+}))`
+  position: absolute;
+  display: flex;
+  font-size: 0.8rem;
+  color: whitesmoke;
+  padding-bottom: 0.2rem;
+`
+const HeartIcon = styled<THeart>(FontAwesomeIcon).attrs(({ isliked, count }) => ({
+  icon: count ? 'heart' : 'heart-broken',
+  size: '2x',
+  color: !count
+    ? '#aaa'
+    : (count && isliked === 'true') ? 'lightcoral' : 'lightpink'
+}))`
+  filter: drop-shadow(2px 2px 2px ${({ isliked, count }) => (
+    !count
+      ? '#aaa'
+      : (count && isliked === 'true') ? 'lightcoral' : 'lightpink'
+  )});
+`
+const LoadingWrapper = styled(LoadingComp)`
   padding: 2rem;
   justify-content: center;
   display: flex;
@@ -331,7 +459,7 @@ export const VertOptionContainer = styled.div`
   width: 1rem;
   z-index: 3;
 `
-const Tooltip = styled("div")<Menu>`
+const Tooltip = styled.div<Menu>`
   position: absolute;
   ${({ isPost, writerAuth }) => isPost
     ? (writerAuth ? 'top: 0' : 'top: 1rem')
@@ -350,7 +478,7 @@ const Tooltip = styled("div")<Menu>`
   margin-right: ${({ isPost }) => isPost ? '-15px' : '-10px'};
   z-index: 4;
 `
-const TooltipMenu = styled("div")<TooltipMenuProps>`
+const TooltipMenu = styled.div<TooltipMenuProps>`
   color: ${({ comment, edit }) => (comment || edit) ? '#aaa' : 'red'};
   font-size: ${({ isPost }) => isPost ? '.875rem' : '.5rem'};
   padding: .25rem .5rem;

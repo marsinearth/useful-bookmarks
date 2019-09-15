@@ -6,25 +6,26 @@ import { ConnectionHandler } from 'relay-runtime'
 import environment from '../utils/Environment'
 import { DVars } from '../types'
 
-type DCMutArgs = {
+type DLMutArgs = {
   (
-    commentId: string,
-    postId: string
+    likeId: string,
+    postId: string,
+    callback: () => void
   ): void
 }
 
 const mutation = graphql`
-  mutation DeleteCommentMutation($input: DeleteCommentInput!) {
-    deleteComment(input: $input) {
+  mutation DeleteLikeMutation($input: DeleteLikeInput!) {
+    deleteLike(input: $input) {
       deletedId
     }
   }
 `
 
-const DeleteCommentMutation: DCMutArgs = function (commentId, postId) {
+const DeleteLikeMutation: DLMutArgs = function (likeId, postId, callback) {
   const variables: DVars = {
     input: {
-      id: commentId,
+      id: likeId,
       clientMutationId: ""
     },
   }
@@ -33,13 +34,16 @@ const DeleteCommentMutation: DCMutArgs = function (commentId, postId) {
       mutation,
       variables,
       onError: err => console.error(err),
+      onCompleted: () => {
+        callback()
+      },
       updater: proxyStore => {
-        const deletePostField = proxyStore.getRootField('deleteComment')
-        if (deletePostField) {
-          const deletedId: any = deletePostField.getValue('deletedId')
+        const deleteLikeField = proxyStore.getRootField('deleteLike')
+        if (deleteLikeField) {
+          const deletedId: any = deleteLikeField.getValue('deletedId')
           const postProxy = proxyStore.get(postId)
           if (postProxy) {
-            const connection = ConnectionHandler.getConnection(postProxy, 'ListComments_comments')
+            const connection = ConnectionHandler.getConnection(postProxy, 'Post_likes')
             if (connection && deletedId) {
               const count = connection.getValue('count')
               if (typeof count === 'number' && count > 0) {
@@ -54,4 +58,4 @@ const DeleteCommentMutation: DCMutArgs = function (commentId, postId) {
   )
 }
 
-export default DeleteCommentMutation
+export default DeleteLikeMutation

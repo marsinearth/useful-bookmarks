@@ -78,7 +78,7 @@ const CreateCommentMutation: CCMutArgs = function (
     },
   }
 
-  return commitMutation(environment,
+  commitMutation(environment,
     {
       mutation,
       variables,

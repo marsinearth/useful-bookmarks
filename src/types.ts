@@ -10,6 +10,17 @@ import {
   RecordProxy
 } from 'relay-runtime'
 
+export interface ILike {
+  id: string,
+  __id?: string,
+  user: {
+    id: string,
+  },
+  post: {
+    id: string
+  }
+}
+
 export interface IComment {
   id: string,
   __id?: string,
@@ -37,6 +48,10 @@ export type Menu = {
 
 export type handleEdit = (comment: IComment) => void
 
+type ILikeNodes = {
+  node: ILike
+}
+
 type ICommentNodes = {
   node: IComment
 }
@@ -50,6 +65,11 @@ export interface IPost {
   postedBy: {
     id: string,
     name: string
+  },
+  likes: {
+    count: number,
+    edges: ILikeNodes[],
+    pageInfo: PageInfo
   },
   comments: {
     count: number,

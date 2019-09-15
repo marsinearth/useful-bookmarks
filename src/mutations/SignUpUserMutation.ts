@@ -1,6 +1,7 @@
 import { commitMutation } from 'react-relay';
 import graphql from 'babel-plugin-relay/macro'
 import environment from '../utils/Environment';
+import RSwal from '../utils/reactSwal';
 import { AuthMutArgs, AuthVars, compRes } from '../types'
 
 const mutation = graphql`
@@ -39,7 +40,7 @@ const SignUpUserMutation: AuthMutArgs = function (
         const { key, token } = signUp
         successCb(key, token)
       } else {
-        alert('email is malformed.')
+        RSwal('error', 'email form is not valid.')
         failCb();
       }
     },

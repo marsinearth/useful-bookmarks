@@ -16,6 +16,8 @@ export type CommentcommentedByUser = {
     readonly password: string;
     readonly commentsIds?: ReadonlyArray<string> | null;
     readonly comments?: ReadonlyArray<UsercommentsComment> | null;
+    readonly likesIds?: ReadonlyArray<string> | null;
+    readonly likes?: ReadonlyArray<UserlikesLike> | null;
     readonly postsIds?: ReadonlyArray<string> | null;
     readonly posts?: ReadonlyArray<UserpostsPost> | null;
 };
@@ -32,6 +34,8 @@ export type CommentcommentedPostPost = {
     readonly postedBy?: PostpostedByUser | null;
     readonly commentsIds?: ReadonlyArray<string> | null;
     readonly comments?: ReadonlyArray<PostcommentsComment> | null;
+    readonly likesIds?: ReadonlyArray<string> | null;
+    readonly likes?: ReadonlyArray<PostlikesLike> | null;
 };
 export type PostpostedByUser = {
     readonly email: string;
@@ -39,6 +43,43 @@ export type PostpostedByUser = {
     readonly password: string;
     readonly commentsIds?: ReadonlyArray<string> | null;
     readonly comments?: ReadonlyArray<UsercommentsComment> | null;
+    readonly likesIds?: ReadonlyArray<string> | null;
+    readonly likes?: ReadonlyArray<UserlikesLike> | null;
+    readonly postsIds?: ReadonlyArray<string> | null;
+    readonly posts?: ReadonlyArray<UserpostsPost> | null;
+};
+export type UserlikesLike = {
+    readonly postId?: string | null;
+    readonly post?: LikepostPost | null;
+};
+export type LikepostPost = {
+    readonly description: string;
+    readonly imageUrl: string;
+    readonly siteUrl: string;
+    readonly postedById?: string | null;
+    readonly postedBy?: PostpostedByUser | null;
+    readonly commentsIds?: ReadonlyArray<string> | null;
+    readonly comments?: ReadonlyArray<PostcommentsComment> | null;
+    readonly likesIds?: ReadonlyArray<string> | null;
+    readonly likes?: ReadonlyArray<PostlikesLike> | null;
+};
+export type PostcommentsComment = {
+    readonly content: string;
+    readonly commentedById?: string | null;
+    readonly commentedBy?: CommentcommentedByUser | null;
+};
+export type PostlikesLike = {
+    readonly userId?: string | null;
+    readonly user?: LikeuserUser | null;
+};
+export type LikeuserUser = {
+    readonly email: string;
+    readonly name: string;
+    readonly password: string;
+    readonly commentsIds?: ReadonlyArray<string> | null;
+    readonly comments?: ReadonlyArray<UsercommentsComment> | null;
+    readonly likesIds?: ReadonlyArray<string> | null;
+    readonly likes?: ReadonlyArray<UserlikesLike> | null;
     readonly postsIds?: ReadonlyArray<string> | null;
     readonly posts?: ReadonlyArray<UserpostsPost> | null;
 };
@@ -48,11 +89,8 @@ export type UserpostsPost = {
     readonly siteUrl: string;
     readonly commentsIds?: ReadonlyArray<string> | null;
     readonly comments?: ReadonlyArray<PostcommentsComment> | null;
-};
-export type PostcommentsComment = {
-    readonly content: string;
-    readonly commentedById?: string | null;
-    readonly commentedBy?: CommentcommentedByUser | null;
+    readonly likesIds?: ReadonlyArray<string> | null;
+    readonly likes?: ReadonlyArray<PostlikesLike> | null;
 };
 export type UpdateCommentMutationVariables = {
     readonly input: UpdateCommentInput;

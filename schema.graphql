@@ -13,6 +13,21 @@ input AddToCommentsPostPostInput {
   clientMutationId: String!
 }
 
+type AddToLikedPostsPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  postPost: Post
+  likesLike: Like
+  postPostEdge: PostEdge
+  likesLikeEdge: LikeEdge
+}
+
+input AddToLikedPostsPostInput {
+  likesLikeId: ID!
+  postPostId: ID!
+  clientMutationId: String!
+}
+
 type AddToUsersCommentsPayload {
   viewer: Viewer!
   clientMutationId: String!
@@ -25,6 +40,21 @@ type AddToUsersCommentsPayload {
 input AddToUsersCommentsUserInput {
   commentsCommentId: ID!
   commentedByUserId: ID!
+  clientMutationId: String!
+}
+
+type AddToUsersLikesPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  userUser: User
+  likesLike: Like
+  userUserEdge: UserEdge
+  likesLikeEdge: LikeEdge
+}
+
+input AddToUsersLikesUserInput {
+  likesLikeId: ID!
+  userUserId: ID!
   clientMutationId: String!
 }
 
@@ -43,7 +73,7 @@ input AddToUsersPostsPostInput {
   clientMutationId: String!
 }
 
-# AuthenticateUserPayload
+"""AuthenticateUserPayload"""
 type AuthenticateUserPayload {
   key: ID!
   token: String!
@@ -64,6 +94,8 @@ input CommentcommentedByUser {
   password: String!
   commentsIds: [ID!]
   comments: [UsercommentsComment!]
+  likesIds: [ID!]
+  likes: [UserlikesLike!]
   postsIds: [ID!]
   posts: [UserpostsPost!]
 }
@@ -76,158 +108,160 @@ input CommentcommentedPostPost {
   postedBy: PostpostedByUser
   commentsIds: [ID!]
   comments: [PostcommentsComment!]
+  likesIds: [ID!]
+  likes: [PostlikesLike!]
 }
 
-# A connection to a list of items.
+"""A connection to a list of items."""
 type CommentConnection {
-  # Information to aid in pagination.
+  """Information to aid in pagination."""
   pageInfo: PageInfo!
 
-  # A list of edges.
+  """A list of edges."""
   edges: [CommentEdge]
 
-  # Count of filtered result set without considering pagination arguments
+  """Count of filtered result set without considering pagination arguments"""
   count: Int!
 }
 
-# An edge in a connection.
+"""An edge in a connection."""
 type CommentEdge {
-  # The item at the end of the edge.
+  """The item at the end of the edge."""
   node: Comment!
 
-  # A cursor for use in pagination.
+  """A cursor for use in pagination."""
   cursor: String!
 }
 
 input CommentFilter {
-  # Logical AND on all given filters.
+  """Logical AND on all given filters."""
   AND: [CommentFilter!]
 
-  # Logical OR on all given filters.
+  """Logical OR on all given filters."""
   OR: [CommentFilter!]
   content: String
 
-  # All values that are not equal to given value.
+  """All values that are not equal to given value."""
   content_not: String
 
-  # All values that are contained in given list.
+  """All values that are contained in given list."""
   content_in: [String!]
 
-  # All values that are not contained in given list.
+  """All values that are not contained in given list."""
   content_not_in: [String!]
 
-  # All values less than the given value.
+  """All values less than the given value."""
   content_lt: String
 
-  # All values less than or equal the given value.
+  """All values less than or equal the given value."""
   content_lte: String
 
-  # All values greater than the given value.
+  """All values greater than the given value."""
   content_gt: String
 
-  # All values greater than or equal the given value.
+  """All values greater than or equal the given value."""
   content_gte: String
 
-  # All values containing the given string.
+  """All values containing the given string."""
   content_contains: String
 
-  # All values not containing the given string.
+  """All values not containing the given string."""
   content_not_contains: String
 
-  # All values starting with the given string.
+  """All values starting with the given string."""
   content_starts_with: String
 
-  # All values not starting with the given string.
+  """All values not starting with the given string."""
   content_not_starts_with: String
 
-  # All values ending with the given string.
+  """All values ending with the given string."""
   content_ends_with: String
 
-  # All values not ending with the given string.
+  """All values not ending with the given string."""
   content_not_ends_with: String
   createdAt: DateTime
 
-  # All values that are not equal to given value.
+  """All values that are not equal to given value."""
   createdAt_not: DateTime
 
-  # All values that are contained in given list.
+  """All values that are contained in given list."""
   createdAt_in: [DateTime!]
 
-  # All values that are not contained in given list.
+  """All values that are not contained in given list."""
   createdAt_not_in: [DateTime!]
 
-  # All values less than the given value.
+  """All values less than the given value."""
   createdAt_lt: DateTime
 
-  # All values less than or equal the given value.
+  """All values less than or equal the given value."""
   createdAt_lte: DateTime
 
-  # All values greater than the given value.
+  """All values greater than the given value."""
   createdAt_gt: DateTime
 
-  # All values greater than or equal the given value.
+  """All values greater than or equal the given value."""
   createdAt_gte: DateTime
   id: ID
 
-  # All values that are not equal to given value.
+  """All values that are not equal to given value."""
   id_not: ID
 
-  # All values that are contained in given list.
+  """All values that are contained in given list."""
   id_in: [ID!]
 
-  # All values that are not contained in given list.
+  """All values that are not contained in given list."""
   id_not_in: [ID!]
 
-  # All values less than the given value.
+  """All values less than the given value."""
   id_lt: ID
 
-  # All values less than or equal the given value.
+  """All values less than or equal the given value."""
   id_lte: ID
 
-  # All values greater than the given value.
+  """All values greater than the given value."""
   id_gt: ID
 
-  # All values greater than or equal the given value.
+  """All values greater than or equal the given value."""
   id_gte: ID
 
-  # All values containing the given string.
+  """All values containing the given string."""
   id_contains: ID
 
-  # All values not containing the given string.
+  """All values not containing the given string."""
   id_not_contains: ID
 
-  # All values starting with the given string.
+  """All values starting with the given string."""
   id_starts_with: ID
 
-  # All values not starting with the given string.
+  """All values not starting with the given string."""
   id_not_starts_with: ID
 
-  # All values ending with the given string.
+  """All values ending with the given string."""
   id_ends_with: ID
 
-  # All values not ending with the given string.
+  """All values not ending with the given string."""
   id_not_ends_with: ID
   updatedAt: DateTime
 
-  # All values that are not equal to given value.
+  """All values that are not equal to given value."""
   updatedAt_not: DateTime
 
-  # All values that are contained in given list.
+  """All values that are contained in given list."""
   updatedAt_in: [DateTime!]
 
-  # All values that are not contained in given list.
+  """All values that are not contained in given list."""
   updatedAt_not_in: [DateTime!]
 
-  # All values less than the given value.
+  """All values less than the given value."""
   updatedAt_lt: DateTime
 
-  # All values less than or equal the given value.
+  """All values less than or equal the given value."""
   updatedAt_lte: DateTime
 
-  # All values greater than the given value.
+  """All values greater than the given value."""
   updatedAt_gt: DateTime
 
-  # All values greater than or equal the given value.
+  """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
   commentedBy: UserFilter
   commentedPost: PostFilter
@@ -270,6 +304,30 @@ type CreateCommentPayload {
   commentedPost: Post
 }
 
+input CreateLike {
+  postId: ID
+  post: LikepostPost
+  userId: ID
+  user: LikeuserUser
+}
+
+input CreateLikeInput {
+  postId: ID
+  post: LikepostPost
+  userId: ID
+  user: LikeuserUser
+  clientMutationId: String!
+}
+
+type CreateLikePayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  like: Like
+  edge: LikeEdge
+  post: Post
+  user: User
+}
+
 input CreatePost {
   description: String!
   imageUrl: String!
@@ -278,6 +336,8 @@ input CreatePost {
   postedBy: PostpostedByUser
   commentsIds: [ID!]
   comments: [PostcommentsComment!]
+  likesIds: [ID!]
+  likes: [PostlikesLike!]
 }
 
 input CreatePostInput {
@@ -288,6 +348,8 @@ input CreatePostInput {
   postedBy: PostpostedByUser
   commentsIds: [ID!]
   comments: [PostcommentsComment!]
+  likesIds: [ID!]
+  likes: [PostlikesLike!]
   clientMutationId: String!
 }
 
@@ -305,11 +367,15 @@ input CreateUser {
   password: String!
   commentsIds: [ID!]
   comments: [UsercommentsComment!]
+  likesIds: [ID!]
+  likes: [UserlikesLike!]
   postsIds: [ID!]
   posts: [UserpostsPost!]
 }
 
-# If authentication was successful the payload contains the user and a token. If unsuccessful this payload is null.
+"""
+If authentication was successful the payload contains the user and a token. If unsuccessful this payload is null.
+"""
 type CreateUserPayload {
   user: User
   clientMutationId: String
@@ -330,6 +396,21 @@ type DeleteCommentPayload {
   edge: CommentEdge
   commentedBy: User
   commentedPost: Post
+  deletedId: ID
+}
+
+input DeleteLikeInput {
+  id: ID!
+  clientMutationId: String!
+}
+
+type DeleteLikePayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  like: Like
+  edge: LikeEdge
+  post: Post
+  user: User
   deletedId: ID
 }
 
@@ -360,56 +441,230 @@ type DeleteUserPayload {
   deletedId: ID
 }
 
-# LoggedInUserPayload
-type LoggedInUserPayload {
+input InvokeFunctionInput {
+  name: String!
+  input: String!
+  clientMutationId: String
+}
+
+type InvokeFunctionPayload {
+  result: String!
+  clientMutationId: String
+}
+
+type Like implements Node {
+  createdAt: DateTime!
   id: ID!
+  post(filter: PostFilter): Post!
+  updatedAt: DateTime!
+  user(filter: UserFilter): User!
+}
+
+"""A connection to a list of items."""
+type LikeConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [LikeEdge]
+
+  """Count of filtered result set without considering pagination arguments"""
+  count: Int!
+}
+
+"""An edge in a connection."""
+type LikeEdge {
+  """The item at the end of the edge."""
+  node: Like!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+input LikeFilter {
+  """Logical AND on all given filters."""
+  AND: [LikeFilter!]
+
+  """Logical OR on all given filters."""
+  OR: [LikeFilter!]
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  post: PostFilter
+  user: UserFilter
+}
+
+enum LikeOrderBy {
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+input LikepostPost {
+  description: String!
+  imageUrl: String!
+  siteUrl: String!
+  postedById: ID
+  postedBy: PostpostedByUser
+  commentsIds: [ID!]
+  comments: [PostcommentsComment!]
+  likesIds: [ID!]
+  likes: [PostlikesLike!]
+}
+
+input LikeuserUser {
+  email: String!
+  name: String!
+  password: String!
+  commentsIds: [ID!]
+  comments: [UsercommentsComment!]
+  likesIds: [ID!]
+  likes: [UserlikesLike!]
+  postsIds: [ID!]
+  posts: [UserpostsPost!]
+}
+
+"""LoggedInUserPayload"""
+type LoggedInUserPayload {
+  key: ID!
 }
 
 type Mutation {
   createComment(input: CreateCommentInput!): CreateCommentPayload
+  createLike(input: CreateLikeInput!): CreateLikePayload
   createPost(input: CreatePostInput!): CreatePostPayload
   updateComment(input: UpdateCommentInput!): UpdateCommentPayload
+  updateLike(input: UpdateLikeInput!): UpdateLikePayload
   updatePost(input: UpdatePostInput!): UpdatePostPayload
   updateUser(input: UpdateUserInput!): UpdateUserPayload
   updateOrCreateComment(input: UpdateOrCreateCommentInput!): UpdateOrCreateCommentPayload
+  updateOrCreateLike(input: UpdateOrCreateLikeInput!): UpdateOrCreateLikePayload
   updateOrCreatePost(input: UpdateOrCreatePostInput!): UpdateOrCreatePostPayload
   updateOrCreateUser(input: UpdateOrCreateUserInput!): UpdateOrCreateUserPayload
   deleteComment(input: DeleteCommentInput!): DeleteCommentPayload
+  deleteLike(input: DeleteLikeInput!): DeleteLikePayload
   deletePost(input: DeletePostInput!): DeletePostPayload
   deleteUser(input: DeleteUserInput!): DeleteUserPayload
   addToCommentsPost(input: AddToCommentsPostPostInput!): AddToCommentsPostPayload
+  addToLikedPosts(input: AddToLikedPostsPostInput!): AddToLikedPostsPayload
   addToUsersComments(input: AddToUsersCommentsUserInput!): AddToUsersCommentsPayload
+  addToUsersLikes(input: AddToUsersLikesUserInput!): AddToUsersLikesPayload
   addToUsersPosts(input: AddToUsersPostsPostInput!): AddToUsersPostsPayload
   removeFromCommentsPost(input: RemoveFromCommentsPostPostInput!): RemoveFromCommentsPostPayload
   removeFromUsersComments(input: RemoveFromUsersCommentsUserInput!): RemoveFromUsersCommentsPayload
   removeFromUsersPosts(input: RemoveFromUsersPostsPostInput!): RemoveFromUsersPostsPayload
-  createUser(input: SignUpUserInput!): CreateUserPayload!
+  createUser(input: SignupUserInput!): CreateUserPayload!
 
-  # authenticate
+  """authenticate"""
   authenticateUser(email: String!, password: String!): AuthenticateUserPayload
 
-  # signUp
+  """signUp"""
   signUpUser(name: String!, email: String!, password: String!): SignUpUserPayload
+  invokeFunction(input: InvokeFunctionInput!): InvokeFunctionPayload
 }
 
-# An object with an ID
+"""An object with an ID"""
 interface Node {
-  # The id of the object.
+  """The id of the object."""
   id: ID!
 }
 
-# Information about pagination in a connection.
+"""Information about pagination in a connection."""
 type PageInfo {
-  # When paginating forwards, are there more items?
+  """When paginating forwards, are there more items?"""
   hasNextPage: Boolean!
 
-  # When paginating backwards, are there more items?
+  """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  # When paginating backwards, the cursor to continue.
+  """When paginating backwards, the cursor to continue."""
   startCursor: String
 
-  # When paginating forwards, the cursor to continue.
+  """When paginating forwards, the cursor to continue."""
   endCursor: String
 }
 
@@ -419,6 +674,7 @@ type Post implements Node {
   description: String!
   id: ID!
   imageUrl: String!
+  likes(filter: LikeFilter, orderBy: LikeOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): LikeConnection
   postedBy(filter: UserFilter): User
   siteUrl: String!
   updatedAt: DateTime!
@@ -430,241 +686,249 @@ input PostcommentsComment {
   commentedBy: CommentcommentedByUser
 }
 
-# A connection to a list of items.
+"""A connection to a list of items."""
 type PostConnection {
-  # Information to aid in pagination.
+  """Information to aid in pagination."""
   pageInfo: PageInfo!
 
-  # A list of edges.
+  """A list of edges."""
   edges: [PostEdge]
 
-  # Count of filtered result set without considering pagination arguments
+  """Count of filtered result set without considering pagination arguments"""
   count: Int!
 }
 
-# An edge in a connection.
+"""An edge in a connection."""
 type PostEdge {
-  # The item at the end of the edge.
+  """The item at the end of the edge."""
   node: Post!
 
-  # A cursor for use in pagination.
+  """A cursor for use in pagination."""
   cursor: String!
 }
 
 input PostFilter {
-  # Logical AND on all given filters.
+  """Logical AND on all given filters."""
   AND: [PostFilter!]
 
-  # Logical OR on all given filters.
+  """Logical OR on all given filters."""
   OR: [PostFilter!]
   createdAt: DateTime
 
-  # All values that are not equal to given value.
+  """All values that are not equal to given value."""
   createdAt_not: DateTime
 
-  # All values that are contained in given list.
+  """All values that are contained in given list."""
   createdAt_in: [DateTime!]
 
-  # All values that are not contained in given list.
+  """All values that are not contained in given list."""
   createdAt_not_in: [DateTime!]
 
-  # All values less than the given value.
+  """All values less than the given value."""
   createdAt_lt: DateTime
 
-  # All values less than or equal the given value.
+  """All values less than or equal the given value."""
   createdAt_lte: DateTime
 
-  # All values greater than the given value.
+  """All values greater than the given value."""
   createdAt_gt: DateTime
 
-  # All values greater than or equal the given value.
+  """All values greater than or equal the given value."""
   createdAt_gte: DateTime
   description: String
 
-  # All values that are not equal to given value.
+  """All values that are not equal to given value."""
   description_not: String
 
-  # All values that are contained in given list.
+  """All values that are contained in given list."""
   description_in: [String!]
 
-  # All values that are not contained in given list.
+  """All values that are not contained in given list."""
   description_not_in: [String!]
 
-  # All values less than the given value.
+  """All values less than the given value."""
   description_lt: String
 
-  # All values less than or equal the given value.
+  """All values less than or equal the given value."""
   description_lte: String
 
-  # All values greater than the given value.
+  """All values greater than the given value."""
   description_gt: String
 
-  # All values greater than or equal the given value.
+  """All values greater than or equal the given value."""
   description_gte: String
 
-  # All values containing the given string.
+  """All values containing the given string."""
   description_contains: String
 
-  # All values not containing the given string.
+  """All values not containing the given string."""
   description_not_contains: String
 
-  # All values starting with the given string.
+  """All values starting with the given string."""
   description_starts_with: String
 
-  # All values not starting with the given string.
+  """All values not starting with the given string."""
   description_not_starts_with: String
 
-  # All values ending with the given string.
+  """All values ending with the given string."""
   description_ends_with: String
 
-  # All values not ending with the given string.
+  """All values not ending with the given string."""
   description_not_ends_with: String
   id: ID
 
-  # All values that are not equal to given value.
+  """All values that are not equal to given value."""
   id_not: ID
 
-  # All values that are contained in given list.
+  """All values that are contained in given list."""
   id_in: [ID!]
 
-  # All values that are not contained in given list.
+  """All values that are not contained in given list."""
   id_not_in: [ID!]
 
-  # All values less than the given value.
+  """All values less than the given value."""
   id_lt: ID
 
-  # All values less than or equal the given value.
+  """All values less than or equal the given value."""
   id_lte: ID
 
-  # All values greater than the given value.
+  """All values greater than the given value."""
   id_gt: ID
 
-  # All values greater than or equal the given value.
+  """All values greater than or equal the given value."""
   id_gte: ID
 
-  # All values containing the given string.
+  """All values containing the given string."""
   id_contains: ID
 
-  # All values not containing the given string.
+  """All values not containing the given string."""
   id_not_contains: ID
 
-  # All values starting with the given string.
+  """All values starting with the given string."""
   id_starts_with: ID
 
-  # All values not starting with the given string.
+  """All values not starting with the given string."""
   id_not_starts_with: ID
 
-  # All values ending with the given string.
+  """All values ending with the given string."""
   id_ends_with: ID
 
-  # All values not ending with the given string.
+  """All values not ending with the given string."""
   id_not_ends_with: ID
   imageUrl: String
 
-  # All values that are not equal to given value.
+  """All values that are not equal to given value."""
   imageUrl_not: String
 
-  # All values that are contained in given list.
+  """All values that are contained in given list."""
   imageUrl_in: [String!]
 
-  # All values that are not contained in given list.
+  """All values that are not contained in given list."""
   imageUrl_not_in: [String!]
 
-  # All values less than the given value.
+  """All values less than the given value."""
   imageUrl_lt: String
 
-  # All values less than or equal the given value.
+  """All values less than or equal the given value."""
   imageUrl_lte: String
 
-  # All values greater than the given value.
+  """All values greater than the given value."""
   imageUrl_gt: String
 
-  # All values greater than or equal the given value.
+  """All values greater than or equal the given value."""
   imageUrl_gte: String
 
-  # All values containing the given string.
+  """All values containing the given string."""
   imageUrl_contains: String
 
-  # All values not containing the given string.
+  """All values not containing the given string."""
   imageUrl_not_contains: String
 
-  # All values starting with the given string.
+  """All values starting with the given string."""
   imageUrl_starts_with: String
 
-  # All values not starting with the given string.
+  """All values not starting with the given string."""
   imageUrl_not_starts_with: String
 
-  # All values ending with the given string.
+  """All values ending with the given string."""
   imageUrl_ends_with: String
 
-  # All values not ending with the given string.
+  """All values not ending with the given string."""
   imageUrl_not_ends_with: String
   siteUrl: String
 
-  # All values that are not equal to given value.
+  """All values that are not equal to given value."""
   siteUrl_not: String
 
-  # All values that are contained in given list.
+  """All values that are contained in given list."""
   siteUrl_in: [String!]
 
-  # All values that are not contained in given list.
+  """All values that are not contained in given list."""
   siteUrl_not_in: [String!]
 
-  # All values less than the given value.
+  """All values less than the given value."""
   siteUrl_lt: String
 
-  # All values less than or equal the given value.
+  """All values less than or equal the given value."""
   siteUrl_lte: String
 
-  # All values greater than the given value.
+  """All values greater than the given value."""
   siteUrl_gt: String
 
-  # All values greater than or equal the given value.
+  """All values greater than or equal the given value."""
   siteUrl_gte: String
 
-  # All values containing the given string.
+  """All values containing the given string."""
   siteUrl_contains: String
 
-  # All values not containing the given string.
+  """All values not containing the given string."""
   siteUrl_not_contains: String
 
-  # All values starting with the given string.
+  """All values starting with the given string."""
   siteUrl_starts_with: String
 
-  # All values not starting with the given string.
+  """All values not starting with the given string."""
   siteUrl_not_starts_with: String
 
-  # All values ending with the given string.
+  """All values ending with the given string."""
   siteUrl_ends_with: String
 
-  # All values not ending with the given string.
+  """All values not ending with the given string."""
   siteUrl_not_ends_with: String
   updatedAt: DateTime
 
-  # All values that are not equal to given value.
+  """All values that are not equal to given value."""
   updatedAt_not: DateTime
 
-  # All values that are contained in given list.
+  """All values that are contained in given list."""
   updatedAt_in: [DateTime!]
 
-  # All values that are not contained in given list.
+  """All values that are not contained in given list."""
   updatedAt_not_in: [DateTime!]
 
-  # All values less than the given value.
+  """All values less than the given value."""
   updatedAt_lt: DateTime
 
-  # All values less than or equal the given value.
+  """All values less than or equal the given value."""
   updatedAt_lte: DateTime
 
-  # All values greater than the given value.
+  """All values greater than the given value."""
   updatedAt_gt: DateTime
 
-  # All values greater than or equal the given value.
+  """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
   comments_every: CommentFilter
   comments_some: CommentFilter
   comments_none: CommentFilter
+  likes_every: LikeFilter
+  likes_some: LikeFilter
+  likes_none: LikeFilter
   postedBy: UserFilter
+}
+
+input PostlikesLike {
+  userId: ID
+  user: LikeuserUser
 }
 
 enum PostOrderBy {
@@ -688,6 +952,8 @@ input PostpostedByUser {
   password: String!
   commentsIds: [ID!]
   comments: [UsercommentsComment!]
+  likesIds: [ID!]
+  likes: [UserlikesLike!]
   postsIds: [ID!]
   posts: [UserpostsPost!]
 }
@@ -695,9 +961,9 @@ input PostpostedByUser {
 type Query {
   viewer: Viewer!
 
-  # Fetches an object given its ID
+  """Fetches an object given its ID"""
   node(
-    # The ID of an object
+    """The ID of an object"""
     id: ID!
   ): Node
 }
@@ -747,18 +1013,20 @@ input RemoveFromUsersPostsPostInput {
   clientMutationId: String!
 }
 
-input SignUpUserInput {
+input SignupUserInput {
   email: String!
   name: String!
   password: String!
   commentsIds: [ID!]
   comments: [UsercommentsComment!]
+  likesIds: [ID!]
+  likes: [UserlikesLike!]
   postsIds: [ID!]
   posts: [UserpostsPost!]
   clientMutationId: String!
 }
 
-# SignUpUserPayload
+"""SignUpUserPayload"""
 type SignUpUserPayload {
   key: ID!
   token: String!
@@ -792,6 +1060,32 @@ type UpdateCommentPayload {
   commentedPost: Post
 }
 
+input UpdateLike {
+  id: ID!
+  postId: ID
+  post: LikepostPost
+  userId: ID
+  user: LikeuserUser
+}
+
+input UpdateLikeInput {
+  id: ID!
+  postId: ID
+  post: LikepostPost
+  userId: ID
+  user: LikeuserUser
+  clientMutationId: String!
+}
+
+type UpdateLikePayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  like: Like
+  edge: LikeEdge
+  post: Post
+  user: User
+}
+
 input UpdateOrCreateCommentInput {
   update: UpdateComment!
   create: CreateComment!
@@ -805,6 +1099,21 @@ type UpdateOrCreateCommentPayload {
   edge: CommentEdge
   commentedBy: User
   commentedPost: Post
+}
+
+input UpdateOrCreateLikeInput {
+  update: UpdateLike!
+  create: CreateLike!
+  clientMutationId: String!
+}
+
+type UpdateOrCreateLikePayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  like: Like
+  edge: LikeEdge
+  post: Post
+  user: User
 }
 
 input UpdateOrCreatePostInput {
@@ -843,6 +1152,8 @@ input UpdatePost {
   postedBy: PostpostedByUser
   commentsIds: [ID!]
   comments: [PostcommentsComment!]
+  likesIds: [ID!]
+  likes: [PostlikesLike!]
 }
 
 input UpdatePostInput {
@@ -854,6 +1165,8 @@ input UpdatePostInput {
   postedBy: PostpostedByUser
   commentsIds: [ID!]
   comments: [PostcommentsComment!]
+  likesIds: [ID!]
+  likes: [PostlikesLike!]
   clientMutationId: String!
 }
 
@@ -872,6 +1185,8 @@ input UpdateUser {
   password: String
   commentsIds: [ID!]
   comments: [UsercommentsComment!]
+  likesIds: [ID!]
+  likes: [UserlikesLike!]
   postsIds: [ID!]
   posts: [UserpostsPost!]
 }
@@ -883,6 +1198,8 @@ input UpdateUserInput {
   password: String
   commentsIds: [ID!]
   comments: [UsercommentsComment!]
+  likesIds: [ID!]
+  likes: [UserlikesLike!]
   postsIds: [ID!]
   posts: [UserpostsPost!]
   clientMutationId: String!
@@ -900,6 +1217,7 @@ type User implements Node {
   createdAt: DateTime!
   email: String!
   id: ID!
+  likes(filter: LikeFilter, orderBy: LikeOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): LikeConnection
   name: String!
   password: String!
   posts(filter: PostFilter, orderBy: PostOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): PostConnection
@@ -912,243 +1230,251 @@ input UsercommentsComment {
   commentedPost: CommentcommentedPostPost
 }
 
-# A connection to a list of items.
+"""A connection to a list of items."""
 type UserConnection {
-  # Information to aid in pagination.
+  """Information to aid in pagination."""
   pageInfo: PageInfo!
 
-  # A list of edges.
+  """A list of edges."""
   edges: [UserEdge]
 
-  # Count of filtered result set without considering pagination arguments
+  """Count of filtered result set without considering pagination arguments"""
   count: Int!
 }
 
-# An edge in a connection.
+"""An edge in a connection."""
 type UserEdge {
-  # The item at the end of the edge.
+  """The item at the end of the edge."""
   node: User!
 
-  # A cursor for use in pagination.
+  """A cursor for use in pagination."""
   cursor: String!
 }
 
 input UserFilter {
-  # Logical AND on all given filters.
+  """Logical AND on all given filters."""
   AND: [UserFilter!]
 
-  # Logical OR on all given filters.
+  """Logical OR on all given filters."""
   OR: [UserFilter!]
   createdAt: DateTime
 
-  # All values that are not equal to given value.
+  """All values that are not equal to given value."""
   createdAt_not: DateTime
 
-  # All values that are contained in given list.
+  """All values that are contained in given list."""
   createdAt_in: [DateTime!]
 
-  # All values that are not contained in given list.
+  """All values that are not contained in given list."""
   createdAt_not_in: [DateTime!]
 
-  # All values less than the given value.
+  """All values less than the given value."""
   createdAt_lt: DateTime
 
-  # All values less than or equal the given value.
+  """All values less than or equal the given value."""
   createdAt_lte: DateTime
 
-  # All values greater than the given value.
+  """All values greater than the given value."""
   createdAt_gt: DateTime
 
-  # All values greater than or equal the given value.
+  """All values greater than or equal the given value."""
   createdAt_gte: DateTime
   email: String
 
-  # All values that are not equal to given value.
+  """All values that are not equal to given value."""
   email_not: String
 
-  # All values that are contained in given list.
+  """All values that are contained in given list."""
   email_in: [String!]
 
-  # All values that are not contained in given list.
+  """All values that are not contained in given list."""
   email_not_in: [String!]
 
-  # All values less than the given value.
+  """All values less than the given value."""
   email_lt: String
 
-  # All values less than or equal the given value.
+  """All values less than or equal the given value."""
   email_lte: String
 
-  # All values greater than the given value.
+  """All values greater than the given value."""
   email_gt: String
 
-  # All values greater than or equal the given value.
+  """All values greater than or equal the given value."""
   email_gte: String
 
-  # All values containing the given string.
+  """All values containing the given string."""
   email_contains: String
 
-  # All values not containing the given string.
+  """All values not containing the given string."""
   email_not_contains: String
 
-  # All values starting with the given string.
+  """All values starting with the given string."""
   email_starts_with: String
 
-  # All values not starting with the given string.
+  """All values not starting with the given string."""
   email_not_starts_with: String
 
-  # All values ending with the given string.
+  """All values ending with the given string."""
   email_ends_with: String
 
-  # All values not ending with the given string.
+  """All values not ending with the given string."""
   email_not_ends_with: String
   id: ID
 
-  # All values that are not equal to given value.
+  """All values that are not equal to given value."""
   id_not: ID
 
-  # All values that are contained in given list.
+  """All values that are contained in given list."""
   id_in: [ID!]
 
-  # All values that are not contained in given list.
+  """All values that are not contained in given list."""
   id_not_in: [ID!]
 
-  # All values less than the given value.
+  """All values less than the given value."""
   id_lt: ID
 
-  # All values less than or equal the given value.
+  """All values less than or equal the given value."""
   id_lte: ID
 
-  # All values greater than the given value.
+  """All values greater than the given value."""
   id_gt: ID
 
-  # All values greater than or equal the given value.
+  """All values greater than or equal the given value."""
   id_gte: ID
 
-  # All values containing the given string.
+  """All values containing the given string."""
   id_contains: ID
 
-  # All values not containing the given string.
+  """All values not containing the given string."""
   id_not_contains: ID
 
-  # All values starting with the given string.
+  """All values starting with the given string."""
   id_starts_with: ID
 
-  # All values not starting with the given string.
+  """All values not starting with the given string."""
   id_not_starts_with: ID
 
-  # All values ending with the given string.
+  """All values ending with the given string."""
   id_ends_with: ID
 
-  # All values not ending with the given string.
+  """All values not ending with the given string."""
   id_not_ends_with: ID
   name: String
 
-  # All values that are not equal to given value.
+  """All values that are not equal to given value."""
   name_not: String
 
-  # All values that are contained in given list.
+  """All values that are contained in given list."""
   name_in: [String!]
 
-  # All values that are not contained in given list.
+  """All values that are not contained in given list."""
   name_not_in: [String!]
 
-  # All values less than the given value.
+  """All values less than the given value."""
   name_lt: String
 
-  # All values less than or equal the given value.
+  """All values less than or equal the given value."""
   name_lte: String
 
-  # All values greater than the given value.
+  """All values greater than the given value."""
   name_gt: String
 
-  # All values greater than or equal the given value.
+  """All values greater than or equal the given value."""
   name_gte: String
 
-  # All values containing the given string.
+  """All values containing the given string."""
   name_contains: String
 
-  # All values not containing the given string.
+  """All values not containing the given string."""
   name_not_contains: String
 
-  # All values starting with the given string.
+  """All values starting with the given string."""
   name_starts_with: String
 
-  # All values not starting with the given string.
+  """All values not starting with the given string."""
   name_not_starts_with: String
 
-  # All values ending with the given string.
+  """All values ending with the given string."""
   name_ends_with: String
 
-  # All values not ending with the given string.
+  """All values not ending with the given string."""
   name_not_ends_with: String
   password: String
 
-  # All values that are not equal to given value.
+  """All values that are not equal to given value."""
   password_not: String
 
-  # All values that are contained in given list.
+  """All values that are contained in given list."""
   password_in: [String!]
 
-  # All values that are not contained in given list.
+  """All values that are not contained in given list."""
   password_not_in: [String!]
 
-  # All values less than the given value.
+  """All values less than the given value."""
   password_lt: String
 
-  # All values less than or equal the given value.
+  """All values less than or equal the given value."""
   password_lte: String
 
-  # All values greater than the given value.
+  """All values greater than the given value."""
   password_gt: String
 
-  # All values greater than or equal the given value.
+  """All values greater than or equal the given value."""
   password_gte: String
 
-  # All values containing the given string.
+  """All values containing the given string."""
   password_contains: String
 
-  # All values not containing the given string.
+  """All values not containing the given string."""
   password_not_contains: String
 
-  # All values starting with the given string.
+  """All values starting with the given string."""
   password_starts_with: String
 
-  # All values not starting with the given string.
+  """All values not starting with the given string."""
   password_not_starts_with: String
 
-  # All values ending with the given string.
+  """All values ending with the given string."""
   password_ends_with: String
 
-  # All values not ending with the given string.
+  """All values not ending with the given string."""
   password_not_ends_with: String
   updatedAt: DateTime
 
-  # All values that are not equal to given value.
+  """All values that are not equal to given value."""
   updatedAt_not: DateTime
 
-  # All values that are contained in given list.
+  """All values that are contained in given list."""
   updatedAt_in: [DateTime!]
 
-  # All values that are not contained in given list.
+  """All values that are not contained in given list."""
   updatedAt_not_in: [DateTime!]
 
-  # All values less than the given value.
+  """All values less than the given value."""
   updatedAt_lt: DateTime
 
-  # All values less than or equal the given value.
+  """All values less than or equal the given value."""
   updatedAt_lte: DateTime
 
-  # All values greater than the given value.
+  """All values greater than the given value."""
   updatedAt_gt: DateTime
 
-  # All values greater than or equal the given value.
+  """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
   comments_every: CommentFilter
   comments_some: CommentFilter
   comments_none: CommentFilter
+  likes_every: LikeFilter
+  likes_some: LikeFilter
+  likes_none: LikeFilter
   posts_every: PostFilter
   posts_some: PostFilter
   posts_none: PostFilter
+}
+
+input UserlikesLike {
+  postId: ID
+  post: LikepostPost
 }
 
 enum UserOrderBy {
@@ -1172,19 +1498,24 @@ input UserpostsPost {
   siteUrl: String!
   commentsIds: [ID!]
   comments: [PostcommentsComment!]
+  likesIds: [ID!]
+  likes: [PostlikesLike!]
 }
 
-# This is the famous Relay viewer object
+"""This is the famous Relay viewer object"""
 type Viewer {
   allComments(filter: CommentFilter, orderBy: CommentOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection!
+  allLikes(filter: LikeFilter, orderBy: LikeOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): LikeConnection!
   allPosts(filter: PostFilter, orderBy: PostOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): PostConnection!
   allUsers(filter: UserFilter, orderBy: UserOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   user: User
   Comment(id: ID): Comment
+  Like(id: ID): Like
   Post(id: ID): Post
   User(email: String, id: ID): User
 
-  # loggedInUser
+  """loggedInUser"""
   loggedInUser: LoggedInUserPayload
   id: ID!
 }
+

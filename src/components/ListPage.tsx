@@ -13,10 +13,10 @@ import Masonry from 'react-masonry-component';
 import history from '../utils/history'
 import Post, { Dim } from './Post'
 import Loading from '../assets/images/loading.gif'
-import { UserConsumer } from '../utils/userContext'
+import { UserContext } from '../utils/userContext'
 import { ITEMS_PER_PAGE } from '../utils/constants'
 import { IPost, toggleOverlay } from '../types';
-import { OverlayProvider, OverlayConsumer } from '../utils/overlayContext'
+import { OverlayProvider } from '../utils/overlayContext'
 
 type PostNode = {
   node: IPost
@@ -55,6 +55,8 @@ const masonryStyle = {
 }
 
 class ListPage extends PureComponent<Props, State> {
+  static contextType = UserContext
+
   _toggleOverlay: toggleOverlay = e => {
     const { target } = e
     const { dataset: { overlay: overlayVal } } = target as HTMLDivElement
@@ -82,47 +84,39 @@ class ListPage extends PureComponent<Props, State> {
   }
 
   render() {
-    const { viewer, relay } = this.props
-    const { allPosts: { edges } } = viewer
-
+    const { viewer: { id: viewerId, allPosts: { edges } }, relay } = this.props
+    const { isOverlay, toggleOverlay } = this.state
+    const { name } = this.context
     return (
       <OverlayProvider value={this.state}>
         <Wrapper>
-          <OverlayConsumer>
-            {({ isOverlay, toggleOverlay }) => (
-              isMobile && <Overlay onTouchEnd={toggleOverlay} on={isOverlay} data-overlay="close" />
-            )}
-          </OverlayConsumer>
-          <UserConsumer>
-            {({ name }) => (
-              <TopPart>
-                <StyledLinkContainer>
-                  <StyledLink
-                    mobile={isMobile.toString()}
-                    to={name ? '/create' : '/login'}
-                  >
-                    + {name ? 'New Post' : 'Sign In'}
-                  </StyledLink>
-                  {!!name && (
-                    <StyledLink
-                      as="div"
-                      mobile={isMobile.toString()}
-                      isLogOut
-                      to="/"
-                      onClick={this._onLogOut}
-                    >
-                      Log Out
-                    </StyledLink>
-                  )}
-                </StyledLinkContainer>
-                {name &&
-                  <WelcomeUser>
-                    Hello {name}!
-                  </WelcomeUser>
-                }
-              </TopPart>
-            )}
-          </UserConsumer>
+          {isMobile && <Overlay onTouchEnd={toggleOverlay} on={isOverlay} data-overlay="close" />}
+          <TopPart>
+            <StyledLinkContainer>
+              <StyledLink
+                mobile={isMobile.toString()}
+                to={name ? '/create' : '/login'}
+              >
+                + {name ? 'New Post' : 'Sign In'}
+              </StyledLink>
+              {!!name && (
+                <StyledLink
+                  as="div"
+                  mobile={isMobile.toString()}
+                  isLogOut
+                  to="/"
+                  onClick={this._onLogOut}
+                >
+                  Log Out
+                </StyledLink>
+              )}
+            </StyledLinkContainer>
+            {name &&
+              <WelcomeUser>
+                Hello {name}!
+              </WelcomeUser>
+            }
+          </TopPart>
           <InfiniteScroll
             pageStart={0}
             loadMore={this._loadMore}
@@ -137,18 +131,15 @@ class ListPage extends PureComponent<Props, State> {
               options={masonryOptions}
               style={masonryStyle}
             >
-              <OverlayConsumer>
-                {({ isOverlay, toggleOverlay }) => (
-                  edges && edges.map(({ node }) =>
-                    <Post
-                      key={node.__id}
-                      post={node}
-                      viewerId={viewer.id}
-                      isOverlay={isOverlay}
-                      toggleOverlay={toggleOverlay}
-                    />
-                ))}
-              </OverlayConsumer>
+              {edges && edges.map(({ node }) =>
+                <Post
+                  key={node.__id}
+                  post={node}
+                  viewerId={viewerId}
+                  isOverlay={isOverlay}
+                  toggleOverlay={toggleOverlay}
+                />
+              )}
             </Masonry>
           </InfiniteScroll>
         </Wrapper>
@@ -186,7 +177,7 @@ export default createPaginationContainer(ListPage,
   {
     direction: 'forward',
     query: graphql`
-      query ListPagePaginationQuery($count: Int! $pCursor: String, $cCursor: String) {
+      query ListPagePaginationQuery($count: Int! $pCursor: String, $cCursor: String, $maxLikes: Int!) {
         viewer {
           ...ListPage_viewer
         }
@@ -195,10 +186,11 @@ export default createPaginationContainer(ListPage,
     getConnectionFromProps(props) {
       return props.viewer && props.viewer.allPosts
     },
-    getVariables(_, { count, cursor }) {
+    getVariables(_, { count, cursor }, { maxLikes }) {
       return {
         count,
-        pCursor: cursor
+        pCursor: cursor,
+        maxLikes
       }
     }
   }

@@ -1,6 +1,7 @@
 import { commitMutation } from 'react-relay'
 import graphql from 'babel-plugin-relay/macro'
 import environment from '../utils/Environment'
+import RSwal from '../utils/reactSwal';
 import { AuthMutArgs, AuthVars, compRes } from '../types'
 
 const mutation = graphql`
@@ -33,7 +34,7 @@ const AuthenticateUserMutation: AuthMutArgs = function (
         const { key, token } = auth
         successCb(key, token);
       } else {
-        alert("email and password doesn't match.")
+        RSwal('error', 'email and password doesn\'t match.')
         failCb();
       }
     },

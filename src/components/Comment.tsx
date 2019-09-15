@@ -16,6 +16,7 @@ import Linkify from 'react-linkify'
 import DeleteCommentMutation from '../mutations/DeleteCommentMutation'
 import { IComment, Menu, handleEdit } from '../types'
 import { contextProps } from '../utils/overlayContext'
+import RSwal from '../utils/reactSwal';
 import { VertOptionContainer, TooltipComp } from './Post'
 
 type Hover = {
@@ -93,11 +94,12 @@ class Comment extends PureComponent<Props, State> {
   }
 
   _handleDelete = () => {
-    const { comment: { id, content }, postId } = this.props
-    if (window.confirm(`Are you sure to delete: ${content}?`)) {
-      DeleteCommentMutation(id, postId)
-    }
-    this.setState({ menu: false })
+    this.setState({ menu: false }, () => {
+      const { comment: { id, content }, postId } = this.props
+      RSwal('warning', `Are you sure to delete: ${content}?`, () => {
+        DeleteCommentMutation(id, postId)
+      })
+    })
   }
 
   render() {

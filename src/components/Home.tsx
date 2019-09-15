@@ -7,7 +7,7 @@ import environment from '../utils/Environment'
 import { UserProvider } from '../utils/userContext'
 import ListPage from './ListPage'
 import Loading from '../assets/images/loading.gif'
-import { GC_USER_ID, ITEMS_PER_PAGE } from '../utils/constants'
+import { GC_USER_ID, ITEMS_PER_PAGE, MAX_LIKES } from '../utils/constants'
 import styled from 'styled-components'
 
 type State = {
@@ -20,7 +20,8 @@ const HomeAllPostQuery = graphql`
     $count: Int!,
     $id: ID,
     $pCursor: String,
-    $cCursor: String
+    $cCursor: String,
+    $maxLikes: Int!
   ) {
     viewer {
       User(id: $id) {
@@ -31,6 +32,7 @@ const HomeAllPostQuery = graphql`
     }
   }
 `
+
 const queryRenderee = ({ error, props }) => {
   if (error) {
     return <div>{error.message}</div>
@@ -60,16 +62,11 @@ export default class Home extends PureComponent<unknown, State> {
     hasError: false
   }
 
-  static getDerivedStateFromProps(_prevProps: unknown, prevState: State) {
-    try {
-      if (sessionStorage.getItem(GC_USER_ID) && prevState.userId === '') {
-        return { userId: sessionStorage.getItem(GC_USER_ID) }
-      }
-      return null
-    } catch(e) {
-      console.log('error in Home getDerivedStateFromProps: ', e.message)
-      return null
+  static getDerivedStateFromProps(_: unknown, prevState: State) {
+    if (prevState.userId === '') {
+      return { userId: sessionStorage.getItem(GC_USER_ID) }
     }
+    return null
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
@@ -92,7 +89,8 @@ export default class Home extends PureComponent<unknown, State> {
         query={HomeAllPostQuery}
         variables={{
           id: this.state.userId,
-          count: ITEMS_PER_PAGE
+          count: ITEMS_PER_PAGE,
+          maxLikes: MAX_LIKES
         }}
         render={queryRenderee}
       />
