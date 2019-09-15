@@ -1,12 +1,14 @@
 import React, { ChangeEvent, PureComponent } from 'react'
 import { Link } from 'react-router-dom'
-import { GC_USER_ID, GC_AUTH_TOKEN } from '../utils/constants'
+import styled from 'styled-components'
+
 import AuthenticateUserMutation from '../mutations/AuthenticateUserMutation'
 import SignUpUserMutation from '../mutations/SignUpUserMutation'
+import { GC_USER_ID, GC_AUTH_TOKEN } from '../utils/constants'
 import Loading from '../assets/images/loading.gif'
-import styled from 'styled-components'
 import history from '../utils/history'
 import RSwal from '../utils/reactSwal';
+import { validateEmail } from '../utils/validations'
 import { Dim } from './Post'
 
 type State = {
@@ -45,29 +47,33 @@ export default class Login extends PureComponent<any, State> {
   _confirm = () => {
     const { isLogInPage, name, email, password } = this.state
     if (email.trim() !== '' && password.trim() !== '') {
-      this.setState({ loading: true }, () => {
-        if (isLogInPage) {
-          AuthenticateUserMutation(
-            email,
-            password,
-            this._saveUserData,
-            this._failedAuth
-          )
-        } else {
-          if (name.trim() !== '') {
-            SignUpUserMutation(
+      if (validateEmail(email)) {
+        this.setState({ loading: true }, () => {
+          if (isLogInPage) {
+            AuthenticateUserMutation(
               email,
               password,
               this._saveUserData,
-              this._failedAuth,
-              name
+              this._failedAuth
             )
           } else {
-            RSwal('error', 'name is required')
-            this._failedAuth()
+            if (name.trim() !== '') {
+              SignUpUserMutation(
+                email,
+                password,
+                this._saveUserData,
+                this._failedAuth,
+                name
+              )
+            } else {
+              RSwal('error', 'name is required')
+              this._failedAuth()
+            }
           }
-        }
-      })
+        })
+      } else {
+        RSwal('error', 'email form is not valid!')
+      }
     } else {
       if (email.trim() === '') RSwal('error', 'email is required')
       else if (password.trim() === '') RSwal('error', 'password is required')
