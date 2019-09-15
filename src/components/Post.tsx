@@ -55,7 +55,8 @@ type TooltipProps = {
 
 type THeartProps = {
   isliked?: string,
-  count?: number
+  count?: number,
+  mobile?: string
 }
 
 type THeart = FC<FAProps & THeartProps>
@@ -271,6 +272,7 @@ class Post extends PureComponent<Props, State> {
           <HeartContainer
             isliked={String(!!likedViewerId)}
             onClick={this._toggleLike}
+            mobile={isMobile.toString()}
           >
             <HeartIcon
               isliked={String(!!likedViewerId)}
@@ -397,6 +399,8 @@ const HeartContainer = styled.div<THeartProps>`
   align-items: center;
   width: 3rem;
   height: 3rem;
+  cursor: pointer;
+  ${({ mobile }) => mobile === 'true' ? '' : Dim};
   div.heartCount {
     font-weight: ${({ isliked }) => isliked ? 'bold' : 'normal'};
   }

@@ -81,6 +81,9 @@ class ListPage extends PureComponent<Props, State> {
   _onLogOut = () => {
     sessionStorage.clear()
     history.push('/login')
+    setTimeout(() => {
+      history.replace('/')
+    })
   }
 
   render() {

@@ -28,7 +28,7 @@
     "noEmit": true,
     "noEmitHelpers": true,
     "isolatedModules": true,
-    "importHelpers": true,
+    "importHelpers": true
   },
   "exclude": [
     "build/**/*",
