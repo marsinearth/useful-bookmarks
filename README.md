@@ -1,6 +1,6 @@
 # Relay Modern & GraphCool Personal Project
 
-## [Demo](https://useful-bookmarks.netlify.com/) Page on Netlify
+## Currently not working due to graphcool is down. port to its successor-prisma is needed
 
 ### Description
 
